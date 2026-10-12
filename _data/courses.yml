@@ -6,76 +6,76 @@ dbricksint:
     y optimización.
   labs:
   - id: lab1
-    title: 'Práctica 1: Configuración de cluster y ejecución de notebook ETL'
+    title: 'Configuración de cluster y ejecución de notebook ETL'
     url: /lab1/lab1/
     duration: 40 min
     desc: Configura cómputo Single node, desarrolla un notebook PySpark y valida un ETL de pedidos con vista temporal
       SQL.
   - id: lab2
-    title: 'Práctica 2: Implementación inicial de arquitectura Bronze/Silver'
+    title: 'Implementación inicial de arquitectura Bronze/Silver'
     url: /lab2/lab2/
     duration: 40 min
     desc: Construye tablas Delta Bronze, Silver y Gold en Unity Catalog, depura pedidos y verifica ventas y trazabilidad.
   - id: lab3
-    title: 'Práctica 3: Ingesta batch completa con validaciones'
+    title: 'Ingesta batch completa con validaciones'
     url: /lab3/lab3/
     duration: 70 min
     desc: Ingiere un lote batch, separa registros inválidos en cuarentena, audita la carga y prepara Silver para
       MERGE.
   - id: lab4
-    title: 'Práctica 4: Implementación de MERGE incremental optimizado'
+    title: 'Implementación de MERGE incremental optimizado'
     url: /lab4/lab4/
     duration: 60 min
     desc: Ingiere un lote incremental, deduplica pedidos, aplica MERGE en Delta y optimiza Silver con auditoría
       verificable.
   - id: lab5
-    title: 'Práctica 5: Auditoría con Time Travel y restauración de versión'
+    title: 'Auditoría con Time Travel y restauración de versión'
     url: /lab5/lab5/
     duration: 40 min
     desc: Consulta versiones Delta con Time Travel, simula un incidente aislado y valida la restauración y su auditoría.
   - id: lab6
-    title: 'Práctica 6: Creación de workflow multi-tarea'
+    title: 'Creación de workflow multi-tarea'
     url: /lab6/lab6/
     duration: 50 min
     desc: Orquesta cuatro notebooks con Jobs, configura dependencias y reintentos, y audita la calidad de un lote
       baseline.
   - id: lab7
-    title: 'Práctica 7: Configuración de tareas condicionales y recuperación ante fallos'
+    title: 'Configuración de tareas condicionales y recuperación ante fallos'
     url: /lab7/lab7/
     duration: 50 min
     desc: Amplía un Job con If/else, dirige lotes a promoción o cuarentena y repara un fallo controlado mediante
       Repair run.
   - id: lab8
-    title: 'Práctica 8: Creación de pipeline Bronze → Silver con DLT'
+    title: 'Creación de pipeline Bronze → Silver con DLT'
     url: /lab8/lab8/
     duration: 60 min
     desc: Crea un pipeline Lakeflow con Bronze streaming y Silver materializada, deduplica pedidos y revisa el event
       log.
   - id: lab9
-    title: 'Práctica 9: Implementación de validaciones y manejo de errores'
+    title: 'Implementación de validaciones y manejo de errores'
     url: /lab9/lab9/
     duration: 40 min
     desc: Agrega expectativas WARN, DROP ROW y FAIL UPDATE a Silver, prueba errores y recupera el pipeline con Full
       refresh.
   - id: lab10
-    title: 'Práctica 10: Configuración completa de permisos en Unity Catalog'
+    title: 'Configuración completa de permisos en Unity Catalog'
     url: /lab10/lab10/
     duration: 40 min
     desc: Configura privilegios mínimos en Unity Catalog, protege correos con una vista dinámica y prueba dos identidades.
   - id: lab11
-    title: 'Práctica 11: Migración y validación de accesos'
+    title: 'Migración y validación de accesos'
     url: /lab11/lab11/
     duration: 40 min
     desc: Clona una tabla Delta con DEEP CLONE, verifica integridad y ubicaciones, y valida vistas protegidas por
       grupo.
   - id: lab12
-    title: 'Práctica 12: Optimización de pipeline y comparación de métricas'
+    title: 'Optimización de pipeline y comparación de métricas'
     url: /lab12/lab12/
     duration: 65 min
     desc: Compara particionado por país y Liquid Clustering sobre 200,000 eventos con 24 ejecuciones y métricas
       reales.
   - id: lab13
-    title: 'Práctica 13: Ajuste de configuración y análisis de costos'
+    title: 'Ajuste de configuración y análisis de costos'
     url: /lab13/lab13/
     duration: 65 min
     desc: Compara AQE con 200 y 64 particiones shuffle, registra seis tiempos y separa rendimiento de costo real.
