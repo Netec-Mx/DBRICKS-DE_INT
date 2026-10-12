@@ -1,0 +1,47 @@
+# Prompts de apoyo para la Práctica 5
+# El slug del laboratorio debe ser: lab5
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 5 de Databricks. Creé `05_time_travel_restore`
+    en `batch_1`, conecté el cluster reutilizado, configuré UTC y las variables ORIGINAL, R, AUD y RECOVERY_ID.
+    Verifiqué que `dbricks_de_int.batch1.p3_silver_orders` conserva 6 pedidos únicos después del MERGE; guardé
+    su snapshot, creé con CREATE OR REPLACE TABLE una copia aislada `p5_silver_restore_lab` y preparé `p5_delta_recovery_audit`.
+    Explícame por qué solo es seguro alterar la copia y cómo validar DESCRIBE DETAIL y DESCRIBE HISTORY. Explica
+    el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo
+    validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 5 de Databricks. Capturé con DESCRIBE HISTORY
+    una versión segura real de la copia y calculé COUNT y SUM(amount) usando VERSION AS OF. Guardé el evento BASELINE_CAPTURED
+    en la tabla de auditoría; extraje el timestamp exacto de la versión y utilicé TIMESTAMP AS OF sin redondear
+    segundos. Comparé conteos e importes para confirmar que ambos métodos de Time Travel devuelven los mismos
+    6 pedidos. Distingue versión lógica, timestamp y límites de retención. Explica el propósito de cada comando,
+    configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se completó
+    correctamente y qué errores comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 3 de la Práctica 5 de Databricks. Seleccioné una clave única
+    en la copia p5_, registré su importe y ejecuté UPDATE para incrementarlo 9999.99 sin modificar p3_silver_orders.
+    Contrasté la diferencia de 0 filas y +9999.99 de importe frente a la versión segura, registré INCIDENT_DETECTED
+    y ejecuté RESTORE TABLE TO VERSION AS OF. Comprobé la recuperación del importe original y que DESCRIBE HISTORY
+    muestra RESTORE posterior a UPDATE. Explica cómo esta recuperación difiere de una consulta histórica de solo
+    lectura. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas
+    esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: 'Explícame expertamente qué hice en la Tarea 4 de la Práctica 5 de Databricks. Comparé la copia restaurada
+    con su versión segura: mismo conteo de 6 pedidos y diferencia 0.00 en SUM(amount). Verifiqué que el snapshot
+    de p3_silver_orders es idéntico al inicial y registré RESTORE_COMPLETED. Consulté cronológicamente p5_delta_recovery_audit
+    filtrada por RECOVERY_ID y confirmé exactamente un BASELINE_CAPTURED, INCIDENT_DETECTED y RESTORE_COMPLETED.
+    Explica el valor de separar auditoría y tabla recuperada. Explica el propósito de cada comando, configuración
+    o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente
+    y qué errores comunes podrían presentarse.'
+tarea5:
+  title: Explicar la Tarea 5 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 5 de la Práctica 5 de Databricks. Intenté consultar VERSION
+    AS OF con un número de versión futuro inexistente, capturé la excepción y comprobé que la copia conserva 6
+    pedidos y el importe restaurado. Consulté el historial con versiones y operaciones UPDATE y RESTORE, conservé
+    notebook, copia p5_ y tabla de auditoría sin realizar VACUUM ni DROP. Explica errores típicos de Time Travel,
+    conservación de archivos históricos y comprobaciones finales. Explica el propósito de cada comando, configuración
+    o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente
+    y qué errores comunes podrían presentarse.

@@ -1,0 +1,157 @@
+lab1:
+  results:
+  - '**Resultado esperado:** Cluster All-Purpose Single node con Databricks Runtime 15.4 LTS, acceso Standard y
+    terminación automática de 20 minutos, en estado Running.'
+  - '**Resultado esperado:** Notebook Python `batch_1/01_etl_basico` conectado al cluster; Spark 3.5.0 verificado,
+    introducción Markdown e importaciones PySpark ejecutadas.'
+  - '**Resultado esperado:** Cinco pedidos procesados y agregados en la vista temporal `etl_ventas_diarias`: 2 fechas,
+    5 pedidos y ventas totales de 470.50.'
+  - '**Resultado esperado:** Aserciones de 2 días, 5 pedidos y 470.50 aprobadas; el ETL se reejecuta sin cambios
+    y el notebook queda guardado en Workspace.'
+lab2:
+  results:
+  - '**Resultado esperado:** Notebook `02_bronze_silver_orders` conectado al cluster reutilizado; esquema `batch1`,
+    volumen `landing` y CSV `orders_batch_001.csv` disponibles con 7 filas.'
+  - '**Resultado esperado:** Tabla Delta `dbricks_de_int.batch1.bronze_orders` con 7 registros de origen sin tipar
+    y metadatos `source_file`, `ingest_ts` y `batch_id=batch_001`.'
+  - '**Resultado esperado:** Tabla Delta `silver_orders` con 5 pedidos únicos, identificadores válidos, importes
+    tipados y montos 120.00, 80.00, 45.00, 60.00 y 25.00.'
+  - '**Resultado esperado:** Tabla Delta `gold_daily_sales` con 2 fechas y ventas totales de 330.00; conciliación
+    Silver/Gold correcta e historial Delta disponible.'
+lab3:
+  results:
+  - '**Resultado esperado:** Notebook `03_ingesta_batch_validaciones` conectado al cluster existente; cinco tablas
+    `p3_` identificadas y tablas Delta de cuarentena y auditoría disponibles.'
+  - '**Resultado esperado:** CSV `orders_batch_002_p3.csv` con 10 filas y 6 columnas, persistido íntegramente en
+    `p3_bronze_orders` con lote y ruta de origen trazables.'
+  - '**Resultado esperado:** Dos pedidos válidos (`1002`, `1009`) y ocho rechazados con motivos en cuarentena; Silver
+    contiene además las semillas `O1001` y `O1002` para MERGE.'
+  - '**Resultado esperado:** Gold con 4 fechas y ventas conciliadas de 245.00; schema enforcement rechaza la inserción
+    incompatible sin alterar Silver, y auditoría registra 10/2/8.'
+  - '**Resultado esperado:** Conteos Bronze=10, cuarentena=8 y Silver=4 verificados; un evento de auditoría, historial
+    Delta y las cinco tablas `p3_` conservados para la Práctica 4.'
+lab4:
+  results:
+  - '**Resultado esperado:** Las cinco tablas `p3_`, el Volume `landing` y las semillas `O1001=100.00` y `O1002=70.00`
+    están disponibles; `batch_003` aún no fue procesado.'
+  - '**Resultado esperado:** CSV `orders_batch_003_p4.csv` validado con 6 filas y 4 claves únicas; Bronze evoluciona
+    su esquema y conserva 16 filas en total.'
+  - '**Resultado esperado:** Staging con 4 pedidos únicos; MERGE actualiza `O1001` y `O1002`, inserta `O1004` y
+    `O1005`, y deja 6 claves únicas en Silver.'
+  - '**Resultado esperado:** Gold excluye el pedido cancelado y suma 460.75; `OPTIMIZE ZORDER` conserva los 6 pedidos
+    y se registra junto con MERGE en Delta History.'
+  - '**Resultado esperado:** La auditoría registra una vez `batch_003` con 6 filas Bronze y 4 claves procesadas;
+    se conservan Silver, Gold y su historial para Time Travel.'
+lab5:
+  results:
+  - '**Resultado esperado:** Notebook `05_time_travel_restore` conectado; `p3_silver_orders` validada con 6 claves
+    únicas, copia Delta `p5_silver_restore_lab` y tabla `p5_delta_recovery_audit` creadas sin modificar la fuente.'
+  - '**Resultado esperado:** Versión segura real y sus métricas capturadas; consultas `VERSION AS OF` y `TIMESTAMP
+    AS OF` devuelven los mismos 6 pedidos y el mismo importe, con evento `BASELINE_CAPTURED` registrado.'
+  - '**Resultado esperado:** `UPDATE` controlado incrementa 9999.99 el importe de un pedido en la copia; `RESTORE
+    TABLE` recupera el valor original y `DESCRIBE HISTORY` conserva las operaciones UPDATE y RESTORE.'
+  - '**Resultado esperado:** Copia restaurada con diferencia de 0 filas y 0.00 de importe frente a la versión segura;
+    fuente Silver sin cambios y tres eventos únicos `BASELINE_CAPTURED`, `INCIDENT_DETECTED` y `RESTORE_COMPLETED`.'
+  - '**Resultado esperado:** Consulta a versión inexistente falla de manera controlada sin alterar los 6 pedidos;
+    historial Delta, copia de recuperación, auditoría y notebook quedan disponibles sin ejecutar DROP ni VACUUM.'
+lab6:
+  results:
+  - '**Resultado esperado:** Catálogo `dbricks_de_int.batch1` y Volume `landing` verificados; carpeta `workflow_6`
+    creada con cuatro notebooks Python y cinco parámetros del Job identificados.'
+  - '**Resultado esperado:** Archivo `wf_baseline_001.csv` generado con 8 filas; tabla Delta `p6_workflow_orders`
+    conserva los datos crudos y permite reemplazo por `batch_id`.'
+  - '**Resultado esperado:** Validación del baseline con 8 filas, 3 válidas, 5 rechazadas y 1 duplicado excedente;
+    cinco task values publicados y evento `QUALITY_CHECK` persistido.'
+  - '**Resultado esperado:** Job `job_orders_orchestration_b2` creado con 4 tareas encadenadas, Job Compute compartido,
+    cinco parámetros, timeout de 20 min y concurrencia máxima de 1.'
+  - '**Resultado esperado:** Run manual finalizado con las cuatro tareas y estado `Succeeded`; auditoría `p6_workflow_audit`
+    refleja 8/3/5/1 y `OBSERVED` y conserva recursos para lab7.'
+lab7:
+  results:
+  - '**Resultado esperado:** El Job `job_orders_orchestration_b2` conserva sus cuatro tareas, cinco parámetros y
+    tablas `p6_`; el notebook `07_control_workflow` verifica el Volume `landing`.'
+  - '**Resultado esperado:** La condición `evaluate_quality_gate` depende de `validate_orders` y evalúa `quality_status
+    == APPROVED`; los lotes `OBSERVED` quedan en la rama False.'
+  - '**Resultado esperado:** Los notebooks `05_promote_for_dlt` y `06_quarantine_invalid_rows` publican tablas Delta
+    aisladas y eventos `DLT_PROMOTION` o `QUALITY_ALERT`, conectados a True y False respectivamente.'
+  - '**Resultado esperado:** El lote `wf_valid_001` promociona 3 pedidos por True; `wf_invalid_001` pone 2 registros
+    en cuarentena por False; `wf_repair_001` falla deliberadamente antes de promocionar.'
+  - '**Resultado esperado:** `Repair run` ejecuta de nuevo solo `promote_for_dlt` para `wf_repair_001`, publica
+    3 pedidos y conserva el historial de los tres escenarios y sus eventos de auditoría.'
+lab8:
+  results:
+  - '**Resultado esperado:** El CSV `orders_p8_baseline.csv` está en `landing/p8_approved` con 8 filas y 6 IDs únicos;
+    la versión más reciente por pedido suma 220.00.'
+  - '**Resultado esperado:** El pipeline `pipeline_orders_bronze_silver_b2` se configura en modo Triggered con destino
+    `dbricks_de_int.batch1` y SQL en `transformations/bronze_silver_orders.sql`: Bronze streaming y Silver materialized
+    view.'
+  - '**Resultado esperado:** `Dry run` valida las dos definiciones `CREATE OR REFRESH` sin realizar una actualización
+    de datos y el SQL queda preparado para el primer Run.'
+  - '**Resultado esperado:** La primera actualización del pipeline finaliza `Succeeded`; `p8_orders_bronze` contiene
+    8 filas y `p8_orders_silver` 6 pedidos únicos por 220.00, incluidos P8002=40.00 y P8004=60.00.'
+  - '**Resultado esperado:** Silver no tiene IDs nulos ni duplicados; `order_date` es DATE, `quantity` INT y los
+    importes DECIMAL; se conserva el Update ID y el event log del pipeline.'
+lab9:
+  results:
+  - '**Resultado esperado:** El pipeline existente de P8 está `Succeeded`; la línea base Silver tiene 6 pedidos
+    y 220.00, sin IDs `Q9001`–`Q9004` previamente publicados.'
+  - '**Resultado esperado:** La materialized view `p8_orders_silver` conserva su tipo y define `valid_status` (WARN),
+    `valid_amount` (DROP ROW) y `valid_order_id` (FAIL UPDATE); la base sigue con 6 pedidos y 220.00.'
+  - '**Resultado esperado:** El caso WARN conserva `Q9001` con estado `OUT_OF_DOMAIN` e importe 12.00; DROP ROW
+    descarta `Q9002` y `Q9003` de Silver, aunque Bronze preserva ambos.'
+  - '**Resultado esperado:** El CSV `p9_fail.csv` con `order_id` vacío provoca un Update fallido por `valid_order_id`;
+    la publicación previa de Silver conserva `Q9001` y no incorpora los casos DROP.'
+  - '**Resultado esperado:** Tras retirar solo `p9_fail.csv` y ejecutar Full refresh, Bronze conserva 11 filas y
+    Silver 7 pedidos, incluyendo `Q9001`, sin Q9002/Q9003 ni IDs nulos, y ventas de 232.00.'
+lab10:
+  results:
+  - '**Resultado esperado:** Los grupos `data_engineers_b2` y `data_analysts_b2` y dos usuarios reales no administradores
+    se verifican previamente; quedan revisados los GRANT heredados del catálogo.'
+  - '**Resultado esperado:** El esquema aislado `dbricks_de_int.p10_security_lab` contiene `p10_orders_sensitive`
+    con 12 pedidos y 1365.00, auditoría con `EVT-001` y el Volume `p10_files`.'
+  - '**Resultado esperado:** Ingeniería obtiene SELECT/MODIFY de la tabla sensible y acceso a auditoría y Volume;
+    ambos grupos reciben SELECT sobre `p10_vw_orders_analytics`, que enmascara correos para Analítica.'
+  - '**Resultado esperado:** Con identidades separadas, Ingeniería consulta correos completos y Analítica ve `c***@ejemplo.test`
+    en la vista; la lectura directa de la tabla sensible se deniega solo si no hay privilegios heredados.'
+  - '**Resultado esperado:** La cuenta principal confirma 12 pedidos, 1365.00 y `EVT-001`; se documenta una matriz
+    de permisos y permanecen intactos el esquema `batch1` y sus concesiones.'
+lab11:
+  results:
+  - '**Resultado esperado:** El esquema `dbricks_de_int.p11_migration_lab` contiene `p11_sales_source` con 20 transacciones
+    sintéticas, 20 claves únicas e importe total de 2100.00.'
+  - '**Resultado esperado:** `p11_sales_migrated` se crea mediante `DEEP CLONE`; origen y destino usan Delta, poseen
+    ubicaciones distintas y el clon conserva su historial propio.'
+  - '**Resultado esperado:** Origen y clon tienen siete columnas equivalentes, 20 filas, 20 claves e importe 2100.00;
+    las diferencias de conteos e importes son cero y ambos `EXCEPT` no devuelven filas.'
+  - '**Resultado esperado:** La vista `p11_vw_sales_masked` protege `email` y `phone` según `is_account_group_member`;
+    ambos grupos tienen `SELECT` sobre la vista y solo Ingeniería sobre la tabla clonada, salvo permisos heredados.'
+  - '**Resultado esperado:** Ingeniería observa `email` y `phone` completos; Analítica ve `***MASKED_EMAIL***` y
+    `***MASKED_PHONE***` y se documenta la denegación de lectura directa solo si realmente ocurre; clon y vista
+    mantienen 20 filas y 2100.00.'
+lab12:
+  results:
+  - '**Resultado esperado:** El notebook `12_benchmark_layout` reutiliza el clúster y configura AQE y shuffle; el
+    esquema `dbricks_de_int.p12_performance_lab` incluye `benchmark_metrics` y `benchmark_recommendation`.'
+  - '**Resultado esperado:** `events_source`, `events_partitioned_country` y `events_liquid` contienen 200,000 eventos
+    equivalentes; el diseño estático usa `PARTITIONED BY (country)` y Liquid `CLUSTER BY (customer_id,event_date)`,
+    con metadatos Delta consultables.'
+  - '**Resultado esperado:** Las consultas Q1, Q2 y Q3 devuelven resultados equivalentes en ambos diseños; `benchmark_metrics`
+    registra 24 ejecuciones de un mismo experimento: 6 warmups y 18 mediciones con duraciones observadas.'
+  - '**Resultado esperado:** La comparación obtiene seis medianas reales, tres mediciones por combinación consulta-diseño,
+    conteos de archivos y evidencia de Spark UI cuando está disponible, sin inventar tiempos de ejecución.'
+  - '**Resultado esperado:** `benchmark_recommendation` conserva una recomendación condicionada por las tres comparaciones
+    de medianas y un `experiment_id` real; quedan disponibles `events_liquid`, `benchmark_metrics` y la recomendación
+    para la Práctica 13.'
+lab13:
+  results:
+  - '**Resultado esperado:** `13_ajuste_costos` reutiliza `events_liquid` con 200,000 filas y las 24 mediciones
+    de P12; registra configuración inicial y prepara `tuning_metrics`, fingerprint e ID del experimento.'
+  - '**Resultado esperado:** El escenario baseline ejecuta AQE habilitado con 200 particiones shuffle, realiza un
+    warmup separado y obtiene tres duraciones reales de la misma consulta SQL.'
+  - '**Resultado esperado:** El escenario adjusted mantiene AQE habilitado y usa 64 particiones; completa un warmup
+    y otras tres mediciones, con seis registros totales y un único fingerprint de consulta.'
+  - '**Resultado esperado:** `tuning_metrics` contiene seis ejecuciones identificadas por `experiment_id` y UUID;
+    se calculan medianas baseline/adjusted y variación porcentual real sin atribuir diferencias a factores no medidos.'
+  - '**Resultado esperado:** Quedan documentadas las propiedades de cómputo y las horas de consulta, sin confundirlas
+    con DBU o facturación; los costos permanecen pendientes si faltan tarifas y uso facturado, y AQE/shuffle vuelven
+    a sus valores iniciales.'

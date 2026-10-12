@@ -1,0 +1,45 @@
+# Prompts de apoyo para la Práctica 10
+# El slug del laboratorio debe ser: lab10
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 10 de Databricks. Con la cuenta principal
+    revisé en Settings > Identity and access los grupos existentes `data_engineers_b2` y `data_analysts_b2`,
+    sus usuarios de prueba, roles y membresía cruzada; en SQL inspeccioné `current_user`, `SHOW GRANTS ON CATALOG`
+    y el esquema de práctica. Explica el riesgo de privilegios heredados y por qué no se crean cuentas ni se
+    revocan privilegios compartidos. Explica el propósito de cada comando, configuración o procedimiento, cómo
+    interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes
+    podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 10 de Databricks. Creé el esquema aislado
+    `dbricks_de_int.p10_security_lab`, la tabla `p10_orders_sensitive` con 12 pedidos sintéticos y ventas de
+    1365.00, la tabla `p10_access_audit` con `EVT-001` y el Managed Volume `p10_files`. Explica los privilegios
+    de creación, INSERT OVERWRITE, aislamiento del esquema y comprobaciones de datos. Explica el propósito
+    de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que
+    la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 3 de la Práctica 10 de Databricks. Concedí USE CATALOG
+    y USE SCHEMA a ambos grupos, SELECT/MODIFY de pedidos, SELECT de auditoría y READ/WRITE VOLUME solo a Ingeniería.
+    Creé la vista dinámica `p10_vw_orders_analytics` con `is_account_group_member` y una máscara `regexp_replace`
+    para Analítica; concedí SELECT sobre la vista a ambos grupos. Revisé SHOW GRANTS de cada objeto en celdas
+    separadas. Explica privilegio mínimo y herencia. Explica el propósito de cada comando, configuración o
+    procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente
+    y qué errores comunes podrían presentarse.
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 10 de Databricks. Probé con dos usuarios
+    reales y sesiones separadas. Ingeniería verifica `is_account_group_member`, consulta tabla y vista con
+    correos completos; Analítica ve `c***@ejemplo.test` en la vista y una lectura directa de la tabla sensible
+    debe ser denegada si no existe acceso heredado. Explica por qué no se debe afirmar que hubo denegación
+    si el usuario pudo leer y cómo detectar errores de membresía o permisos. Explica el propósito de cada comando,
+    configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se completó
+    correctamente y qué errores comunes podrían presentarse.
+tarea5:
+  title: Explicar la Tarea 5 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 5 de la Práctica 10 de Databricks. Volví a la cuenta
+    principal y verifiqué 12 pedidos, ventas por 1365.00 y el evento de auditoría `EVT-001`. Documenté una
+    matriz de acceso para tabla sensible, vista dinámica, auditoría y Volume, conservando los objetos de `p10_security_lab`
+    y sin modificar `batch1`. Explica criterios de evidencia para accesos permitidos, enmascarados y denegados.
+    Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.

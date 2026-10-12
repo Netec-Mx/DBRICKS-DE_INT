@@ -1,0 +1,46 @@
+# Prompts de apoyo para la Práctica 4
+# El slug del laboratorio debe ser: lab4
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 4 de Databricks. Creé el notebook 04_merge_incremental_optimizado,
+    reutilicé el cómputo y las cinco tablas p3_ de la Práctica 3, comprobé el Volume landing y los registros semilla
+    O1001=100.00 y O1002=70.00 en Silver. Verifiqué el contrato de columnas, 4 pedidos iniciales, 10 filas del lote
+    batch_002 en Bronze y que batch_003 no estuviera procesado. Explica por qué estas precondiciones protegen el
+    MERGE y qué hacer si una falla. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar
+    las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 4 de Databricks. Generé orders_batch_003_p4.csv
+    con 6 filas, versiones repetidas de O1001 y O1004, canales web, mobile, store y partner y marcas source_updated_at
+    y update_sequence. Leí el CSV sin inferir tipos, incorporé batch_id, deshabilité autoMerge global y anexé el
+    lote a Bronze con mergeSchema=true solo para esa escritura. Verifiqué 16 filas Bronze totales, 6 del lote nuevo
+    y 4 claves únicas. Explica la evolución controlada del esquema, sus límites y el historial Delta. Explica el
+    propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar
+    que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: 'Explícame expertamente qué hice en la Tarea 3 de la Práctica 4 de Databricks. Construí p4_incremental_staging
+    con try_cast de tipos y Window.partitionBy(order_id) ordenada por source_updated_at y secuencia descendente,
+    conservando 4 claves. Ejecuté MERGE INTO Silver usando la marca de actualización: actualicé O1001 a 125.50/DELIVERED
+    y O1002 a 80.00/CANCELLED; inserté O1004=215.00 y O1005=45.25. Comprobé 6 pedidos únicos, 4 asociados a batch_003,
+    auditoría temporal y operación MERGE en el historial. Explica matched, not matched, deduplicación e idempotencia.
+    Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.'
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 4 de Databricks. Reconstruí p3_gold_daily_sales
+    agrupando Silver por fecha y canal, excluyendo CANCELLED y conciliando 460.75 de ventas elegibles con Silver.
+    Comprobé los canales y ventas del 10 de febrero, medí numFiles antes y después de OPTIMIZE ZORDER BY(order_id,
+    customer_id) y revisé operationMetrics en DESCRIBE HISTORY. Explica por qué OPTIMIZE modifica archivos físicos
+    sin cambiar registros y por qué un dataset pequeño no permite concluir mejoras de rendimiento. Explica el propósito
+    de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la
+    tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea5:
+  title: Explicar la Tarea 5 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 5 de la Práctica 4 de Databricks. Validé batch_003 con 6 filas
+    Bronze, 4 registros afectados en Silver, canales finales de O1001/O1002/O1004/O1005, ausencia de duplicados
+    y formato Delta de Gold. Añadí un único evento al registro p3_batch_ingestion_audit con conteos y detalle de
+    MERGE/OPTIMIZE, consulté DESCRIBE HISTORY y conservé objetos sin DROP ni VACUUM para la Práctica 5. Explica
+    cómo auditar los resultados y por qué no debo reejecutar la Práctica 3 después del MERGE. Explica el propósito
+    de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la
+    tarea se completó correctamente y qué errores comunes podrían presentarse.

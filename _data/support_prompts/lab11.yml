@@ -1,0 +1,39 @@
+# Prompts de apoyo para la Práctica 11
+# El slug del laboratorio debe ser: lab11
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 11 de Databricks. Con la cuenta principal
+    preparé el notebook SQL `11_migracion_accesos`, revisé `SHOW SCHEMAS`, `SHOW GRANTS ON CATALOG` y creé `dbricks_de_int.p11_migration_lab.p11_sales_source`
+    con 20 transacciones Delta, 20 claves únicas y 2100.00. Explica privilegios y riesgos de herencia. Explica el
+    propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar
+    que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 11 de Databricks. Creé `p11_sales_migrated`
+    con `CREATE TABLE ... DEEP CLONE`, revisé `SHOW TABLES`, `DESCRIBE DETAIL` y `DESCRIBE HISTORY`, y comprobé
+    que el origen y el destino tienen ubicaciones de almacenamiento independientes. Diferencia DEEP CLONE de SYNC
+    TABLE. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 3 de la Práctica 11 de Databricks. Validé que fuente y clon
+    tienen siete columnas iguales, 20 transacciones, 20 claves y 2100.00; utilicé agregados comparativos y `EXCEPT`
+    en ambos sentidos para obtener cero diferencias. También comprobé 20 correos y teléfonos sintéticos. Explica
+    el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar
+    que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 11 de Databricks. Configuré `USE SCHEMA`,
+    `GRANT SELECT` y la vista dinámica `p11_vw_sales_masked` con `is_account_group_member` para mostrar PII sin
+    máscara a Ingeniería y `***MASKED_EMAIL***`/`***MASKED_PHONE***` a Analítica. Revisé GRANT de tabla, vista y
+    esquema por separado y la posible herencia. Explica el propósito de cada comando, configuración o procedimiento,
+    cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes
+    podrían presentarse.
+tarea5:
+  title: Explicar la Tarea 5 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 5 de la Práctica 11 de Databricks. Probé con sesiones independientes
+    las membresías de `data_engineers_b2` y `data_analysts_b2`, consultas a la vista y denegación de lectura directa
+    del clon para Analítica cuando los privilegios efectivos lo permiten. Regresé a la cuenta principal y verifiqué
+    20 filas y 2100.00 en clon y vista. Explica el propósito de cada comando, configuración o procedimiento, cómo
+    interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes
+    podrían presentarse.

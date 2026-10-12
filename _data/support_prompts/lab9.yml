@@ -1,0 +1,43 @@
+# Prompts de apoyo para la Práctica 9
+# El slug del laboratorio debe ser: lab9
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 9 de Databricks. Continué el pipeline
+    Lakeflow de la Práctica 8, abrí `transformations/bronze_silver_orders.sql` y confirmé la dependencia Bronze
+    → Silver y la ruta `p8_approved`. Creé `09_control_expectations`; Silver inicia con 6 pedidos y ventas
+    de 220.00, sin los IDs Q9001–Q9004. Explica por qué es importante fijar una línea base antes de añadir
+    expectations. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las
+    salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 9 de Databricks. Modifiqué solo `CREATE
+    OR REFRESH MATERIALIZED VIEW p8_orders_silver`, conservando Bronze, y declaré `valid_status` con WARN implícito,
+    `valid_amount` con `ON VIOLATION DROP ROW` y `valid_order_id` con `ON VIOLATION FAIL UPDATE`. Guardé el
+    SQL y ejecuté una actualización inicial Succeeded que conservó 6 pedidos y 220.00. Explica cada semántica
+    y la compatibilidad de expectativas con materialized views según el laboratorio. Explica el propósito de
+    cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la
+    tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 3 de la Práctica 9 de Databricks. Generé `p9_warn.csv`
+    con Q9001/OUT_OF_DOMAIN/12.00 y confirmé que WARN lo conserva en Silver. Después escribí `p9_drop.csv`
+    con Q9002 de importe 0.00 y Q9003 de precio vacío, y verifiqué que DROP ROW mantiene esos registros en
+    Bronze pero no en Silver. Explícame cómo consultar métricas de expectativas y diferencias entre advertir
+    y descartar. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las
+    salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 9 de Databricks. Generé `p9_fail.csv`
+    con un order_id vacío, disparé `Run pipeline` y observé un fallo de la expectativa `valid_order_id` en
+    Silver. Revisé Errors/Event log, anoté el Update ID y confirmé que Silver mantiene Q9001=12.00 y continúa
+    sin Q9002/Q9003. Explica la consistencia de la materialized view tras un Update fallido y que otros flujos
+    pueden avanzar. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las
+    salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea5:
+  title: Explicar la Tarea 5 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 5 de la Práctica 9 de Databricks. Eliminé únicamente
+    `p9_fail.csv`, confirmé los tres CSV restantes y ejecuté `Full refresh` del mismo pipeline. Validé Bronze=11
+    filas y Silver=7 pedidos, WARN=1, DROP=0, IDs nulos=0 y ventas=232.00; conservé evidencia del Update fallido
+    y del Succeeded. Explica riesgos de Full refresh, checkpoints y recuperación en un entorno de entrenamiento.
+    Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.

@@ -1,0 +1,43 @@
+# Prompts de apoyo para la Práctica 3
+# El slug del laboratorio debe ser: lab3
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 3 de Databricks. Creé el notebook 03_ingesta_batch_validaciones
+    sobre el cluster existente, definí cinco tablas aisladas con prefijo dbricks_de_int.batch1.p3_ y verifiqué el volumen landing. Creé
+    tablas Delta p3_quarantine_orders y p3_batch_ingestion_audit con esquemas explícitos, confirmé sus formatos y registré la hora de
+    inicio. Explica aislamiento de recursos, roles de cuarentena y auditoría, permisos y el efecto de reejecutar escrituras controladas.
+    Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la
+    tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 3 de Databricks. Generé orders_batch_002_p3.csv con 10 filas
+    y 6 columnas, incluyendo duplicados, valores nulos, cantidades/precios inválidos y fecha no convertible. Validé el archivo en Volume,
+    lo leí sin inferSchema y persistí las 10 filas en p3_bronze_orders con batch_id, source_file e ingested_at. Explica por qué Bronze
+    no filtra datos, qué validaciones son de estructura y cómo comprobar la trazabilidad. Explica el propósito de cada comando, configuración
+    o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes
+    podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 3 de la Práctica 3 de Databricks. Leí Bronze y convertí de forma tolerante order_date,
+    quantity y unit_price con try_cast. Apliqué 8 reglas de calidad para identificador, cliente, fecha, cantidad, precio y duplicados;
+    separé 2 pedidos válidos (1002 y 1009) y 8 rechazados con rejection_reason en cuarentena. Persistí Silver y añadí dos semillas O1001=100.00
+    y O1002=70.00, con source_updated_at, created_at y updated_at, para un MERGE posterior. Explica el conteo de validación, por qué
+    se rechazan ambas filas duplicadas y cómo se preserva el contrato de esquema. Explica el propósito de cada comando, configuración
+    o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes
+    podrían presentarse.
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 3 de Databricks. Reconstruí p3_gold_daily_sales desde Silver
+    por fecha y canal, con 4 fechas y 245.00 totales conciliados. Probé schema enforcement intentando escribir una columna unexpected_column
+    en Silver con mergeSchema=false; el error esperado no insertó el registro fake. Registré en p3_batch_ingestion_audit los tiempos
+    y conteos Bronze=10, válidos=2, rechazados=8 y estado EXPECTED_ERROR. Explica protección de esquema, diferencia entre rechazo controlado
+    y fallo real y cómo interpretar auditoría. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar
+    las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea5:
+  title: Explicar la Tarea 5 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 5 de la Práctica 3 de Databricks. Validé Bronze=10, cuarentena=8, 2 pedidos batch_002
+    y 2 semillas en Silver; revisé importes 30.00 y 45.00, un evento de auditoría, permanencia del CSV en Volume y DESCRIBE HISTORY
+    en Bronze/Silver/cuarentena. Confirmé que las cinco tablas p3_ permanecen disponibles para la Práctica 4 sin ejecutar DROP ni VACUUM.
+    Explica cómo interpretar historial y evidencias, la importancia de conservar semillas y los riesgos de limpiar recursos antes de
+    MERGE. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar
+    que la tarea se completó correctamente y qué errores comunes podrían presentarse.

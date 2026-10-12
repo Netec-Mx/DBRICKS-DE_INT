@@ -1,0 +1,48 @@
+# Prompts de apoyo para la Práctica 6
+# El slug del laboratorio debe ser: lab6
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: 'Explícame expertamente qué hice en la Tarea 1 de la Práctica 6 de Databricks. Verifiqué el acceso a Unity
+    Catalog dbricks_de_int.batch1, al Volume landing y al Job Compute autorizado con Runtime 15.4 LTS y Standard.
+    Creé la carpeta workflow_6 y cuatro notebooks Python: 01_ingest_landing, 02_transform_orders, 03_validate_orders
+    y 04_publish_run_metrics. Identifiqué los parámetros batch_id, run_date, source_file, quality_scenario y simulate_publish_failure
+    para el workflow. Explica los privilegios y las responsabilidades de cada notebook. Explica el propósito de
+    cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea
+    se completó correctamente y qué errores comunes podrían presentarse.'
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 6 de Databricks. En 01_ingest_landing parametrizé
+    tres escenarios (baseline, valid, invalid) y generé wf_baseline_001.csv de 8 filas con duplicado, importe negativo,
+    importe vacío e ID vacío en /Volumes/dbricks_de_int/batch1/landing/. En 02_transform_orders leí el CSV como
+    texto, agregué batch_id, run_date, source_file e ingested_at, y guardé la tabla Delta p6_workflow_orders usando
+    mode(overwrite) y replaceWhere por lote. Explica el contrato de 7 columnas, el aislamiento y cómo comprobar
+    reejecución sin duplicación. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar
+    las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 3 de la Práctica 6 de Databricks. En 03_validate_orders apliqué
+    try_cast a amount_raw, detecté IDs no válidos, clientes vacíos, importes incorrectos y order_id duplicados mediante
+    Window. El escenario baseline produjo total_rows=8, valid_rows=3, invalid_rows=5, duplicate_excess=1 y quality_status=OBSERVED.
+    Guardé p6_workflow_validated y publiqué cinco dbutils.jobs.taskValues.set. En 04_publish_run_metrics recuperé
+    los task values de validate_orders y escribí un único QUALITY_CHECK en p6_workflow_audit. Explica la diferencia
+    entre filas rechazadas y duplicados excedentes, los task values y la auditoría. Explica el propósito de cada
+    comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se
+    completó correctamente y qué errores comunes podrían presentarse.
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 6 de Databricks. Creé el Job job_orders_orchestration_b2
+    usando cuatro Notebook tasks y el DAG ingest_landing → transform_orders → validate_orders → publish_run_metrics.
+    Configuré un Job Compute compartido con Runtime 15.4 LTS y Standard, cinco Job parameters baseline, timeout
+    de 20 minutos por tarea, Max concurrent runs=1, un retry en transform_orders, cero en las demás y notificación
+    On failure. Explica cómo estas opciones afectan la dependencia, los fallos, los costos y el aislamiento del
+    Job. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea5:
+  title: Explicar la Tarea 5 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 5 de la Práctica 6 de Databricks. Ejecuté Run now con batch_id=wf_baseline_001
+    y quality_scenario=baseline, comprobé que las cuatro tareas del Job finalizaron Succeeded y revisé los logs.
+    Consulté dbricks_de_int.batch1.p6_workflow_audit para validar el evento QUALITY_CHECK con métricas 8/3/5/1 y
+    estado OBSERVED, y preservé los cuatro notebooks, el Job y las tablas p6_ para la Práctica 7. Explica la diferencia
+    entre un Run exitoso y un estado de calidad OBSERVED y cómo diagnosticar un fallo de task values. Explica el
+    propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar
+    que la tarea se completó correctamente y qué errores comunes podrían presentarse.

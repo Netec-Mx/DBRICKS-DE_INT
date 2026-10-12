@@ -1,0 +1,38 @@
+# Prompts de apoyo para la Práctica 12
+# El slug del laboratorio debe ser: lab12
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 12 de Databricks. Preparé `12_benchmark_layout`
+    sobre el clúster existente, inspeccioné `spark.version`, habilité AQE y fijé `spark.sql.shuffle.partitions=200`,
+    creé `dbricks_de_int.p12_performance_lab` y las tablas Delta `benchmark_metrics` y `benchmark_recommendation`.
+    Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 12 de Databricks. Generé 200,000 eventos
+    reproducibles con `range(200000)`; construí `events_partitioned_country` con `PARTITIONED BY (country)` y `events_liquid`
+    con `CLUSTER BY (customer_id,event_date)`, ejecuté `OPTIMIZE` en Liquid y contrasté conteos, importes y `DESCRIBE
+    DETAIL`. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: 'Explícame expertamente qué hice en la Tarea 3 de la Práctica 12 de Databricks. Definí tres consultas
+    Q1_customer_date, Q2_country_day y Q3_summary, comprobé resultados idénticos entre diseños y medí cuatro ejecuciones
+    por combinación (primera warmup): 24 registros totales, 6 calentamientos, 18 duraciones reales, guardadas con
+    `experiment_id` en `benchmark_metrics`. Explica el propósito de cada comando, configuración o procedimiento,
+    cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes
+    podrían presentarse.'
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 12 de Databricks. Revisé Spark UI donde estuvo
+    disponible para stages, shuffle y spill y calculé medianas reales filtrando por `experiment_id` y `is_warmup=false`,
+    con tres mediciones por cada una de las seis combinaciones. Diferencia tiempo medido en Python de métricas nativas
+    de Spark. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas
+    esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea5:
+  title: Explicar la Tarea 5 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 5 de la Práctica 12 de Databricks. Comparé medianas de static
+    y liquid para tres consultas, calculé `liquid_mejora_pct` y guardé una recomendación condicionada en `benchmark_recommendation`,
+    con limitaciones de tamaño, cómputo compartido y costo no verificado. Conservé recursos para la Práctica 13.
+    Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.

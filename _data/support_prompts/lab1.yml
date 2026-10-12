@@ -1,0 +1,32 @@
+# Prompts de apoyo para la Práctica 1
+# El slug del laboratorio debe ser: lab1
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 1 de Databricks. Configuré o validé un cluster All-Purpose Single
+    node en Azure Databricks con Runtime 15.4 LTS, modo Standard, el nodo más pequeño autorizado, política disponible y terminación
+    automática tras 20 minutos. Revisé la cuota de CPU y confirmé el estado Running. Explica por qué se eligen estas propiedades, qué
+    implican las cuotas y políticas, cómo comprobar compatibilidad y qué hacer si el aprovisionamiento falla. Explica el propósito de
+    cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente
+    y qué errores comunes podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 1 de Databricks. Creé la carpeta personal batch_1 y el notebook
+    Python 01_etl_basico, lo conecté al mismo cluster, imprimí las versiones de Python y Spark, agregué una celda Markdown con el flujo
+    Extract → Transform → Load e importé pyspark.sql.functions y DecimalType. Explica la organización del notebook, el alcance de SparkSession
+    y la conexión al cómputo. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 3 de la Práctica 1 de Databricks. Construí raw_df a partir de cinco pedidos en
+    memoria; convertí order_date a date e importe a decimal(12,2), filtré filas inválidas, agregué pedidos e importe por fecha y publiqué
+    la vista temporal etl_ventas_diarias con createOrReplaceTempView. La consulta SQL mostró 2 fechas, 5 pedidos y 470.50 de ventas
+    (200.50 y 270.00). Explica las transformaciones, la agregación, la diferencia entre vista temporal y tabla Delta y cómo comprobar
+    los importes. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo
+    validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 1 de Databricks. Ejecuté aserciones Python/Spark que validaron
+    2 días, 5 pedidos y 470.50 con Decimal; reejecuté el agregado y la creación de la vista, comprobé que los totales permanecen iguales
+    y verifiqué el notebook guardado en Workspace. Explica reproducibilidad dentro de una sesión, errores AssertionError, persistencia
+    del notebook y precauciones al detener un cluster compartido. Explica el propósito de cada comando, configuración o procedimiento,
+    cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.

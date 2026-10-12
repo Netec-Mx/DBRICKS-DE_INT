@@ -1,0 +1,45 @@
+# Prompts de apoyo para la Práctica 7
+# El slug del laboratorio debe ser: lab7
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 7 de Databricks. Inspeccioné el Job
+    existente `job_orders_orchestration_b2`, sus tareas y dependencias; creé `07_control_workflow` y validé
+    tablas `p6_workflow_orders`, `p6_workflow_validated`, `p6_workflow_audit` y el Volume `dbricks_de_int.batch1.landing`.
+    Revisé cinco Job parameters y los escenarios baseline, valid e invalid sin crear otro Job ni cluster. Explica
+    dependencias de la Práctica 6 y qué comprobar si falta un objeto. Explica el propósito de cada comando,
+    configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se completó
+    correctamente y qué errores comunes podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 7 de Databricks. Verifiqué que `validate_orders`
+    publica los task values `total_rows`, `valid_rows`, `invalid_rows`, `duplicate_excess` y `quality_status`.
+    Configuré `evaluate_quality_gate` como If/else con `Depends on=validate_orders` y condición dinámica `{{tasks.validate_orders.values.quality_status}}
+    == APPROVED`; True promueve y False envía a cuarentena. Explica la expresión, el operador y el riesgo de
+    confundir texto literal con task value. Explica el propósito de cada comando, configuración o procedimiento,
+    cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores
+    comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 3 de la Práctica 7 de Databricks. Creé `05_promote_for_dlt`
+    para escribir pedidos aprobados en `p6_workflow_promoted` y auditar `DLT_PROMOTION`, y `06_quarantine_invalid_rows`
+    para escribir registros rechazados en `p6_workflow_quarantine` y auditar `QUALITY_ALERT`. Usé `replaceWhere`
+    por `batch_id`, enlacé las tareas a las ramas True/False y preparé la marca `.failed_once` para fallo único.
+    Explica que aquí no se ejecuta un pipeline DLT real. Explica el propósito de cada comando, configuración
+    o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente
+    y qué errores comunes podrían presentarse.
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 7 de Databricks. Ejecuté `wf_valid_001`
+    (3 pedidos promocionados y rama True), `wf_invalid_001` (2 rechazos, QUALITY_ALERT y rama False) y `wf_repair_001`
+    con `simulate_publish_failure=true`. El tercer Run falló en `promote_for_dlt` con `FALLA_CONTROLADA_PROMOCION`
+    y dejó 0 filas promocionadas antes de reparar. Explica cómo identificar Succeeded, Excluded y Failed en
+    el DAG. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas
+    esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea5:
+  title: Explicar la Tarea 5 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 5 de la Práctica 7 de Databricks. Usé `Repair run` sobre
+    el Run fallido de `wf_repair_001` sin cambiar sus parámetros ni repetir ingesta o validación. La marca
+    persistente permitió completar `promote_for_dlt` y verificar 3 filas nuevas; la auditoría conserva QUALITY_CHECK,
+    DLT_PROMOTION y QUALITY_ALERT según escenario. Explica los límites de Repair run y la evidencia necesaria.
+    Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.

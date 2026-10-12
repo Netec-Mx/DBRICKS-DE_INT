@@ -1,0 +1,31 @@
+# Prompts de apoyo para la Práctica 2
+# El slug del laboratorio debe ser: lab2
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 2 de Databricks. Reutilicé el cluster Single node de la Práctica
+    1 y creé el notebook 02_bronze_silver_orders. Configuré dbricks_de_int.batch1, creé o validé el volumen landing y preparé orders_batch_001.csv
+    con 7 filas en /Volumes/.../landing/lab2_bronze_silver. Leí el archivo como texto y comprobé sus cuatro columnas y 7 registros.
+    Explica permisos de Unity Catalog, rutas de Volumes, validación de entradas y prevención de sobrescrituras en esquemas compartidos.
+    Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la
+    tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 2 de Databricks. Leí el CSV sin inferencia de esquema para conservar
+    las columnas de negocio como string, agregué source_file, ingest_ts y batch_id=batch_001 y guardé una tabla Delta administrada dbricks_de_int.batch1.bronze_orders.
+    Verifiqué 7 filas, un archivo y un lote. Explica fidelidad de datos Bronze, trazabilidad, write.format("delta"), overwrite y consultas
+    SQL de validación. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 3 de la Práctica 2 de Databricks. Leí Bronze, apliqué trim a order_id, convertí
+    fechas y números, descarté ID vacío y dedupliqué por order_id usando Window, fecha más reciente y hash de desempate. Calculé total_amount=quantity*unit_price
+    y persistí silver_orders con 5 pedidos únicos e importes 120, 80, 45, 60 y 25. Explica reglas, límites de deduplicación, tipos decimal,
+    controles de nulos y verificación de claves únicas. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar
+    las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 2 de Databricks. Agrupé Silver por order_date para calcular total_orders,
+    total_units y daily_sales_amount; guardé gold_daily_sales en Delta. Validé Bronze=7, Silver=5, Gold=2; ventas Silver=Gold=330.00;
+    revisé batch_001 y ejecuté DESCRIBE DETAIL y DESCRIBE HISTORY. Explica granularidad Gold, reconciliación, metadatos Delta, historial
+    y preservación de tablas para prácticas posteriores. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar
+    las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.

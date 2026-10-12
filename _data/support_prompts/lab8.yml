@@ -1,0 +1,43 @@
+# Prompts de apoyo para la Práctica 8
+# El slug del laboratorio debe ser: lab8
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 8 de Databricks. Preparé el notebook
+    `08_preparar_origen`, verifiqué `dbricks_de_int.batch1.landing` y creé un CSV exclusivo con 8 registros
+    y 6 claves únicas; P8002 y P8004 tienen dos versiones. Validé las 8 columnas, las secuencias y el resultado
+    esperado Silver de 220.00. Explica por qué separar la preparación con All-Purpose Compute del cómputo Lakeflow.
+    Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 8 de Databricks. Creé desde Jobs & Pipelines
+    un ETL pipeline `pipeline_orders_bronze_silver_b2` en modo Triggered, con catálogo `dbricks_de_int` y esquema
+    `batch1`. En `transformations/bronze_silver_orders.sql` definí `p8_orders_bronze` como STREAMING TABLE
+    alimentada con `STREAM read_files` y `p8_orders_silver` como MATERIALIZED VIEW con `try_cast`, `ROW_NUMBER`
+    y cálculo `order_amount`. Explica las dependencias declarativas y por qué el SQL no se ejecuta en SQL Warehouse.
+    Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 3 de la Práctica 8 de Databricks. Ejecuté `Dry run` sobre
+    las definiciones de Bronze y Silver antes del primer `Run pipeline`, revisé errores de análisis por archivo/línea
+    y corregí solo si fue necesario. Explica qué valida Dry run, qué no demuestra sobre los datos y cómo mantener
+    una única definición fuente. Explica el propósito de cada comando, configuración o procedimiento, cómo
+    interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes
+    podrían presentarse.
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 8 de Databricks. Ejecuté `Run pipeline`
+    en modo Triggered, confirmé el DAG Bronze → Silver y registré el Update ID. Consulté Bronze=8 filas y Silver=6
+    pedidos únicos, ventas=220.00; verifiqué las versiones finales de P8002 y P8004 con `update_sequence=2`
+    e importes 40.00 y 60.00. Explica el procesamiento y la interpretación de los conteos. Explica el propósito
+    de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que
+    la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea5:
+  title: Explicar la Tarea 5 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 5 de la Práctica 8 de Databricks. Validé que `p8_orders_silver`
+    tiene 0 grupos duplicados y 0 IDs nulos, tipos DATE, INT y DECIMAL, y consulté el estado Succeeded y los
+    eventos por Update ID en el pipeline event log. Explica la diferencia entre event log de Lakeflow y Delta
+    table history, y por qué conservar el pipeline para la Práctica 9. Explica el propósito de cada comando,
+    configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar que la tarea se completó
+    correctamente y qué errores comunes podrían presentarse.

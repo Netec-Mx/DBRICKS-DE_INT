@@ -1,0 +1,38 @@
+# Prompts de apoyo para la Práctica 13
+# El slug del laboratorio debe ser: lab13
+tarea1:
+  title: Explicar la Tarea 1 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 1 de la Práctica 13 de Databricks. Abrí el notebook `13_ajuste_costos`
+    reutilizando el clúster y la tabla `dbricks_de_int.p12_performance_lab.events_liquid` (200,000 filas), verifiqué
+    al menos 24 métricas de P12, guardé los valores originales de AQE y shuffle, creé `tuning_metrics` y definí
+    una consulta SQL fija con fingerprint SHA-256. Explica el propósito de cada comando, configuración o procedimiento,
+    cómo interpretar las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes
+    podrían presentarse.
+tarea2:
+  title: Explicar la Tarea 2 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 2 de la Práctica 13 de Databricks. Configuré `spark.sql.adaptive.enabled=true`
+    y `spark.sql.shuffle.partitions=200`, definí un medidor con `time.perf_counter()` y UUID, ejecuté un warmup
+    no contabilizado y tres mediciones baseline de la consulta idéntica sin usar `spark.sparkContext`. Explica el
+    propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas, cómo validar
+    que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea3:
+  title: Explicar la Tarea 3 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 3 de la Práctica 13 de Databricks. Inspeccioné Spark UI si
+    estaba accesible, elegí 64 particiones como segundo escenario didáctico y no como óptimo garantizado, mantuve
+    AQE activo, realicé un warmup y tres mediciones adjusted. Comprobé seis registros y el mismo fingerprint para
+    ambos escenarios. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las
+    salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea4:
+  title: Explicar la Tarea 4 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 4 de la Práctica 13 de Databricks. Guardé las seis ejecuciones
+    con UUID y `experiment_id` en `tuning_metrics`; calculé medianas usando `statistics.median` y la variación porcentual
+    entre 200 y 64 particiones, registrando observaciones de shuffle, spill y stages solo si Spark UI las mostraba.
+    Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar las salidas esperadas,
+    cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
+tarea5:
+  title: Explicar la Tarea 5 con IA
+  prompt: Explícame expertamente qué hice en la Tarea 5 de la Práctica 13 de Databricks. Inspeccioné configuración
+    y políticas disponibles del clúster, calculé segundos y horas de consulta sin equipararlos a horas facturadas,
+    dejé tarifas DBU/VM y consumo facturado como pendientes cuando faltaban fuentes verificadas, y restauré `ORIGINAL_AQE`
+    y `ORIGINAL_SHUFFLE`. Explica el propósito de cada comando, configuración o procedimiento, cómo interpretar
+    las salidas esperadas, cómo validar que la tarea se completó correctamente y qué errores comunes podrían presentarse.
