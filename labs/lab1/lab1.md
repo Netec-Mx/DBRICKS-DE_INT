@@ -76,9 +76,9 @@ Configura las propiedades **en este orden**, igual que aparecen en tu interfaz.
 | 3 | **Machine learning** | Sin seleccionar |
 | 4 | **Databricks runtime** | `15.4 LTS` (sin ML) |
 | 5 | **Photon acceleration** | Sin seleccionar |
-| 6 | **Preferred node type** | El nodo más pequeño autorizado **con cuota disponible** |
+| 6 | **Preferred node type** | Standard_D8s_v5 (8 vCPU) o Standard_D4s_v5 (4 vCPU) o Standard_D4ds_v4 **con cuota disponible** |
 | 7 | **Single node** | Activado |
-| 8 | **Terminate after** | Activar y escribir `20` minutos |
+| 8 | **Terminate after** | Activar y escribir `120` minutos |
 | 9 | **Tags** | Dejar vacíos salvo que la institución los exija |
 | 10 | **Advanced > Access mode** | `Manual` → `Standard (formerly: Shared)` |
 
@@ -99,10 +99,7 @@ Configura las propiedades **en este orden**, igual que aparecen en tu interfaz.
 
 - {% include step_label.html %} Deja desmarcada la casilla **Photon acceleration**; no es necesaria para este ejemplo pequeño.
 
-- {% include step_label.html %} En **Preferred node type**, selecciona el nodo autorizado más pequeño con cuota suficiente.
-
-  > **Advertencia:** La captura muestra `Standard_D4a_v4` (4 cores) con **Estimated available: 0, requested: 4**. Ese nodo no tiene cuota suficiente en la imagen. No presiones Create esperando que se solucione: busca un tamaño disponible o solicita al instructor/administrador liberar o aumentar la cuota regional correspondiente.
-  {: .lab-note .warning .compact}
+- {% include step_label.html %} En **Preferred node type**, selecciona el nodo autorizado más pequeño con cuota suficiente **Standard_D8s_v5 (8 vCPU) o Standard_D4s_v5 (4 vCPU) o Standard_D4ds_v4**.
 
 - {% include step_label.html %} Mantén marcada la casilla **Single node** para ejecutar driver y procesamiento en un solo nodo.
 
@@ -120,9 +117,9 @@ Configura las propiedades **en este orden**, igual que aparecen en tu interfaz.
 
 - {% include step_label.html %} Despliega **Advanced** y entra en **Access mode**, como se muestra al final del formulario.
 
-- {% include step_label.html %} Selecciona **Manual** y, en el desplegable contiguo, **Standard (formerly: Shared)**.
+- {% include step_label.html %} Selecciona **Auto** y, en el desplegable contiguo, **Standard (formerly: Shared)**.
 
-  > **Salida esperada:** El formulario muestra `Manual` y `Standard (formerly: Shared)`.
+  > **Salida esperada:** El formulario muestra `Auto` y `Standard (formerly: Shared)`.
   {: .lab-note .output .compact}
 
 - {% include step_label.html %} Comprueba nombre, Runtime 15.4 LTS, Single node, terminación 20 minutos y Access mode Standard.
