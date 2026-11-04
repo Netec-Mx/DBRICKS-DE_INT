@@ -1,4 +1,8 @@
 ---
+course_id: dbricksint
+lab_id: l002
+tracking: true
+position: 2
 layout: lab
 title: "Práctica 2: Implementación inicial de arquitectura Bronze/Silver"
 permalink: /lab2/lab2/
@@ -57,7 +61,10 @@ Reutilizar el cluster de la Práctica 1, crear un notebook y comprobar el catál
 Abre tu carpeta existente batch_1, crea el notebook 02 y conecta el mismo cluster usado en lab1. Después, establece una sola vez las rutas y nombres de las tablas.
 
 
-- {% include step_label.html %} En la barra lateral izquierda, entra a **Workspace > Home** o **Workspace > Users > tu usuario** y abre **batch_1** (creada en la Práctica 1).
+
+{% assign tracking_task_id = "t001" %}
+
+- {% include step_label.html id="s001" %} En la barra lateral izquierda, entra a **Workspace > Home** o **Workspace > Users > tu usuario** y abre **batch_1** (creada en la Práctica 1).
 
   > **Nota:** Si **batch_1** no existe, en tu carpeta personal selecciona **Create > Folder**, escribe `batch_1` y confirma **Create**. No crees otra carpeta si ya existe.
   {: .lab-note .info .compact}
@@ -66,13 +73,13 @@ Abre tu carpeta existente batch_1, crea el notebook 02 y conecta el mismo cluste
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Dentro de **batch_1**, haz clic en **Create > Notebook**; escribe `02_bronze_silver_orders`, selecciona **Python** y confirma **Create**.
+- {% include step_label.html id="s002" %} Dentro de **batch_1**, haz clic en **Create > Notebook**; escribe `02_bronze_silver_orders`, selecciona **Python** y confirma **Create**.
 
   > **Salida esperada:** El notebook se muestra en la carpeta y su lenguaje predeterminado es Python.
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En la parte superior del notebook, abre el selector **Connect** o **Compute** y selecciona `lab1-etl-<usuario>` (el mismo de lab1).
+- {% include step_label.html id="s003" %} En la parte superior del notebook, abre el selector **Connect** o **Compute** y selecciona `lab1-etl-<usuario>` (el mismo de lab1).
 
   > **Nota:** No selecciones **Create compute**. Si el cluster está **Terminated**, ábrelo desde **Compute > All-purpose compute**, pulsa **Start**, espera **Running** y vuelve a conectarlo. Si aparece el aviso de cuota CPU, usa el cluster autorizado del instructor.
   {: .lab-note .info .compact}
@@ -81,7 +88,7 @@ Abre tu carpeta existente batch_1, crea el notebook 02 y conecta el mismo cluste
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En la primera celda **Python**, pega y ejecuta el bloque completo. Verifica catálogo, crea esquema y volumen antes de acceder a la ruta.
+- {% include step_label.html id="s004" %} En la primera celda **Python**, pega y ejecuta el bloque completo. Verifica catálogo, crea esquema y volumen antes de acceder a la ruta.
 
   ```python
   from pyspark.sql import functions as F
@@ -121,7 +128,7 @@ Abre tu carpeta existente batch_1, crea el notebook 02 y conecta el mismo cluste
 Comprobar el volumen creado en el paso anterior, generar un lote exclusivo de esta práctica y validar su estructura antes de transformar.
 
 
-- {% include step_label.html %} Debajo de la celda de constantes, pulsa **+ Code**, pega el comando y presiona **Shift+Enter** para listar el volumen `landing`.
+- {% include step_label.html id="s005" %} Debajo de la celda de constantes, pulsa **+ Code**, pega el comando y presiona **Shift+Enter** para listar el volumen `landing`.
 
   ```python
   display(dbutils.fs.ls(LANDING_PATH))
@@ -131,7 +138,7 @@ Comprobar el volumen creado en el paso anterior, generar un lote exclusivo de es
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Agrega una celda **Python**; crea la subcarpeta exclusiva y escribe el CSV de muestra completo para una ejecución reproducible.
+- {% include step_label.html id="s006" %} Agrega una celda **Python**; crea la subcarpeta exclusiva y escribe el CSV de muestra completo para una ejecución reproducible.
 
   > **Importante:** Solo se reemplaza `landing/lab2_bronze_silver/orders_batch_001.csv`, archivo propiedad de esta práctica. No uses esa ruta para datos reales.
   {: .lab-note .important .compact}
@@ -155,7 +162,7 @@ Comprobar el volumen creado en el paso anterior, generar un lote exclusivo de es
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Debajo, agrega una celda Python, pega `spark.read...csv(SOURCE_FILE)` y ejecútala; usa `display()` para revisar el contenido.
+- {% include step_label.html id="s007" %} Debajo, agrega una celda Python, pega `spark.read...csv(SOURCE_FILE)` y ejecútala; usa `display()` para revisar el contenido.
 
   ```python
   raw_df = spark.read.option("header", True).option("inferSchema", False).csv(SOURCE_FILE)
@@ -166,7 +173,7 @@ Comprobar el volumen creado en el paso anterior, generar un lote exclusivo de es
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En otra celda Python, ejecuta la validación de columnas, `printSchema()` y `count()`; detente si falla el `assert`.
+- {% include step_label.html id="s008" %} En otra celda Python, ejecuta la validación de columnas, `printSchema()` y `count()`; detente si falla el `assert`.
 
   > **Advertencia:** Si la validación falla, revisa que hayas ejecutado todas las celdas en orden y que `SOURCE_FILE` apunte a la subcarpeta de lab2.
   {: .lab-note .warning .compact}
@@ -204,7 +211,10 @@ Ingerir el CSV como texto y agregar metadatos técnicos de origen, momento de ca
 Construir un DataFrame Bronze que conserve las columnas de origen y añada tres columnas técnicas necesarias para trazabilidad y auditoría básica.
 
 
-- {% include step_label.html %} En una celda Python debajo de la validación, pega la lectura de Bronze y ejecútala sin `inferSchema`.
+
+{% assign tracking_task_id = "t002" %}
+
+- {% include step_label.html id="s009" %} En una celda Python debajo de la validación, pega la lectura de Bronze y ejecútala sin `inferSchema`.
 
   ```python
   bronze_source_df = (
@@ -218,7 +228,7 @@ Construir un DataFrame Bronze que conserve las columnas de origen y añada tres 
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En la siguiente celda Python, incorpora la ruta del archivo como `source_file`, definida por `SOURCE_FILE` (esta lectura usa un solo archivo).
+- {% include step_label.html id="s010" %} En la siguiente celda Python, incorpora la ruta del archivo como `source_file`, definida por `SOURCE_FILE` (esta lectura usa un solo archivo).
 
   ```python
   bronze_with_source_df = bronze_source_df.withColumn("source_file", F.lit(SOURCE_FILE))
@@ -228,7 +238,7 @@ Construir un DataFrame Bronze que conserve las columnas de origen y añada tres 
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En una nueva celda Python, agrega `ingest_ts` para identificar el instante de ingesta; ejecútala.
+- {% include step_label.html id="s011" %} En una nueva celda Python, agrega `ingest_ts` para identificar el instante de ingesta; ejecútala.
 
   ```python
   bronze_with_time_df = bronze_with_source_df.withColumn("ingest_ts", F.current_timestamp())
@@ -238,7 +248,7 @@ Construir un DataFrame Bronze que conserve las columnas de origen y añada tres 
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En la celda siguiente, agrega `batch_id` usando la constante `BATCH_ID` y ejecútala.
+- {% include step_label.html id="s012" %} En la celda siguiente, agrega `batch_id` usando la constante `BATCH_ID` y ejecútala.
 
   ```python
   bronze_df = bronze_with_time_df.withColumn("batch_id", F.lit(BATCH_ID))
@@ -248,7 +258,7 @@ Construir un DataFrame Bronze que conserve las columnas de origen y añada tres 
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En otra celda Python, ejecuta `printSchema()` y `display()`; comprueba las cuatro columnas originales y las tres técnicas.
+- {% include step_label.html id="s013" %} En otra celda Python, ejecuta `printSchema()` y `display()`; comprueba las cuatro columnas originales y las tres técnicas.
 
   ```python
   bronze_df.printSchema()
@@ -264,7 +274,7 @@ Construir un DataFrame Bronze que conserve las columnas de origen y añada tres 
 Persistir Bronze como tabla administrada de Unity Catalog, consultar una muestra y comprobar el número de registros y la identidad del lote.
 
 
-- {% include step_label.html %} En una celda Python nueva, ejecuta el bloque `bronze_df.write` para crear `bronze_orders` como tabla Delta administrada.
+- {% include step_label.html id="s014" %} En una celda Python nueva, ejecuta el bloque `bronze_df.write` para crear `bronze_orders` como tabla Delta administrada.
 
   > **Advertencia:** mode("overwrite") reemplaza el contenido de la tabla indicada; usa un esquema exclusivo si el workspace es compartido.
   {: .lab-note .warning .compact}
@@ -282,7 +292,7 @@ Persistir Bronze como tabla administrada de Unity Catalog, consultar una muestra
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Agrega una celda debajo, escribe `%sql` en la primera línea, pega el `SELECT` y ejecútalo con **Shift+Enter**.
+- {% include step_label.html id="s015" %} Agrega una celda debajo, escribe `%sql` en la primera línea, pega el `SELECT` y ejecútalo con **Shift+Enter**.
 
   ```sql
   %sql
@@ -295,7 +305,7 @@ Persistir Bronze como tabla administrada de Unity Catalog, consultar una muestra
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Agrega otra celda con `%sql` y ejecuta la consulta de conteos de archivos, lotes y filas.
+- {% include step_label.html id="s016" %} Agrega otra celda con `%sql` y ejecuta la consulta de conteos de archivos, lotes y filas.
 
   ```sql
   %sql
@@ -309,7 +319,7 @@ Persistir Bronze como tabla administrada de Unity Catalog, consultar una muestra
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En otra celda `%sql`, consulta `batch_id` y `source_file`; comprueba el sufijo `orders_batch_001.csv`.
+- {% include step_label.html id="s017" %} En otra celda `%sql`, consulta `batch_id` y `source_file`; comprueba el sufijo `orders_batch_001.csv`.
 
   ```sql
   %sql
@@ -339,7 +349,10 @@ Estandarizar los campos del lote, eliminar pedidos sin identificador y elegir un
 Leer Bronze, limpiar espacios y convertir fechas y valores numéricos para que Silver pueda utilizarse en consultas y cálculos de negocio.
 
 
-- {% include step_label.html %} Vuelve a **+ Code** y crea una celda Python debajo de las consultas; ejecuta `spark.table(BRONZE_TABLE)`.
+
+{% assign tracking_task_id = "t003" %}
+
+- {% include step_label.html id="s018" %} Vuelve a **+ Code** y crea una celda Python debajo de las consultas; ejecuta `spark.table(BRONZE_TABLE)`.
 
   ```python
   bronze_input_df = spark.table(BRONZE_TABLE)
@@ -349,7 +362,7 @@ Leer Bronze, limpiar espacios y convertir fechas y valores numéricos para que S
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En otra celda Python, ejecuta `trim()` sobre `order_id` y guarda el resultado en `order_id_clean`.
+- {% include step_label.html id="s019" %} En otra celda Python, ejecuta `trim()` sobre `order_id` y guarda el resultado en `order_id_clean`.
 
   ```python
   silver_work_df = bronze_input_df.withColumn("order_id_clean", F.trim(F.col("order_id")))
@@ -359,7 +372,7 @@ Leer Bronze, limpiar espacios y convertir fechas y valores numéricos para que S
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En la siguiente celda Python, ejecuta `to_timestamp()` con el patrón `yyyy-MM-dd HH:mm:ss`.
+- {% include step_label.html id="s020" %} En la siguiente celda Python, ejecuta `to_timestamp()` con el patrón `yyyy-MM-dd HH:mm:ss`.
 
   ```python
   silver_work_df = silver_work_df.withColumn(
@@ -371,7 +384,7 @@ Leer Bronze, limpiar espacios y convertir fechas y valores numéricos para que S
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Agrega una celda Python y convierte `quantity` a `int` y `unit_price` a `decimal(12,2)`; ejecútala.
+- {% include step_label.html id="s021" %} Agrega una celda Python y convierte `quantity` a `int` y `unit_price` a `decimal(12,2)`; ejecútala.
 
   ```python
   silver_work_df = (
@@ -385,7 +398,7 @@ Leer Bronze, limpiar espacios y convertir fechas y valores numéricos para que S
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En otra celda Python, ejecuta `printSchema()` sobre las cuatro columnas derivadas y revisa sus tipos.
+- {% include step_label.html id="s022" %} En otra celda Python, ejecuta `printSchema()` sobre las cuatro columnas derivadas y revisa sus tipos.
 
   ```python
   silver_work_df.select(
@@ -402,7 +415,7 @@ Leer Bronze, limpiar espacios y convertir fechas y valores numéricos para que S
 Conservar los pedidos con identificadores válidos y resolver claves repetidas mediante fecha descendente y un criterio de desempate estable.
 
 
-- {% include step_label.html %} En la siguiente celda Python, elimina los pedidos cuyo identificador normalizado sea nulo o vacío.
+- {% include step_label.html id="s023" %} En la siguiente celda Python, elimina los pedidos cuyo identificador normalizado sea nulo o vacío.
 
   ```python
   silver_valid_df = silver_work_df.filter(
@@ -414,7 +427,7 @@ Conservar los pedidos con identificadores válidos y resolver claves repetidas m
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En otra celda Python, calcula `dedupe_hash` como criterio técnico de desempate reproducible.
+- {% include step_label.html id="s024" %} En otra celda Python, calcula `dedupe_hash` como criterio técnico de desempate reproducible.
 
   > **Nota:** El hash es un criterio reproducible de desempate, no sustituye una regla de negocio de actualización.
   {: .lab-note .info .compact}
@@ -436,7 +449,7 @@ Conservar los pedidos con identificadores válidos y resolver claves repetidas m
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En una nueva celda Python, define `Window.partitionBy("order_id_clean")` y ordena por fecha descendente y hash.
+- {% include step_label.html id="s025" %} En una nueva celda Python, define `Window.partitionBy("order_id_clean")` y ordena por fecha descendente y hash.
 
   ```python
   dedupe_window = Window.partitionBy("order_id_clean").orderBy(
@@ -449,7 +462,7 @@ Conservar los pedidos con identificadores válidos y resolver claves repetidas m
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Debajo, agrega una celda Python, calcula `row_number()` y filtra `row_num == 1`; ejecútala.
+- {% include step_label.html id="s026" %} Debajo, agrega una celda Python, calcula `row_number()` y filtra `row_num == 1`; ejecútala.
 
   ```python
   silver_unique_df = (
@@ -463,7 +476,7 @@ Conservar los pedidos con identificadores válidos y resolver claves repetidas m
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En otra celda Python, ejecuta `count()` y `display()`; confirma que el pedido 1001 usa el registro de las 11:00.
+- {% include step_label.html id="s027" %} En otra celda Python, ejecuta `count()` y `display()`; confirma que el pedido 1001 usa el registro de las 11:00.
 
   ```python
   assert silver_unique_df.count() == 5, "Se esperaban 5 pedidos únicos"
@@ -480,7 +493,7 @@ Conservar los pedidos con identificadores válidos y resolver claves repetidas m
 Conservar los campos tipados, calcular quantity por unit_price y crear una tabla administrada con un registro por pedido válido.
 
 
-- {% include step_label.html %} Agrega una celda Python para seleccionar las columnas finales; calcula `total_amount` multiplicando cantidad por precio.
+- {% include step_label.html id="s028" %} Agrega una celda Python para seleccionar las columnas finales; calcula `total_amount` multiplicando cantidad por precio.
 
   ```python
   silver_df = silver_unique_df.select(
@@ -498,7 +511,7 @@ Conservar los campos tipados, calcular quantity por unit_price y crear una tabla
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En otra celda Python, ejecuta el bloque `silver_df.write` para persistir `silver_orders` en Delta.
+- {% include step_label.html id="s029" %} En otra celda Python, ejecuta el bloque `silver_df.write` para persistir `silver_orders` en Delta.
 
   > **Importante:** La sobrescritura es apropiada para este lote controlado; las cargas incrementales y MERGE se verán posteriormente.
   {: .lab-note .important .compact}
@@ -516,7 +529,7 @@ Conservar los campos tipados, calcular quantity por unit_price y crear una tabla
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Agrega una celda con `%sql`, pega el `SELECT` de Silver y ejecútalo; compara los cinco importes.
+- {% include step_label.html id="s030" %} Agrega una celda con `%sql`, pega el `SELECT` de Silver y ejecútalo; compara los cinco importes.
 
   ```sql
   %sql
@@ -529,7 +542,7 @@ Conservar los campos tipados, calcular quantity por unit_price y crear una tabla
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En otra celda `%sql`, ejecuta los indicadores de calidad y comprueba que no haya IDs inválidos ni importes nulos.
+- {% include step_label.html id="s031" %} En otra celda `%sql`, ejecuta los indicadores de calidad y comprueba que no haya IDs inválidos ni importes nulos.
 
   ```sql
   %sql
@@ -562,7 +575,10 @@ Crear una agregación diaria Gold a partir de Silver y comprobar las propiedades
 Agrupar los pedidos por fecha, calcular cantidades y ventas, y guardar un resultado analítico básico para verificar la transformación.
 
 
-- {% include step_label.html %} Agrega una celda Python debajo de la validación de Silver y ejecuta el `groupBy` para calcular ventas diarias.
+
+{% assign tracking_task_id = "t004" %}
+
+- {% include step_label.html id="s032" %} Agrega una celda Python debajo de la validación de Silver y ejecuta el `groupBy` para calcular ventas diarias.
 
   ```python
   gold_df = (
@@ -582,7 +598,7 @@ Agrupar los pedidos por fecha, calcular cantidades y ventas, y guardar un result
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En la celda Python siguiente, ejecuta `gold_df.write` para crear `gold_daily_sales` como tabla Delta.
+- {% include step_label.html id="s033" %} En la celda Python siguiente, ejecuta `gold_df.write` para crear `gold_daily_sales` como tabla Delta.
 
   ```python
   (
@@ -597,7 +613,7 @@ Agrupar los pedidos por fecha, calcular cantidades y ventas, y guardar un result
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Agrega una celda `%sql`, ejecuta la consulta de Gold y compara pedidos, unidades y ventas por día.
+- {% include step_label.html id="s034" %} Agrega una celda `%sql`, ejecuta la consulta de Gold y compara pedidos, unidades y ventas por día.
 
   ```sql
   %sql
@@ -615,7 +631,7 @@ Agrupar los pedidos por fecha, calcular cantidades y ventas, y guardar un result
 Comprobar los conteos y la conciliación de importes entre Silver y Gold, además de la presencia de metadatos de procedencia.
 
 
-- {% include step_label.html %} Agrega una nueva celda `%sql` y ejecuta el `UNION ALL` para comparar los conteos de las tres capas.
+- {% include step_label.html id="s035" %} Agrega una nueva celda `%sql` y ejecuta el `UNION ALL` para comparar los conteos de las tres capas.
 
   ```sql
   %sql
@@ -630,7 +646,7 @@ Comprobar los conteos y la conciliación de importes entre Silver y Gold, ademá
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Agrega una celda `%sql` y ejecuta la conciliación: las ventas totales de Silver y Gold deben coincidir.
+- {% include step_label.html id="s036" %} Agrega una celda `%sql` y ejecuta la conciliación: las ventas totales de Silver y Gold deben coincidir.
 
   ```sql
   %sql
@@ -643,7 +659,7 @@ Comprobar los conteos y la conciliación de importes entre Silver y Gold, ademá
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En otra celda `%sql`, agrupa por `batch_id` y confirma que las cinco filas Silver provienen del mismo CSV.
+- {% include step_label.html id="s037" %} En otra celda `%sql`, agrupa por `batch_id` y confirma que las cinco filas Silver provienen del mismo CSV.
 
   ```sql
   %sql
@@ -661,7 +677,7 @@ Comprobar los conteos y la conciliación de importes entre Silver y Gold, ademá
 Verificar el formato e historial transaccional de las tablas y conservar los objetos creados para las siguientes actividades del curso.
 
 
-- {% include step_label.html %} En una celda `%sql`, ejecuta `DESCRIBE DETAIL` sobre Bronze; repite en dos celdas nuevas con Silver y Gold.
+- {% include step_label.html id="s038" %} En una celda `%sql`, ejecuta `DESCRIBE DETAIL` sobre Bronze; repite en dos celdas nuevas con Silver y Gold.
 
   ```sql
   %sql
@@ -672,7 +688,7 @@ Verificar el formato e historial transaccional de las tablas y conservar los obj
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En una celda `%sql`, ejecuta `DESCRIBE HISTORY` de Bronze. Verifica que el notebook se guardó automáticamente en `batch_1`.
+- {% include step_label.html id="s039" %} En una celda `%sql`, ejecuta `DESCRIBE HISTORY` de Bronze. Verifica que el notebook se guardó automáticamente en `batch_1`.
 
   > **Nota:** No elimines los datos del volumen ni las tablas; se reutilizarán al estudiar cargas posteriores. Para Silver y Gold puedes repetir DESCRIBE HISTORY.
   {: .lab-note .info .compact}

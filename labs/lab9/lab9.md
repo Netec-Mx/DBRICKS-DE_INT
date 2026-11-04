@@ -1,4 +1,8 @@
 ---
+course_id: dbricksint
+lab_id: l009
+tracking: true
+position: 9
 layout: lab
 title: 'Práctica 9: Implementación de validaciones y manejo de errores'
 permalink: /lab9/lab9/
@@ -54,17 +58,20 @@ Comprobar el resultado de la única ejecución de la Práctica 8. El código Lak
 
 Trabajar sobre el mismo pipeline y los mismos objetos de Unity Catalog.
 
-- {% include step_label.html %} En **Jobs & Pipelines**, abre `pipeline_orders_bronze_silver_b2` (creado en P8). Revisa la última actualización en el historial de ejecuciones: debe figurar **Succeeded**; en el DAG localiza `p8_orders_bronze` → `p8_orders_silver`.
+
+{% assign tracking_task_id = "t001" %}
+
+- {% include step_label.html id="s001" %} En **Jobs & Pipelines**, abre `pipeline_orders_bronze_silver_b2` (creado en P8). Revisa la última actualización en el historial de ejecuciones: debe figurar **Succeeded**; en el DAG localiza `p8_orders_bronze` → `p8_orders_silver`.
 
   > **Salida esperada:** El pipeline existente tiene p8_orders_bronze y p8_orders_silver sin errores activos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la página del mismo pipeline pulsa **Edit pipeline**. En el explorador del editor abre **transformations > bronze_silver_orders.sql**; localiza las dos sentencias `CREATE OR REFRESH`. No crees otro archivo SQL.
+- {% include step_label.html id="s002" %} En la página del mismo pipeline pulsa **Edit pipeline**. En el explorador del editor abre **transformations > bronze_silver_orders.sql**; localiza las dos sentencias `CREATE OR REFRESH`. No crees otro archivo SQL.
 
   > **Salida esperada:** Las definiciones CREATE OR REFRESH de Bronze y Silver están presentes.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **transformations/bronze_silver_orders.sql**, ubica `FROM STREAM read_files(...)` dentro de `p8_orders_bronze` y comprueba que apunta exactamente a `/Volumes/dbricks_de_int/batch1/landing/p8_approved/`. No edites esa sentencia.
+- {% include step_label.html id="s003" %} En **transformations/bronze_silver_orders.sql**, ubica `FROM STREAM read_files(...)` dentro de `p8_orders_bronze` y comprueba que apunta exactamente a `/Volumes/dbricks_de_int/batch1/landing/p8_approved/`. No edites esa sentencia.
 
   > **Salida esperada:** Los archivos que se crearán en P9 serán leídos por el mismo pipeline, no por otras prácticas.
   {: .lab-note .output .compact}
@@ -73,7 +80,7 @@ Trabajar sobre el mismo pipeline y los mismos objetos de Unity Catalog.
 
 Comparar posteriores pruebas contra datos iniciales medibles.
 
-- {% include step_label.html %} En `Workspace > batch_1`, crea el notebook Python **09_control_expectations**, conéctalo al cluster existente y ejecuta la **celda 1 (Python)**.
+- {% include step_label.html id="s004" %} En `Workspace > batch_1`, crea el notebook Python **09_control_expectations**, conéctalo al cluster existente y ejecuta la **celda 1 (Python)**.
 
   ```python
   from decimal import Decimal
@@ -88,7 +95,7 @@ Comparar posteriores pruebas contra datos iniciales medibles.
   > **Salida esperada:** El resultado inicial es 6 pedidos e importe total 220.00.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **09_control_expectations**, agrega la **celda 2 (Python)** debajo de la anterior; comprueba que los IDs de P9 aún no estén publicados.
+- {% include step_label.html id="s005" %} En **09_control_expectations**, agrega la **celda 2 (Python)** debajo de la anterior; comprueba que los IDs de P9 aún no estén publicados.
 
   ```python
   pending = spark.sql(f"SELECT COUNT(*) AS n FROM {SILVER} WHERE order_id IN ('Q9001','Q9002','Q9003','Q9004')").first().n
@@ -99,7 +106,7 @@ Comparar posteriores pruebas contra datos iniciales medibles.
   > **Salida esperada:** El conteo para Q9001, Q9002, Q9003 y Q9004 es cero.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **09_control_expectations**, agrega la **celda 3 (Python)** para inspeccionar los tipos y columnas de Silver.
+- {% include step_label.html id="s006" %} En **09_control_expectations**, agrega la **celda 3 (Python)** para inspeccionar los tipos y columnas de Silver.
 
   ```python
   silver_cols = set(spark.table(SILVER).columns)
@@ -128,7 +135,10 @@ Modificar exclusivamente la sentencia `CREATE OR REFRESH MATERIALIZED VIEW p8_or
 
 Configurar WARN implícito, DROP ROW y FAIL UPDATE con expresiones sobre columnas Silver.
 
-- {% include step_label.html %} En **Edit pipeline > transformations > bronze_silver_orders.sql**, identifica la segunda sentencia, que inicia `CREATE OR REFRESH MATERIALIZED VIEW p8_orders_silver`. Sustituye **solo esa sentencia**, desde `CREATE` hasta su `;` final, por el bloque siguiente; conserva Bronze intacta.
+
+{% assign tracking_task_id = "t002" %}
+
+- {% include step_label.html id="s007" %} En **Edit pipeline > transformations > bronze_silver_orders.sql**, identifica la segunda sentencia, que inicia `CREATE OR REFRESH MATERIALIZED VIEW p8_orders_silver`. Sustituye **solo esa sentencia**, desde `CREATE` hasta su `;` final, por el bloque siguiente; conserva Bronze intacta.
 
   > **Nota:** Sustituye solo la sentencia Silver anterior; conserva intacta la sentencia Bronze. En SQL Lakeflow WARN se expresa con EXPECT sin ON VIOLATION WARN.
   {: .lab-note .info .compact}
@@ -172,17 +182,17 @@ Configurar WARN implícito, DROP ROW y FAIL UPDATE con expresiones sobre columna
   > **Salida esperada:** Aparecen las expectativas valid_status, valid_amount y valid_order_id en Silver.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En ese mismo archivo SQL, dentro de la sentencia Silver, localiza `CONSTRAINT valid_status`: debe contener `EXPECT` y **no** incluir `ON VIOLATION`. Es la regla WARN (conserva Q9001).
+- {% include step_label.html id="s008" %} En ese mismo archivo SQL, dentro de la sentencia Silver, localiza `CONSTRAINT valid_status`: debe contener `EXPECT` y **no** incluir `ON VIOLATION`. Es la regla WARN (conserva Q9001).
 
   > **Salida esperada:** WARN se aplica por defecto; las únicas cláusulas ON VIOLATION son DROP ROW y FAIL UPDATE.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Debajo de `valid_status`, revisa `CONSTRAINT valid_amount`: debe evaluar `order_amount > 0` y finalizar en `ON VIOLATION DROP ROW`. Será la regla de Q9002/Q9003.
+- {% include step_label.html id="s009" %} Debajo de `valid_status`, revisa `CONSTRAINT valid_amount`: debe evaluar `order_amount > 0` y finalizar en `ON VIOLATION DROP ROW`. Será la regla de Q9002/Q9003.
 
   > **Salida esperada:** Las filas con importe nulo o no positivo se descartan de Silver.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Debajo de `valid_amount`, revisa `CONSTRAINT valid_order_id`: debe comprobar `order_id IS NOT NULL` y usar `ON VIOLATION FAIL UPDATE`. Será la prueba controlada de la Tarea 4.
+- {% include step_label.html id="s010" %} Debajo de `valid_amount`, revisa `CONSTRAINT valid_order_id`: debe comprobar `order_id IS NOT NULL` y usar `ON VIOLATION FAIL UPDATE`. Será la prueba controlada de la Tarea 4.
 
   > **Salida esperada:** El campo order_id vacío se convierte en NULL mediante nullif(trim(order_id),'').
   {: .lab-note .output .compact}
@@ -191,17 +201,17 @@ Configurar WARN implícito, DROP ROW y FAIL UPDATE con expresiones sobre columna
 
 Reutilizar la materialized view de P8 sin redefinirla como streaming table.
 
-- {% include step_label.html %} En el editor **Edit pipeline**, guarda `transformations/bronze_silver_orders.sql` con **Ctrl+S**. Comprueba que el archivo contiene exactamente dos sentencias: Bronze `STREAMING TABLE` y Silver `MATERIALIZED VIEW` con tres `CONSTRAINT`.
+- {% include step_label.html id="s011" %} En el editor **Edit pipeline**, guarda `transformations/bronze_silver_orders.sql` con **Ctrl+S**. Comprueba que el archivo contiene exactamente dos sentencias: Bronze `STREAMING TABLE` y Silver `MATERIALIZED VIEW` con tres `CONSTRAINT`.
 
   > **Salida esperada:** La única modificación funcional es el conjunto de expectativas sobre Silver.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Regresa a la página de `pipeline_orders_bronze_silver_b2` y pulsa **Run pipeline** una vez para activar la nueva definición **antes de crear los CSV de P9**. Abre la ejecución y espera el estado **Succeeded**. No selecciones **Full refresh** aquí.
+- {% include step_label.html id="s012" %} Regresa a la página de `pipeline_orders_bronze_silver_b2` y pulsa **Run pipeline** una vez para activar la nueva definición **antes de crear los CSV de P9**. Abre la ejecución y espera el estado **Succeeded**. No selecciones **Full refresh** aquí.
 
   > **Salida esperada:** La actualización termina Succeeded y Silver mantiene 6 registros e importe 220.00 (antes de añadir CSV P9).
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **09_control_expectations**, crea la **celda 4 (Python)** y consulta Silver para comprobar los seis pedidos y el total 220.00.
+- {% include step_label.html id="s013" %} En **09_control_expectations**, crea la **celda 4 (Python)** y consulta Silver para comprobar los seis pedidos y el total 220.00.
 
   ```python
   initial = spark.sql(f"SELECT COUNT(*) AS pedidos, CAST(SUM(order_amount) AS DECIMAL(14,2)) AS ventas FROM {SILVER}").first()
@@ -227,7 +237,10 @@ Usar el notebook `09_control_expectations` para crear archivos CSV; después eje
 
 Inyectar un estado fuera de dominio con importe válido.
 
-- {% include step_label.html %} En **Workspace > batch_1 > 09_control_expectations**, crea la **celda 5 (Python)** debajo de la celda 4. Define `ROOT`, `HEAD` y la función `put_case`; se reutilizará en las celdas 6, 8 y 11.
+
+{% assign tracking_task_id = "t003" %}
+
+- {% include step_label.html id="s014" %} En **Workspace > batch_1 > 09_control_expectations**, crea la **celda 5 (Python)** debajo de la celda 4. Define `ROOT`, `HEAD` y la función `put_case`; se reutilizará en las celdas 6, 8 y 11.
 
   ```python
   import csv,io
@@ -249,7 +262,7 @@ Inyectar un estado fuera de dominio con importe válido.
   > **Salida esperada:** Se muestra la ruta completa de `p8_approved`, ocho columnas CSV y `archivos P9 previos=0`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **09_control_expectations**, crea la **celda 6 (Python)** y genera `p9_warn.csv` con Q9001.
+- {% include step_label.html id="s015" %} En **09_control_expectations**, crea la **celda 6 (Python)** y genera `p9_warn.csv` con Q9001.
 
   ```python
   put_case('p9_warn.csv', [['Q9001','C901','2026-09-04','OUT_OF_DOMAIN','2','6.00','2026-09-04 10:00:00','1']])
@@ -260,12 +273,12 @@ Inyectar un estado fuera de dominio con importe válido.
   > **Salida esperada:** El archivo p9_warn.csv contiene exactamente una fila de negocio.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Después de crear `p9_warn.csv`, vuelve a **Jobs & Pipelines > pipeline_orders_bronze_silver_b2** y pulsa **Run pipeline** **una sola vez**. Abre el detalle de esta actualización y espera **Succeeded**; en el DAG inspecciona `p8_orders_silver`.
+- {% include step_label.html id="s016" %} Después de crear `p9_warn.csv`, vuelve a **Jobs & Pipelines > pipeline_orders_bronze_silver_b2** y pulsa **Run pipeline** **una sola vez**. Abre el detalle de esta actualización y espera **Succeeded**; en el DAG inspecciona `p8_orders_silver`.
 
   > **Salida esperada:** La actualización termina Succeeded; la infracción WARN no detiene el pipeline.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **09_control_expectations**, crea la **celda 7 (Python)**; consulta Q9001 en Silver y revisa la infracción `valid_status` en los detalles del último Update.
+- {% include step_label.html id="s017" %} En **09_control_expectations**, crea la **celda 7 (Python)**; consulta Q9001 en Silver y revisa la infracción `valid_status` en los detalles del último Update.
 
   ```python
   warn = spark.sql(f"SELECT order_id, order_status, order_amount FROM {SILVER} WHERE order_id='Q9001'").collect()
@@ -281,7 +294,7 @@ Inyectar un estado fuera de dominio con importe válido.
 
 Agregar casos de importe cero y unit_price vacío para aislar la expectativa valid_amount.
 
-- {% include step_label.html %} En **09_control_expectations**, crea la **celda 8 (Python)** para generar `p9_drop.csv` con Q9002 y Q9003.
+- {% include step_label.html id="s018" %} En **09_control_expectations**, crea la **celda 8 (Python)** para generar `p9_drop.csv` con Q9002 y Q9003.
 
   ```python
   put_case('p9_drop.csv', [['Q9002','C902','2026-09-04','COMPLETED','1','0.00','2026-09-04 11:00:00','1'],['Q9003','C903','2026-09-04','PENDING','1','','2026-09-04 12:00:00','1']])
@@ -292,12 +305,12 @@ Agregar casos de importe cero y unit_price vacío para aislar la expectativa val
   > **Salida esperada:** El archivo contiene dos registros; ningún otro campo es inválido.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Después de escribir `p9_drop.csv`, vuelve a la página del mismo pipeline y pulsa **Run pipeline** **una vez**. Espera **Succeeded** y revisa el detalle de la actualización de `p8_orders_silver`; no uses **Full refresh** todavía.
+- {% include step_label.html id="s019" %} Después de escribir `p9_drop.csv`, vuelve a la página del mismo pipeline y pulsa **Run pipeline** **una vez**. Espera **Succeeded** y revisa el detalle de la actualización de `p8_orders_silver`; no uses **Full refresh** todavía.
 
   > **Salida esperada:** La actualización termina Succeeded y Bronze incorpora las dos filas de p9_drop.csv.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **09_control_expectations**, crea la **celda 9 (Python)** para verificar la ausencia de Q9002/Q9003 en Silver.
+- {% include step_label.html id="s020" %} En **09_control_expectations**, crea la **celda 9 (Python)** para verificar la ausencia de Q9002/Q9003 en Silver.
 
   ```python
   dropped = spark.sql(f"SELECT COUNT(*) AS n FROM {SILVER} WHERE order_id IN ('Q9002','Q9003')").first().n
@@ -308,7 +321,7 @@ Agregar casos de importe cero y unit_price vacío para aislar la expectativa val
   > **Salida esperada:** El resultado pedidos_descartados=0; Q9001 permanece publicado.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **09_control_expectations**, crea la **celda 10 (Python)** y consulta Bronze para comprobar los dos registros rechazados antes de Silver.
+- {% include step_label.html id="s021" %} En **09_control_expectations**, crea la **celda 10 (Python)** y consulta Bronze para comprobar los dos registros rechazados antes de Silver.
 
   ```python
   bronze_drop = spark.sql(f"SELECT order_id, quantity, unit_price FROM {BRONZE} WHERE order_id IN ('Q9002','Q9003') ORDER BY order_id").collect()
@@ -335,7 +348,10 @@ Simular una clave ausente que impide publicar Silver sin eliminar las versiones 
 
 Aislar el error de clave; conservar el resto de columnas válidas.
 
-- {% include step_label.html %} En **09_control_expectations**, crea la **celda 11 (Python)** y escribe `p9_fail.csv` con `order_id` vacío.
+
+{% assign tracking_task_id = "t004" %}
+
+- {% include step_label.html id="s022" %} En **09_control_expectations**, crea la **celda 11 (Python)** y escribe `p9_fail.csv` con `order_id` vacío.
 
   ```python
   put_case('p9_fail.csv', [['','C904','2026-09-04','COMPLETED','1','49.90','2026-09-04 13:00:00','1']])
@@ -346,12 +362,12 @@ Aislar el error de clave; conservar el resto de columnas válidas.
   > **Salida esperada:** El archivo contiene una fila con order_id vacío e importe calculable de 49.90.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Después de crear `p9_fail.csv`, desde la página del pipeline pulsa **Run pipeline** **una vez**. Mantén `valid_order_id` habilitada; abre la nueva ejecución y comprueba el estado **Failed** en la actualización de Silver.
+- {% include step_label.html id="s023" %} Después de crear `p9_fail.csv`, desde la página del pipeline pulsa **Run pipeline** **una vez**. Mantén `valid_order_id` habilitada; abre la nueva ejecución y comprueba el estado **Failed** en la actualización de Silver.
 
   > **Salida esperada:** La actualización de Silver falla por `valid_order_id`; el estado global puede mostrarse Failed aunque otros flujos hayan completado.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Dentro del detalle de la actualización fallida, selecciona el nodo **p8_orders_silver** del DAG y abre **Errors** o el panel de errores disponible. Busca `valid_order_id`, `EXPECTATION_VIOLATION` o `FAIL UPDATE`.
+- {% include step_label.html id="s024" %} Dentro del detalle de la actualización fallida, selecciona el nodo **p8_orders_silver** del DAG y abre **Errors** o el panel de errores disponible. Busca `valid_order_id`, `EXPECTATION_VIOLATION` o `FAIL UPDATE`.
 
   > **Salida esperada:** El mensaje señala la regla FAIL UPDATE o la expresión order_id IS NOT NULL.
   {: .lab-note .output .compact}
@@ -360,12 +376,12 @@ Aislar el error de clave; conservar el resto de columnas válidas.
 
 Distinguir estado del flujo Silver y datos ya materializados.
 
-- {% include step_label.html %} En la vista de la actualización fallida, abre los detalles de eventos (por ejemplo **Event log**, si está disponible) y localiza el error de `p8_orders_silver`; anota el identificador de esa actualización, sin ejecutar otro Run.
+- {% include step_label.html id="s025" %} En la vista de la actualización fallida, abre los detalles de eventos (por ejemplo **Event log**, si está disponible) y localiza el error de `p8_orders_silver`; anota el identificador de esa actualización, sin ejecutar otro Run.
 
   > **Salida esperada:** El evento correspondiente identifica p8_orders_silver y la expectativa valid_order_id.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **09_control_expectations**, agrega la **celda 12 (Python)** y comprueba que Silver conserva Q9001 pero no Q9002/Q9003.
+- {% include step_label.html id="s026" %} En **09_control_expectations**, agrega la **celda 12 (Python)** y comprueba que Silver conserva Q9001 pero no Q9002/Q9003.
 
   > **Nota:** El FAIL UPDATE impide publicar la actualización fallida de Silver; no implica que ningún otro flujo paralelo haya avanzado.
   {: .lab-note .info .compact}
@@ -379,7 +395,7 @@ Distinguir estado del flujo Silver y datos ya materializados.
   > **Salida esperada:** Q9001 conserva 12.00; Q9002/Q9003 siguen ausentes.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **09_control_expectations**, crea la **celda 13 (Python)** para consultar `DESCRIBE HISTORY` de Silver, si está habilitado.
+- {% include step_label.html id="s027" %} En **09_control_expectations**, crea la **celda 13 (Python)** para consultar `DESCRIBE HISTORY` de Silver, si está habilitado.
 
   ```python
   try:
@@ -408,7 +424,10 @@ Retirar solo `p9_fail.csv` con una celda Python del notebook de control; en `Job
 
 Evitar un nuevo pipeline y evitar borrar tablas manualmente.
 
-- {% include step_label.html %} En **09_control_expectations**, crea la **celda 14 (Python)** y elimina solamente `p9_fail.csv`; confirma su ausencia.
+
+{% assign tracking_task_id = "t005" %}
+
+- {% include step_label.html id="s028" %} En **09_control_expectations**, crea la **celda 14 (Python)** y elimina solamente `p9_fail.csv`; confirma su ausencia.
 
   ```python
   bad=f'{ROOT}/p9_fail.csv'
@@ -422,7 +441,7 @@ Evitar un nuevo pipeline y evitar borrar tablas manualmente.
   > **Salida esperada:** p9_fail.csv no aparece en el directorio p8_approved.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Después de eliminar `p9_fail.csv`, regresa al pipeline y abre la **flecha desplegable** junto a **Run pipeline**. Selecciona **Full refresh** (o la opción equivalente para actualizar todas las tablas); confirma el aviso y espera **Succeeded**. Es una recuperación de laboratorio: **no pulses Run pipeline normal antes de este Full refresh**.
+- {% include step_label.html id="s029" %} Después de eliminar `p9_fail.csv`, regresa al pipeline y abre la **flecha desplegable** junto a **Run pipeline**. Selecciona **Full refresh** (o la opción equivalente para actualizar todas las tablas); confirma el aviso y espera **Succeeded**. Es una recuperación de laboratorio: **no pulses Run pipeline normal antes de este Full refresh**.
 
   > **Nota:** Full refresh reinicializa los checkpoints de las streaming tables y reprocesa los CSV presentes. Ejecuta esta operación únicamente en el pipeline de práctica, con autorización; no depende de que aparezca un interruptor Development en Settings.
   {: .lab-note .info .compact}
@@ -430,7 +449,7 @@ Evitar un nuevo pipeline y evitar borrar tablas manualmente.
   > **Salida esperada:** La actualización termina Succeeded y vuelve a procesar solo los archivos que permanecen en p8_approved.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Cuando el Update termine en `Succeeded`, abre **09_control_expectations** y crea la **celda 15 (Python)** para validar Silver.
+- {% include step_label.html id="s030" %} Cuando el Update termine en `Succeeded`, abre **09_control_expectations** y crea la **celda 15 (Python)** para validar Silver.
 
   ```python
   recovered = spark.sql(f"""SELECT COUNT(*) AS silver_rows,
@@ -450,7 +469,7 @@ Evitar un nuevo pipeline y evitar borrar tablas manualmente.
 
 Cerrar el laboratorio con resultados operativos comprobables.
 
-- {% include step_label.html %} En **09_control_expectations**, agrega la **celda 16 (Python)** y consulta el total de Bronze después de Full refresh.
+- {% include step_label.html id="s031" %} En **09_control_expectations**, agrega la **celda 16 (Python)** y consulta el total de Bronze después de Full refresh.
 
   ```python
   bronze_count = spark.sql(f'SELECT COUNT(*) AS n FROM {BRONZE}').first().n
@@ -461,7 +480,7 @@ Cerrar el laboratorio con resultados operativos comprobables.
   > **Salida esperada:** `Bronze recuperada; filas=11; 8 base + 1 WARN + 2 DROP`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En el historial de actualizaciones del pipeline, abre primero el Run **Failed** (regla `valid_order_id`) y luego el **Succeeded** de **Full refresh**; registra ambos identificadores y los conteos comprobados en las celdas 15–16.
+- {% include step_label.html id="s032" %} En el historial de actualizaciones del pipeline, abre primero el Run **Failed** (regla `valid_order_id`) y luego el **Succeeded** de **Full refresh**; registra ambos identificadores y los conteos comprobados en las celdas 15–16.
 
   > **Salida esperada:** Evidencia: tres reglas con resultados diferentes y un Full refresh final Succeeded.
   {: .lab-note .output .compact}

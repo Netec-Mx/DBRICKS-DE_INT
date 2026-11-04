@@ -1,4 +1,8 @@
 ---
+course_id: dbricksint
+lab_id: l004
+tracking: true
+position: 4
 layout: lab
 title: 'Práctica 4: Implementación de MERGE incremental optimizado'
 permalink: /lab4/lab4/
@@ -51,17 +55,20 @@ Verificar que Silver contiene los dos pedidos semilla y que los contratos de Bro
 
 Confirmar que la ejecución anterior dejó los datos necesarios.
 
-- {% include step_label.html %} Crea el notebook Python **04_merge_incremental_optimizado** en **batch_1**.
+
+{% assign tracking_task_id = "t001" %}
+
+- {% include step_label.html id="s001" %} Crea el notebook Python **04_merge_incremental_optimizado** en **batch_1**.
 
   > **Salida esperada:** El notebook se crea en Workspace.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Conecta el clúster compatible con Unity Catalog que utiliza el curso.
+- {% include step_label.html id="s002" %} Conecta el clúster compatible con Unity Catalog que utiliza el curso.
 
   > **Salida esperada:** La conexión del notebook figura activa.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Ejecuta la configuración de nombres de tablas y ruta de entrada.
+- {% include step_label.html id="s003" %} Ejecuta la configuración de nombres de tablas y ruta de entrada.
 
   ```python
   from pyspark.sql import functions as F
@@ -90,7 +97,7 @@ Confirmar que la ejecución anterior dejó los datos necesarios.
   > **Salida esperada:** Se definen B, V, G, A y P.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Verifica que las tablas del laboratorio batch existen antes de continuar.
+- {% include step_label.html id="s004" %} Verifica que las tablas del laboratorio batch existen antes de continuar.
 
   ```python
   required_tables = [B, V, G, Q, A]
@@ -130,7 +137,7 @@ Confirmar que la ejecución anterior dejó los datos necesarios.
   > **Salida esperada:** Las cuatro tablas están disponibles. Mensaje: `VALIDACIÓN EXITOSA: Dependencias: cinco tablas Delta disponibles y Volume landing accesible`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta los pedidos O1001 y O1002 que el MERGE actualizará.
+- {% include step_label.html id="s005" %} Consulta los pedidos O1001 y O1002 que el MERGE actualizará.
 
   ```python
   seed = {r['order_id']: r for r in spark.table(V)
@@ -151,7 +158,7 @@ Confirmar que la ejecución anterior dejó los datos necesarios.
 
 Registrar claves actuales y comprobar que el lote batch_003 no está previamente insertado.
 
-- {% include step_label.html %} Comprueba que Silver tiene las columnas de negocio y auditoría exigidas.
+- {% include step_label.html id="s006" %} Comprueba que Silver tiene las columnas de negocio y auditoría exigidas.
 
   ```python
   required = {'order_id', 'customer_id', 'order_date', 'quantity', 'unit_price',
@@ -168,7 +175,7 @@ Registrar claves actuales y comprobar que el lote batch_003 no está previamente
   > **Salida esperada:** La validación de columnas finaliza sin errores. Mensaje: `VALIDACIÓN EXITOSA: Silver inicial: 4 pedidos, contrato completo; Bronze anterior: 10 filas`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que el lote batch_003 aún no está presente en Silver.
+- {% include step_label.html id="s007" %} Comprueba que el lote batch_003 aún no está presente en Silver.
 
   > **Importante:** Si el lote ya existe, detén la ejecución. Este laboratorio es de una sola aplicación; repetirlo exige restablecer el estado inicial bajo autorización.
   {: .lab-note .important .compact}
@@ -202,7 +209,10 @@ Construir seis filas con dos claves repetidas, incorporar columnas nuevas median
 
 Preparar versiones antiguas y recientes de pedidos junto con dos inserciones nuevas.
 
-- {% include step_label.html %} Genera el archivo CSV incremental con seis filas controladas.
+
+{% assign tracking_task_id = "t002" %}
+
+- {% include step_label.html id="s008" %} Genera el archivo CSV incremental con seis filas controladas.
 
   ```python
   csv = """order_id,customer_id,order_date,amount,status,source_updated_at,channel,update_sequence
@@ -220,7 +230,7 @@ Preparar versiones antiguas y recientes de pedidos junto con dos inserciones nue
   > **Salida esperada:** Se crea orders_batch_003_p4.csv.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Muestra su contenido y comprueba que contiene dos filas para O1001 y O1004.
+- {% include step_label.html id="s009" %} Muestra su contenido y comprueba que contiene dos filas para O1001 y O1004.
 
   ```python
   print(dbutils.fs.head(P,3000))
@@ -229,7 +239,7 @@ Preparar versiones antiguas y recientes de pedidos junto con dos inserciones nue
   > **Salida esperada:** Aparecen O1001 y O1004 repetidos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Lee el lote sin inferir tipos y verifica su estructura.
+- {% include step_label.html id="s010" %} Lee el lote sin inferir tipos y verifica su estructura.
 
   ```python
   preview = spark.read.option('header', True).option('inferSchema', False).csv(P)
@@ -245,7 +255,7 @@ Preparar versiones antiguas y recientes de pedidos junto con dos inserciones nue
   > **Salida esperada:** Se leen seis filas del lote. Mensaje: `VALIDACIÓN EXITOSA: CSV validado: 6 filas, 8 columnas y duplicados controlados`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que la columna channel tiene valores de los cuatro canales admitidos.
+- {% include step_label.html id="s011" %} Comprueba que la columna channel tiene valores de los cuatro canales admitidos.
 
   ```python
   display(preview.select('channel').distinct())
@@ -258,7 +268,7 @@ Preparar versiones antiguas y recientes de pedidos junto con dos inserciones nue
 
 Añadir campos de actualización que no existían durante la carga batch de la práctica anterior.
 
-- {% include step_label.html %} Convierte las columnas CSV al contrato crudo Bronze y añade batch_id.
+- {% include step_label.html id="s012" %} Convierte las columnas CSV al contrato crudo Bronze y añade batch_id.
 
   ```python
   source = spark.read.option('header', True).option('inferSchema', False).csv(P)
@@ -277,7 +287,7 @@ Añadir campos de actualización que no existían durante la carga batch de la p
   > **Salida esperada:** Se crea inc conservando las columnas como texto. Mensaje: `VALIDACIÓN EXITOSA: DataFrame incremental: 6 registros preparados`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Desactiva la evolución automática de esquema en la sesión.
+- {% include step_label.html id="s013" %} Desactiva la evolución automática de esquema en la sesión.
 
   ```python
   spark.conf.set('spark.databricks.delta.schema.autoMerge.enabled', 'false')
@@ -289,7 +299,7 @@ Añadir campos de actualización que no existían durante la carga batch de la p
   > **Salida esperada:** La evolución global queda deshabilitada. Mensaje: `VALIDACIÓN EXITOSA: Evolución global de esquema deshabilitada`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Anexa el lote incremental a Bronze utilizando mergeSchema solo en esta escritura.
+- {% include step_label.html id="s014" %} Anexa el lote incremental a Bronze utilizando mergeSchema solo en esta escritura.
 
   ```python
   assert spark.table(B).filter(F.col('batch_id') == BATCH).count() == 0
@@ -302,7 +312,7 @@ Añadir campos de actualización que no existían durante la carga batch de la p
   > **Salida esperada:** Bronze recibe seis filas y las nuevas columnas channel, source_updated_at_raw y update_sequence_raw. Mensaje: `VALIDACIÓN EXITOSA: Bronze: escritura incremental autorizada y realizada`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Valida el conteo de filas y claves únicas del lote ingresado.
+- {% include step_label.html id="s015" %} Valida el conteo de filas y claves únicas del lote ingresado.
 
   ```python
   z = spark.table(B).filter(F.col('batch_id') == BATCH)
@@ -331,7 +341,10 @@ Deduplicar por marca de actualización y secuencia, ejecutar un MERGE condiciona
 
 Conservar únicamente la versión más reciente por pedido antes de combinarla con Silver.
 
-- {% include step_label.html %} Prepara el DataFrame tipado desde Bronze y la vista p4_incremental_staging.
+
+{% assign tracking_task_id = "t003" %}
+
+- {% include step_label.html id="s016" %} Prepara el DataFrame tipado desde Bronze y la vista p4_incremental_staging.
 
   ```python
   bronze3 = spark.table(B).filter(F.col('batch_id') == BATCH)
@@ -357,7 +370,7 @@ Conservar únicamente la versión más reciente por pedido antes de combinarla c
   > **Salida esperada:** La vista temporal contiene cuatro claves únicas. Mensaje: `VALIDACIÓN EXITOSA: Staging tipado: conversiones válidas y 4 claves deduplicadas`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta el staging ordenado por order_id.
+- {% include step_label.html id="s017" %} Consulta el staging ordenado por order_id.
 
   ```python
   display(spark.table('p4_incremental_staging').orderBy('order_id'))
@@ -366,7 +379,7 @@ Conservar únicamente la versión más reciente por pedido antes de combinarla c
   > **Salida esperada:** Se muestran cuatro pedidos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que se conservaron los estados más recientes de O1001 y O1004.
+- {% include step_label.html id="s018" %} Comprueba que se conservaron los estados más recientes de O1001 y O1004.
 
   ```python
   r={x['order_id']:x['status'] for x in spark.table('p4_incremental_staging').collect()}
@@ -377,7 +390,7 @@ Conservar únicamente la versión más reciente por pedido antes de combinarla c
   > **Salida esperada:** Los estados son DELIVERED y CONFIRMED. Mensaje: `VALIDACIÓN EXITOSA: Staging: O1001=DELIVERED y O1004=CONFIRMED`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Verifica que no existen identificadores repetidos en el staging.
+- {% include step_label.html id="s019" %} Verifica que no existen identificadores repetidos en el staging.
 
   ```python
   s=spark.table('p4_incremental_staging')
@@ -388,7 +401,7 @@ Conservar únicamente la versión más reciente por pedido antes de combinarla c
   > **Salida esperada:** Cuatro registros y cuatro claves únicas. Mensaje: `VALIDACIÓN EXITOSA: Staging: 4 registros y 4 identificadores únicos`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Guarda el estado anterior de los pedidos para contrastarlo después del MERGE.
+- {% include step_label.html id="s020" %} Guarda el estado anterior de los pedidos para contrastarlo después del MERGE.
 
   ```python
   before_merge = {r['order_id']: r['amount'] for r in spark.table(V)
@@ -406,7 +419,7 @@ Conservar únicamente la versión más reciente por pedido antes de combinarla c
 
 Aplicar MERGE conservando created_at y actualizando updated_at solo cuando la fuente no sea antigua.
 
-- {% include step_label.html %} Ejecuta MERGE INTO desde la vista deduplicada.
+- {% include step_label.html id="s021" %} Ejecuta MERGE INTO desde la vista deduplicada.
 
   > **Importante:** No uses directamente Bronze: contiene duplicados que hacen ambiguas las coincidencias.
   {: .lab-note .important .compact}
@@ -432,7 +445,7 @@ Aplicar MERGE conservando created_at y actualizando updated_at solo cuando la fu
   > **Salida esperada:** Delta MERGE finaliza correctamente.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta los cuatro pedidos afectados para observar status, amount y channel.
+- {% include step_label.html id="s022" %} Consulta los cuatro pedidos afectados para observar status, amount y channel.
 
   ```python
   display(spark.table(V).filter(F.col('order_id').isin('O1001','O1002','O1004','O1005')).select('order_id','status','amount','channel'))
@@ -441,7 +454,7 @@ Aplicar MERGE conservando created_at y actualizando updated_at solo cuando la fu
   > **Salida esperada:** Dos filas actualizadas y dos nuevas.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que O1001 y O1002 se actualizaron con los valores nuevos.
+- {% include step_label.html id="s023" %} Comprueba que O1001 y O1002 se actualizaron con los valores nuevos.
 
   ```python
   d = {r['order_id']: r for r in spark.table(V)
@@ -456,7 +469,7 @@ Aplicar MERGE conservando created_at y actualizando updated_at solo cuando la fu
   > **Salida esperada:** Las actualizaciones presentan DELIVERED y CANCELLED. Mensaje: `VALIDACIÓN EXITOSA: MERGE: O1001=125.50 DELIVERED y O1002=80.00 CANCELLED`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que O1004 y O1005 fueron insertados y aparecen una sola vez.
+- {% include step_label.html id="s024" %} Comprueba que O1004 y O1005 fueron insertados y aparecen una sola vez.
 
   ```python
   new = {r['order_id']: r['amount'] for r in spark.table(V)
@@ -470,7 +483,7 @@ Aplicar MERGE conservando created_at y actualizando updated_at solo cuando la fu
   > **Salida esperada:** Las dos claves nuevas se encuentran en Silver. Mensaje: `VALIDACIÓN EXITOSA: MERGE: O1004=215.00 y O1005=45.25 insertados`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que no se produjeron claves duplicadas en la tabla Silver.
+- {% include step_label.html id="s025" %} Comprueba que no se produjeron claves duplicadas en la tabla Silver.
 
   ```python
   assert spark.table(V).count() == 6
@@ -486,7 +499,7 @@ Aplicar MERGE conservando created_at y actualizando updated_at solo cuando la fu
 
 Comprobar que los cuatro pedidos procesados conservan el identificador de lote y fechas técnicas.
 
-- {% include step_label.html %} Consulta el lote batch_003 después del MERGE y verifica exactamente cuatro registros.
+- {% include step_label.html id="s026" %} Consulta el lote batch_003 después del MERGE y verifica exactamente cuatro registros.
 
   ```python
   assert spark.table(V).filter(F.col('batch_id')==BATCH).count()==4
@@ -496,7 +509,7 @@ Comprobar que los cuatro pedidos procesados conservan el identificador de lote y
   > **Salida esperada:** El lote incremental tiene cuatro pedidos únicos. Mensaje: `VALIDACIÓN EXITOSA: Trazabilidad: 4 pedidos asociados al lote batch_003`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que las columnas created_at y updated_at están pobladas.
+- {% include step_label.html id="s027" %} Comprueba que las columnas created_at y updated_at están pobladas.
 
   ```python
   assert spark.table(V).filter(F.col('batch_id')==BATCH).filter(F.col('created_at').isNull() | F.col('updated_at').isNull()).count()==0
@@ -506,7 +519,7 @@ Comprobar que los cuatro pedidos procesados conservan el identificador de lote y
   > **Salida esperada:** Todas las filas procesadas conservan marcas temporales. Mensaje: `VALIDACIÓN EXITOSA: Trazabilidad: created_at y updated_at no tienen valores nulos`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Visualiza la operación MERGE en el historial Delta de Silver.
+- {% include step_label.html id="s028" %} Visualiza la operación MERGE en el historial Delta de Silver.
 
   ```python
   display(spark.sql(f'DESCRIBE HISTORY {V} LIMIT 5'))
@@ -530,7 +543,10 @@ Reconstruir Gold con datos incrementales y comprobar operaciones físicas Delta;
 
 Actualizar los agregados por fecha y canal excluyendo pedidos cancelados.
 
-- {% include step_label.html %} Reconstruye Gold con la tabla Silver actualizada.
+
+{% assign tracking_task_id = "t004" %}
+
+- {% include step_label.html id="s029" %} Reconstruye Gold con la tabla Silver actualizada.
 
   ```python
   spark.sql(f'''CREATE OR REPLACE TABLE {G} USING DELTA AS
@@ -542,7 +558,7 @@ Actualizar los agregados por fecha y canal excluyendo pedidos cancelados.
   > **Salida esperada:** Gold agrupa por fecha/canal y suma 460.75, excluyendo O1002 (CANCELLED).
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que el pedido O1002 cancelado no contribuye al agregado Gold.
+- {% include step_label.html id="s030" %} Comprueba que el pedido O1002 cancelado no contribuye al agregado Gold.
 
   ```python
   g = spark.table(G)
@@ -555,7 +571,7 @@ Actualizar los agregados por fecha y canal excluyendo pedidos cancelados.
   > **Salida esperada:** La fecha y canal del pedido CANCELLED no aparecen. Mensaje: `VALIDACIÓN EXITOSA: Gold: pedido cancelado excluido; ventas no canceladas=460.75`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba el aporte de O1004 y O1005 en la fecha 2025-02-10.
+- {% include step_label.html id="s031" %} Comprueba el aporte de O1004 y O1005 en la fecha 2025-02-10.
 
   ```python
   day = (spark.table(G).filter(F.col('order_date') == F.lit('2025-02-10').cast('date'))
@@ -570,7 +586,7 @@ Actualizar los agregados por fecha y canal excluyendo pedidos cancelados.
   > **Salida esperada:** partner=215.00 y mobile=45.25; unknown puede incluir 30.00 de batch_002. Mensaje: `VALIDACIÓN EXITOSA: Gold del 10 de febrero: unknown=30.00, partner=215.00 y mobile=45.25`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta el total Gold y el total Silver no cancelado para reconciliar importes.
+- {% include step_label.html id="s032" %} Consulta el total Gold y el total Silver no cancelado para reconciliar importes.
 
   ```python
   a=spark.table(G).agg(F.sum('total_sales')).first()[0]
@@ -586,7 +602,7 @@ Actualizar los agregados por fecha y canal excluyendo pedidos cancelados.
 
 Ejecutar OPTIMIZE y ZORDER sobre claves consultadas y documentar que los beneficios son limitados con datos pequeños.
 
-- {% include step_label.html %} Registra la cantidad de archivos previa a OPTIMIZE.
+- {% include step_label.html id="s033" %} Registra la cantidad de archivos previa a OPTIMIZE.
 
   ```python
   n_before=spark.sql(f'DESCRIBE DETAIL {V}').first()['numFiles']; print(n_before)
@@ -595,7 +611,7 @@ Ejecutar OPTIMIZE y ZORDER sobre claves consultadas y documentar que los benefic
   > **Salida esperada:** Se obtiene el número inicial de archivos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Ejecuta OPTIMIZE con ZORDER BY sobre order_id y customer_id.
+- {% include step_label.html id="s034" %} Ejecuta OPTIMIZE con ZORDER BY sobre order_id y customer_id.
 
   > **Nota:** Este dataset es pequeño; la operación demuestra sintaxis e historial, no una mejora medible de rendimiento.
   {: .lab-note .info .compact}
@@ -607,7 +623,7 @@ Ejecutar OPTIMIZE y ZORDER sobre claves consultadas y documentar que los benefic
   > **Salida esperada:** Se muestra el resultado de OPTIMIZE.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba el estado físico después de la optimización.
+- {% include step_label.html id="s035" %} Comprueba el estado físico después de la optimización.
 
   ```python
   print('Archivos después:',spark.sql(f'DESCRIBE DETAIL {V}').first()['numFiles'])
@@ -616,7 +632,7 @@ Ejecutar OPTIMIZE y ZORDER sobre claves consultadas y documentar que los benefic
   > **Salida esperada:** Se muestra el conteo posterior de archivos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que el resultado lógico no cambió tras OPTIMIZE.
+- {% include step_label.html id="s036" %} Comprueba que el resultado lógico no cambió tras OPTIMIZE.
 
   ```python
   assert spark.table(V).count() == 6
@@ -633,7 +649,7 @@ Ejecutar OPTIMIZE y ZORDER sobre claves consultadas y documentar que los benefic
 
 Examinar operaciones transaccionales y contrastar MERGE y OPTIMIZE mediante las entradas del Delta Log.
 
-- {% include step_label.html %} Muestra únicamente las operaciones MERGE y OPTIMIZE usando el historial como DataFrame.
+- {% include step_label.html id="s037" %} Muestra únicamente las operaciones MERGE y OPTIMIZE usando el historial como DataFrame.
 
   ```python
   h=spark.sql(f'DESCRIBE HISTORY {V}')
@@ -643,7 +659,7 @@ Examinar operaciones transaccionales y contrastar MERGE y OPTIMIZE mediante las 
   > **Salida esperada:** Se muestran MERGE y OPTIMIZE con métricas cuando están disponibles.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que el historial contiene ambas operaciones.
+- {% include step_label.html id="s038" %} Comprueba que el historial contiene ambas operaciones.
 
   ```python
   ops={r['operation'] for r in h.select('operation').collect()}
@@ -654,7 +670,7 @@ Examinar operaciones transaccionales y contrastar MERGE y OPTIMIZE mediante las 
   > **Salida esperada:** Se validan operaciones MERGE y OPTIMIZE. Mensaje: `VALIDACIÓN EXITOSA: Historial Delta contiene MERGE y OPTIMIZE`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta el historial de Bronze para ubicar la escritura con evolución de esquema.
+- {% include step_label.html id="s039" %} Consulta el historial de Bronze para ubicar la escritura con evolución de esquema.
 
   ```python
   display(spark.sql(f'DESCRIBE HISTORY {B} LIMIT 5'))
@@ -678,7 +694,10 @@ Registrar los conteos de batch_003 y obtener evidencia de que Silver y Gold refl
 
 Ejecutar aserciones reproducibles sobre las cuatro claves procesadas y sobre la agregación Gold.
 
-- {% include step_label.html %} Valida que Bronze tiene seis registros del lote y Silver cuatro registros afectados.
+
+{% assign tracking_task_id = "t005" %}
+
+- {% include step_label.html id="s040" %} Valida que Bronze tiene seis registros del lote y Silver cuatro registros afectados.
 
   ```python
   assert spark.table(B).filter(F.col('batch_id')==BATCH).count()==6
@@ -689,7 +708,7 @@ Ejecutar aserciones reproducibles sobre las cuatro claves procesadas y sobre la 
   > **Salida esperada:** Bronze=6 y Silver batch_003=4. Mensaje: `VALIDACIÓN EXITOSA: Conteos finales: Bronze batch_003=6 y Silver batch_003=4`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba los canales finales de O1001, O1002, O1004 y O1005.
+- {% include step_label.html id="s041" %} Comprueba los canales finales de O1001, O1002, O1004 y O1005.
 
   ```python
   channels={r['order_id']:r['channel'] for r in spark.table(V).filter(F.col('batch_id')==BATCH).collect()}
@@ -700,7 +719,7 @@ Ejecutar aserciones reproducibles sobre las cuatro claves procesadas y sobre la 
   > **Salida esperada:** Los cuatro canales coinciden con el lote incremental. Mensaje: `VALIDACIÓN EXITOSA: Canales finales: mobile, store, partner y mobile por pedido`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba la ausencia de duplicados después del MERGE.
+- {% include step_label.html id="s042" %} Comprueba la ausencia de duplicados después del MERGE.
 
   ```python
   assert spark.table(V).count()==spark.table(V).select('order_id').distinct().count()
@@ -710,7 +729,7 @@ Ejecutar aserciones reproducibles sobre las cuatro claves procesadas y sobre la 
   > **Salida esperada:** La tabla Silver conserva claves de negocio únicas. Mensaje: `VALIDACIÓN EXITOSA: Integridad: no existen order_id duplicados en Silver`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Valida que la tabla Gold existe y usa formato Delta.
+- {% include step_label.html id="s043" %} Valida que la tabla Gold existe y usa formato Delta.
 
   ```python
   assert spark.sql(f'DESCRIBE DETAIL {G}').first()['format']=='delta'
@@ -724,7 +743,7 @@ Ejecutar aserciones reproducibles sobre las cuatro claves procesadas y sobre la 
 
 Guardar un registro compatible con el esquema original de la auditoría de la Práctica 3.
 
-- {% include step_label.html %} Registra batch_003 en la tabla de auditoría con los campos que creó la Práctica 3.
+- {% include step_label.html id="s044" %} Registra batch_003 en la tabla de auditoría con los campos que creó la Práctica 3.
 
   ```python
   completed = datetime.now(timezone.utc).replace(tzinfo=None)
@@ -750,7 +769,7 @@ Guardar un registro compatible con el esquema original de la auditoría de la Pr
   > **Salida esperada:** Auditoría registra 6 filas Bronze y 4 claves incrementales. Mensaje: `VALIDACIÓN EXITOSA: Auditoría: batch_003 registrado una sola vez`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta la auditoría y el historial Silver como evidencia del laboratorio.
+- {% include step_label.html id="s045" %} Consulta la auditoría y el historial Silver como evidencia del laboratorio.
 
   ```python
   display(spark.table(A).filter(F.col('batch_id')==BATCH));display(spark.sql(f'DESCRIBE HISTORY {V} LIMIT 5'))
@@ -759,7 +778,7 @@ Guardar un registro compatible con el esquema original de la auditoría de la Pr
   > **Salida esperada:** Aparece una fila batch_003 y las operaciones Delta recientes.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Guarda el notebook sin eliminar las tablas que usará la Práctica 5.
+- {% include step_label.html id="s046" %} Guarda el notebook sin eliminar las tablas que usará la Práctica 5.
 
   > **Importante:** Evita DROP y VACUUM: los datos deben conservar su historial para Time Travel.
   {: .lab-note .important .compact}

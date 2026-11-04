@@ -1,4 +1,8 @@
 ---
+course_id: dbricksint
+lab_id: l008
+tracking: true
+position: 8
 layout: lab
 title: 'Práctica 8: Creación de pipeline Bronze → Silver con DLT'
 permalink: /lab8/lab8/
@@ -48,12 +52,15 @@ Preparar un conjunto CSV reproducible de ocho registros en un directorio exclusi
 
 Usar recursos existentes sin modificar tablas de prácticas anteriores.
 
-- {% include step_label.html %} **Abre** Workspace y localiza tu carpeta personal; comprueba que puedes crear una subcarpeta.
+
+{% assign tracking_task_id = "t001" %}
+
+- {% include step_label.html id="s001" %} **Abre** Workspace y localiza tu carpeta personal; comprueba que puedes crear una subcarpeta.
 
   > **Salida esperada:** Aparece tu directorio /Workspace/Users/<usuario> y está habilitada la creación de archivos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **Workspace > Home > batch_1**, selecciona **Create > Notebook**, nómbralo `08_preparar_origen`, elige **Python** y conéctalo al **mismo cluster All-Purpose** de las Prácticas 1–5 (no crees otro).
+- {% include step_label.html id="s002" %} En **Workspace > Home > batch_1**, selecciona **Create > Notebook**, nómbralo `08_preparar_origen`, elige **Python** y conéctalo al **mismo cluster All-Purpose** de las Prácticas 1–5 (no crees otro).
 
   > **Nota:** El cómputo para preparar el CSV es independiente del cómputo administrado por Lakeflow.
   {: .lab-note .info .compact}
@@ -61,7 +68,7 @@ Usar recursos existentes sin modificar tablas de prácticas anteriores.
   > **Salida esperada:** La sesión permite ejecutar una celda Python sin error de conexión.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En `08_preparar_origen`, **celda 1 (Python)**, ejecuta este bloque para comprobar catálogo, esquema, Volume `landing` y la ruta completa antes de escribir archivos.
+- {% include step_label.html id="s003" %} En `08_preparar_origen`, **celda 1 (Python)**, ejecuta este bloque para comprobar catálogo, esquema, Volume `landing` y la ruta completa antes de escribir archivos.
 
   ```python
   v=spark.sql('SHOW VOLUMES IN dbricks_de_int.batch1')
@@ -73,7 +80,7 @@ Usar recursos existentes sin modificar tablas de prácticas anteriores.
   > **Salida esperada:** Se imprime la validación del catálogo, esquema y Volume landing; un error de permisos detiene la ejecución.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En `08_preparar_origen`, **celda 2 (Python)**, debajo de la celda 1, define la ruta exclusiva del pipeline y confirma que comienza en el Volume `landing`.
+- {% include step_label.html id="s004" %} En `08_preparar_origen`, **celda 2 (Python)**, debajo de la celda 1, define la ruta exclusiva del pipeline y confirma que comienza en el Volume `landing`.
 
   ```python
   INPUT='/Volumes/dbricks_de_int/batch1/landing/p8_approved'
@@ -88,7 +95,7 @@ Usar recursos existentes sin modificar tablas de prácticas anteriores.
 
 Crear ocho filas con seis claves únicas y versiones reproducibles para dos pedidos.
 
-- {% include step_label.html %} En `08_preparar_origen`, **celda 3 (Python)**, pega las ocho filas de ejemplo y ejecútalas; identifica `P8002` y `P8004` como IDs con dos versiones.
+- {% include step_label.html id="s005" %} En `08_preparar_origen`, **celda 3 (Python)**, pega las ocho filas de ejemplo y ejecútalas; identifica `P8002` y `P8004` como IDs con dos versiones.
 
   ```python
   import csv,io
@@ -107,7 +114,7 @@ Crear ocho filas con seis claves únicas y versiones reproducibles para dos pedi
   > **Salida esperada:** Las claves P8002 y P8004 aparecen dos veces; hay seis claves distintas.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En `08_preparar_origen`, **celda 4 (Python)**, justo debajo de las filas, crea el CSV en memoria con sus ocho columnas y verifica el encabezado.
+- {% include step_label.html id="s006" %} En `08_preparar_origen`, **celda 4 (Python)**, justo debajo de las filas, crea el CSV en memoria con sus ocho columnas y verifica el encabezado.
 
   ```python
   headers=['order_id','customer_id','order_date','status','quantity','unit_price','source_updated_at','update_sequence']
@@ -119,7 +126,7 @@ Crear ocho filas con seis claves únicas y versiones reproducibles para dos pedi
   > **Salida esperada:** El encabezado incluye order_id, status, quantity, unit_price, source_updated_at y update_sequence.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En `08_preparar_origen`, **celda 5 (Python)**, crea `landing/p8_approved` y escribe `orders_p8_baseline.csv`; verifica la ruta antes de continuar.
+- {% include step_label.html id="s007" %} En `08_preparar_origen`, **celda 5 (Python)**, crea `landing/p8_approved` y escribe `orders_p8_baseline.csv`; verifica la ruta antes de continuar.
 
   ```python
   dbutils.fs.mkdirs(INPUT)
@@ -132,7 +139,7 @@ Crear ocho filas con seis claves únicas y versiones reproducibles para dos pedi
   > **Salida esperada:** Se crea orders_p8_baseline.csv con nueve líneas físicas.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En `08_preparar_origen`, **celda 6 (Python)**, lee `BASEFILE` con Spark y comprueba ocho filas, ocho columnas y las cuatro filas de `P8002`/`P8004`.
+- {% include step_label.html id="s008" %} En `08_preparar_origen`, **celda 6 (Python)**, lee `BASEFILE` con Spark y comprueba ocho filas, ocho columnas y las cuatro filas de `P8002`/`P8004`.
 
   ```python
   test=spark.read.option('header',True).option('inferSchema',False).csv(BASEFILE)
@@ -144,7 +151,7 @@ Crear ocho filas con seis claves únicas y versiones reproducibles para dos pedi
   > **Salida esperada:** La lectura devuelve exactamente 8 filas y 8 columnas; P8002 y P8004 aparecen dos veces.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En `08_preparar_origen`, **celda 7 (Python)**, calcula el importe con la última secuencia de cada pedido y verifica seis pedidos y un total de 220.00.
+- {% include step_label.html id="s009" %} En `08_preparar_origen`, **celda 7 (Python)**, calcula el importe con la última secuencia de cada pedido y verifica seis pedidos y un total de 220.00.
 
   ```python
   from decimal import Decimal
@@ -176,32 +183,35 @@ Crear el pipeline por primera vez en **Jobs & Pipelines**, configurar `transform
 
 Crear el recurso antes de intentar editar su SQL y establecer su destino de Unity Catalog.
 
-- {% include step_label.html %} En la barra izquierda entra a **Jobs & Pipelines**. Selecciona **Create** o **Create pipeline** y elige **ETL pipeline** (Lakeflow Spark Declarative Pipelines); no selecciones **Job**.
+
+{% assign tracking_task_id = "t002" %}
+
+- {% include step_label.html id="s010" %} En la barra izquierda entra a **Jobs & Pipelines**. Selecciona **Create** o **Create pipeline** y elige **ETL pipeline** (Lakeflow Spark Declarative Pipelines); no selecciones **Job**.
 
   > **Salida esperada:** Se abre la vista de un nuevo **ETL pipeline** con botones **Edit pipeline**, **Settings** y **Run pipeline**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la vista del pipeline nuevo pulsa **Settings**. En **Pipeline settings > Pipeline name**, selecciona el icono de lápiz; escribe `pipeline_orders_bronze_silver_b2` y confirma.
+- {% include step_label.html id="s011" %} En la vista del pipeline nuevo pulsa **Settings**. En **Pipeline settings > Pipeline name**, selecciona el icono de lápiz; escribe `pipeline_orders_bronze_silver_b2` y confirma.
 
   > **Salida esperada:** **Pipeline name** muestra `pipeline_orders_bronze_silver_b2`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Sin salir de **Settings**, en **Default location for data assets** pulsa **Edit catalog and schema**. Establece **Default catalog**=`dbricks_de_int` y **Default schema**=`batch1`; confirma los cambios.
+- {% include step_label.html id="s012" %} Sin salir de **Settings**, en **Default location for data assets** pulsa **Edit catalog and schema**. Establece **Default catalog**=`dbricks_de_int` y **Default schema**=`batch1`; confirma los cambios.
 
   > **Salida esperada:** Se muestran `dbricks_de_int` y `batch1` como destino del pipeline; no permanece `default` como esquema.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **Settings > Pipeline mode**, selecciona el lápiz y establece **Triggered**. En **Compute**, utiliza **Serverless** si está autorizado. Conserva la identidad de **Run as** de tu cuenta o la asignada por el curso.
+- {% include step_label.html id="s013" %} En **Settings > Pipeline mode**, selecciona el lápiz y establece **Triggered**. En **Compute**, utiliza **Serverless** si está autorizado. Conserva la identidad de **Run as** de tu cuenta o la asignada por el curso.
 
   > **Salida esperada:** **Pipeline mode**=`Triggered` y **Compute**=`Serverless` (o la opción permitida por la política institucional).
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **Settings > Code assets**, comprueba que **Root folder** apunta al directorio generado al crear el pipeline y **Source code** señala `transformations/`. Si falta, usa **Configure paths** para vincular esa carpeta; no crees archivos en otro directorio.
+- {% include step_label.html id="s014" %} En **Settings > Code assets**, comprueba que **Root folder** apunta al directorio generado al crear el pipeline y **Source code** señala `transformations/`. Si falta, usa **Configure paths** para vincular esa carpeta; no crees archivos en otro directorio.
 
   > **Salida esperada:** **Source code** incluye `transformations/` dentro de **Root folder**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Cierra **Settings** con la **X**. En la vista principal abre **Edit pipeline**, y en el explorador del editor expande la carpeta `transformations/`.
+- {% include step_label.html id="s015" %} Cierra **Settings** con la **X**. En la vista principal abre **Edit pipeline**, y en el explorador del editor expande la carpeta `transformations/`.
 
   > **Nota:** Todavía no ejecutes **Run pipeline**. Si el editor contiene un archivo SQL de ejemplo, puede sustituirse; evita mantener definiciones de ejemplo junto a las del curso.
   {: .lab-note .info .compact}
@@ -209,7 +219,7 @@ Crear el recurso antes de intentar editar su SQL y establecer su destino de Unit
   > **Salida esperada:** Se abre el editor de código del pipeline y puedes ver `transformations/`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Dentro de `transformations/`, usa **Add > File** o **Create file** para crear `bronze_silver_orders.sql` de tipo SQL. Si existe un SQL de ejemplo, elimina sus definiciones o excluye ese archivo para evitar tablas adicionales.
+- {% include step_label.html id="s016" %} Dentro de `transformations/`, usa **Add > File** o **Create file** para crear `bronze_silver_orders.sql` de tipo SQL. Si existe un SQL de ejemplo, elimina sus definiciones o excluye ese archivo para evitar tablas adicionales.
 
   > **Salida esperada:** En `transformations/` hay un archivo `bronze_silver_orders.sql` listo para editar, sin definiciones duplicadas de Bronze o Silver.
   {: .lab-note .output .compact}
@@ -218,7 +228,7 @@ Crear el recurso antes de intentar editar su SQL y establecer su destino de Unit
 
 Utilizar `read_files` para alimentar una streaming table con los datos crudos del CSV.
 
-- {% include step_label.html %} En `transformations/bronze_silver_orders.sql`, **al inicio del archivo**, pega el bloque completo de Bronze. No lo ejecutes desde **SQL Editor**: se procesará al iniciar el pipeline.
+- {% include step_label.html id="s017" %} En `transformations/bronze_silver_orders.sql`, **al inicio del archivo**, pega el bloque completo de Bronze. No lo ejecutes desde **SQL Editor**: se procesará al iniciar el pipeline.
 
   ```sql
   CREATE OR REFRESH STREAMING TABLE p8_orders_bronze
@@ -234,12 +244,12 @@ Utilizar `read_files` para alimentar una streaming table con los datos crudos de
   > **Salida esperada:** La primera sentencia crea `p8_orders_bronze` como **STREAMING TABLE** y apunta al directorio de entrada exclusivo.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la primera sentencia SQL, localiza `FROM STREAM read_files(...)` y comprueba que la ruta contiene catálogo `dbricks_de_int`, esquema `batch1`, volumen `landing` y carpeta `p8_approved`.
+- {% include step_label.html id="s018" %} En la primera sentencia SQL, localiza `FROM STREAM read_files(...)` y comprueba que la ruta contiene catálogo `dbricks_de_int`, esquema `batch1`, volumen `landing` y carpeta `p8_approved`.
 
   > **Salida esperada:** La ruta es `/Volumes/dbricks_de_int/batch1/landing/p8_approved/`; no apunta a la raíz del volumen.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En el `SELECT` de Bronze verifica que figuran `*`, `_metadata.file_path AS source_file` y `current_timestamp() AS ingestion_timestamp`, sin filtros ni deduplicación.
+- {% include step_label.html id="s019" %} En el `SELECT` de Bronze verifica que figuran `*`, `_metadata.file_path AS source_file` y `current_timestamp() AS ingestion_timestamp`, sin filtros ni deduplicación.
 
   > **Salida esperada:** Bronze preservará las ocho filas originales y añadirá `source_file` e `ingestion_timestamp`.
   {: .lab-note .output .compact}
@@ -248,7 +258,7 @@ Utilizar `read_files` para alimentar una streaming table con los datos crudos de
 
 Añadir la vista materializada tipada y deduplicada debajo de la sentencia Bronze.
 
-- {% include step_label.html %} En el mismo archivo SQL, **debajo del `;` que termina Bronze**, agrega la segunda sentencia completa para Silver.
+- {% include step_label.html id="s020" %} En el mismo archivo SQL, **debajo del `;` que termina Bronze**, agrega la segunda sentencia completa para Silver.
 
   ```sql
   CREATE OR REFRESH MATERIALIZED VIEW p8_orders_silver
@@ -281,17 +291,17 @@ Añadir la vista materializada tipada y deduplicada debajo de la sentencia Bronz
   > **Salida esperada:** La segunda sentencia declara `p8_orders_silver` como **MATERIALIZED VIEW** dependiente de Bronze.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Dentro de `p8_orders_silver`, ubica **`WITH typed AS`** y comprueba que usa `try_cast` para `order_date`, `quantity`, `unit_price`, `source_updated_at` y `update_sequence`.
+- {% include step_label.html id="s021" %} Dentro de `p8_orders_silver`, ubica **`WITH typed AS`** y comprueba que usa `try_cast` para `order_date`, `quantity`, `unit_price`, `source_updated_at` y `update_sequence`.
 
   > **Salida esperada:** Las conversiones tolerantes están en el CTE `typed` y conservan el nombre `order_status` para las expectativas de la Práctica 9.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En el CTE **`ranked`** confirma `PARTITION BY order_id` y las columnas `source_updated_at` y `update_sequence` con orden `DESC`.
+- {% include step_label.html id="s022" %} En el CTE **`ranked`** confirma `PARTITION BY order_id` y las columnas `source_updated_at` y `update_sequence` con orden `DESC`.
 
   > **Salida esperada:** La regla conservará la versión 2 de `P8002` y `P8004` al aplicar `rn = 1`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En el **SELECT final** de Silver, identifica `CAST(quantity * unit_price AS DECIMAL(14,2)) AS order_amount` y `FROM ranked WHERE rn = 1`.
+- {% include step_label.html id="s023" %} En el **SELECT final** de Silver, identifica `CAST(quantity * unit_price AS DECIMAL(14,2)) AS order_amount` y `FROM ranked WHERE rn = 1`.
 
   > **Salida esperada:** Silver calculará `order_amount` y tendrá una fila por identificador de pedido.
   {: .lab-note .output .compact}
@@ -311,7 +321,10 @@ El pipeline ya fue creado y configurado en la Tarea 2. En esta tarea **no vuelva
 
 Comprobar la definición de Bronze y Silver sin iniciar la primera actualización de datos.
 
-- {% include step_label.html %} En **Jobs & Pipelines**, abre `pipeline_orders_bronze_silver_b2`. En la vista principal del pipeline, selecciona **Dry run** (debajo del área del gráfico central). Espera a que concluya la validación.
+
+{% assign tracking_task_id = "t003" %}
+
+- {% include step_label.html id="s024" %} En **Jobs & Pipelines**, abre `pipeline_orders_bronze_silver_b2`. En la vista principal del pipeline, selecciona **Dry run** (debajo del área del gráfico central). Espera a que concluya la validación.
 
   > **Nota:** **Dry run** comprueba las definiciones del pipeline; **no sustituye** a **Run pipeline** y no garantiza que la carga de datos vaya a finalizar correctamente.
   {: .lab-note .info .compact}
@@ -319,7 +332,7 @@ Comprobar la definición de Bronze y Silver sin iniciar la primera actualizació
   > **Salida esperada:** El resultado de Dry run no presenta errores de análisis de las definiciones `p8_orders_bronze` y `p8_orders_silver`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Revisa el resultado del **Dry run**. Si aparece un error, abre su detalle e identifica el **archivo y la línea SQL**; no continúes con la carga hasta corregirlo.
+- {% include step_label.html id="s025" %} Revisa el resultado del **Dry run**. Si aparece un error, abre su detalle e identifica el **archivo y la línea SQL**; no continúes con la carga hasta corregirlo.
 
   > **Salida esperada:** La validación previa termina sin errores pendientes. Si hubo errores, queda identificado el mensaje técnico que debió corregirse.
   {: .lab-note .output .compact}
@@ -328,12 +341,12 @@ Comprobar la definición de Bronze y Silver sin iniciar la primera actualizació
 
 Mantener el archivo fuente único y volver a validar solo cuando haya errores.
 
-- {% include step_label.html %} **Solo si Dry run reportó errores**, selecciona **Edit pipeline**, abre `transformations/bronze_silver_orders.sql`, corrige la línea señalada y guarda con **Ctrl+S**. Regresa al pipeline y repite **Dry run** hasta que no haya errores. Si pasó a la primera, omite la edición.
+- {% include step_label.html id="s026" %} **Solo si Dry run reportó errores**, selecciona **Edit pipeline**, abre `transformations/bronze_silver_orders.sql`, corrige la línea señalada y guarda con **Ctrl+S**. Regresa al pipeline y repite **Dry run** hasta que no haya errores. Si pasó a la primera, omite la edición.
 
   > **Salida esperada:** El archivo conserva las dos sentencias `CREATE OR REFRESH` y el último Dry run no muestra errores de análisis.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la vista principal del pipeline, comprueba que **aún no se ha realizado la primera actualización de datos**: el gráfico puede seguir vacío. Continúa a la **Tarea 4**, donde ejecutarás **Run pipeline** una sola vez.
+- {% include step_label.html id="s027" %} En la vista principal del pipeline, comprueba que **aún no se ha realizado la primera actualización de datos**: el gráfico puede seguir vacío. Continúa a la **Tarea 4**, donde ejecutarás **Run pipeline** una sola vez.
 
   > **Salida esperada:** Pipeline listo para su primera actualización, sin carga duplicada ni tablas creadas manualmente.
   {: .lab-note .output .compact}
@@ -353,7 +366,10 @@ Lanzar una actualización triggered y confirmar el DAG, las tablas Delta y los r
 
 Usar el grafo como evidencia de que la dependencia es declarativa.
 
-- {% include step_label.html %} En **Jobs & Pipelines**, abre `pipeline_orders_bronze_silver_b2` y pulsa **Run pipeline** (botón superior derecho). Esta es la **única ejecución de carga** de la práctica. Espera a que finalice y consulta su estado en la misma vista.
+
+{% assign tracking_task_id = "t004" %}
+
+- {% include step_label.html id="s028" %} En **Jobs & Pipelines**, abre `pipeline_orders_bronze_silver_b2` y pulsa **Run pipeline** (botón superior derecho). Esta es la **única ejecución de carga** de la práctica. Espera a que finalice y consulta su estado en la misma vista.
 
   > **Nota:** El tiempo de inicio de cómputo puede variar; no inventes métricas de duración.
   {: .lab-note .info .compact}
@@ -361,12 +377,12 @@ Usar el grafo como evidencia de que la dependencia es declarativa.
   > **Salida esperada:** La actualización termina Succeeded; las dos tablas aparecen en el DAG.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Cuando el estado sea **Succeeded**, revisa el **gráfico central** generado por la ejecución: identifica `p8_orders_bronze` y sigue la dependencia hacia `p8_orders_silver`.
+- {% include step_label.html id="s029" %} Cuando el estado sea **Succeeded**, revisa el **gráfico central** generado por la ejecución: identifica `p8_orders_bronze` y sigue la dependencia hacia `p8_orders_silver`.
 
   > **Salida esperada:** Se visualiza una flecha entre la streaming table y la materialized view.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En los detalles de la **actualización que acabas de ejecutar**, registra su **Update ID** y el estado final; consulta la duración únicamente si la interfaz la muestra.
+- {% include step_label.html id="s030" %} En los detalles de la **actualización que acabas de ejecutar**, registra su **Update ID** y el estado final; consulta la duración únicamente si la interfaz la muestra.
 
   > **Salida esperada:** La actualización presenta un identificador y una duración observada, no estimada.
   {: .lab-note .output .compact}
@@ -375,7 +391,7 @@ Usar el grafo como evidencia de que la dependencia es declarativa.
 
 Demostrar con consultas la conservación de Bronze y el resultado tipado Silver.
 
-- {% include step_label.html %} Regresa a `08_preparar_origen` y crea la **celda 8 (Python)** debajo de la celda 7. Ejecuta la consulta SQL mediante `spark.sql` y muestra el conteo Bronze.
+- {% include step_label.html id="s031" %} Regresa a `08_preparar_origen` y crea la **celda 8 (Python)** debajo de la celda 7. Ejecuta la consulta SQL mediante `spark.sql` y muestra el conteo Bronze.
 
    ```python
    bronze_result = spark.sql("SELECT COUNT(*) AS bronze_rows FROM dbricks_de_int.batch1.p8_orders_bronze").first()
@@ -386,7 +402,7 @@ Demostrar con consultas la conservación de Bronze y el resultado tipado Silver.
   > **Salida esperada:** Se imprime `VALIDACIÓN: Bronze=p8_orders_bronze; filas=8; esperado=8`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En `08_preparar_origen`, crea la **celda 9 (Python)** debajo de la celda 8. Ejecuta la agregación SQL mediante `spark.sql` y comprueba 6 filas, 6 IDs y 220.00.
+- {% include step_label.html id="s032" %} En `08_preparar_origen`, crea la **celda 9 (Python)** debajo de la celda 8. Ejecuta la agregación SQL mediante `spark.sql` y comprueba 6 filas, 6 IDs y 220.00.
 
    ```python
    from decimal import Decimal
@@ -401,7 +417,7 @@ Demostrar con consultas la conservación de Bronze y el resultado tipado Silver.
   > **Salida esperada:** Se imprime `VALIDACIÓN: Silver=6 filas; ids_unicos=6; ventas=220.00`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En `08_preparar_origen`, crea la **celda 10 (Python)** debajo de la celda 9. Consulta `P8002` y `P8004` y confirma las secuencias finales.
+- {% include step_label.html id="s033" %} En `08_preparar_origen`, crea la **celda 10 (Python)** debajo de la celda 9. Consulta `P8002` y `P8004` y confirma las secuencias finales.
 
    ```python
    orders = spark.sql("""SELECT order_id,order_status,update_sequence,order_amount
@@ -433,7 +449,10 @@ Revisar la calidad estructural de Silver y la evidencia operativa de la actualiz
 
 Dejar comprobaciones reproducibles que puedan repetirse después de la Práctica 9.
 
-- {% include step_label.html %} En `08_preparar_origen`, crea la **celda 11 (Python)** debajo de la celda 10. Ejecuta la consulta de duplicados e IDs nulos; ambos conteos deben ser cero.
+
+{% assign tracking_task_id = "t005" %}
+
+- {% include step_label.html id="s034" %} En `08_preparar_origen`, crea la **celda 11 (Python)** debajo de la celda 10. Ejecuta la consulta de duplicados e IDs nulos; ambos conteos deben ser cero.
 
    ```python
    quality = spark.sql("""SELECT
@@ -447,7 +466,7 @@ Dejar comprobaciones reproducibles que puedan repetirse después de la Práctica
   > **Salida esperada:** Se imprime `VALIDACIÓN: Silver grupos_duplicados=0; ids_nulos=0`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En `08_preparar_origen`, crea la **celda 12 (Python)** debajo de la celda 11. Ejecuta `DESCRIBE TABLE` mediante `spark.sql` y muestra los tipos DATE, INT y DECIMAL.
+- {% include step_label.html id="s035" %} En `08_preparar_origen`, crea la **celda 12 (Python)** debajo de la celda 11. Ejecuta `DESCRIBE TABLE` mediante `spark.sql` y muestra los tipos DATE, INT y DECIMAL.
 
    ```python
    schema_rows = spark.sql('DESCRIBE TABLE dbricks_de_int.batch1.p8_orders_silver')
@@ -466,12 +485,12 @@ Dejar comprobaciones reproducibles que puedan repetirse después de la Práctica
 
 Identificar eventos reales sin confundir el event log con el historial Delta.
 
-- {% include step_label.html %} En **Jobs & Pipelines > pipeline_orders_bronze_silver_b2 > Updates**, selecciona el último Update ID y comprueba **Succeeded** y ambos datasets.
+- {% include step_label.html id="s036" %} En **Jobs & Pipelines > pipeline_orders_bronze_silver_b2 > Updates**, selecciona el último Update ID y comprueba **Succeeded** y ambos datasets.
 
   > **Salida esperada:** El estado observado es Succeeded y aparecen Bronze y Silver como datasets procesados.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En los detalles del pipeline, abre **Event log / Events** (según la vista), filtra por el Update ID y revisa eventos de progreso, finalización y errores.
+- {% include step_label.html id="s037" %} En los detalles del pipeline, abre **Event log / Events** (según la vista), filtra por el Update ID y revisa eventos de progreso, finalización y errores.
 
   > **Nota:** El event log depende del pipeline, no de DESCRIBE HISTORY de una tabla Delta.
   {: .lab-note .info .compact}
@@ -479,7 +498,7 @@ Identificar eventos reales sin confundir el event log con el historial Delta.
   > **Salida esperada:** Se muestran eventos asociados al pipeline y su update ID; no hay error de ejecución.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En `08_preparar_origen` conserva las **celdas 8–12** con sus resultados; en Lakeflow conserva el pipeline y su **Update ID** para la Práctica 9. No ejecutes DROP ni elimines el archivo CSV.
+- {% include step_label.html id="s038" %} En `08_preparar_origen` conserva las **celdas 8–12** con sus resultados; en Lakeflow conserva el pipeline y su **Update ID** para la Práctica 9. No ejecutes DROP ni elimines el archivo CSV.
 
   > **Salida esperada:** Evidencia final: 8 filas Bronze; 6 pedidos Silver; 220.00 en importe total.
   {: .lab-note .output .compact}

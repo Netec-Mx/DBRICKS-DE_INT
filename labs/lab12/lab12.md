@@ -1,4 +1,8 @@
 ---
+course_id: dbricksint
+lab_id: l012
+tracking: true
+position: 12
 layout: lab
 title: 'Práctica 12: Optimización de pipeline y comparación de métricas'
 permalink: /lab12/lab12/
@@ -41,12 +45,15 @@ next: /lab13/lab13/
 
 Reutilizar el cómputo autorizado y crear objetos del experimento en un esquema exclusivo.
 
-- {% include step_label.html %} **Cuenta principal → Workspace > Home > batch_1:** crea el notebook `12_benchmark_layout`, con lenguaje **Python** y conecta el clúster existente; no crees otro clúster.
+
+{% assign tracking_task_id = "t001" %}
+
+- {% include step_label.html id="s001" %} **Cuenta principal → Workspace > Home > batch_1:** crea el notebook `12_benchmark_layout`, con lenguaje **Python** y conecta el clúster existente; no crees otro clúster.
 
   > **Salida esperada:** Notebook conectado y listo para ejecutar Python.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 1 (Python):** inspecciona versión del runtime y configuración de Spark; no supongas workers fijos ni Photon.
+- {% include step_label.html id="s002" %} **Celda 1 (Python):** inspecciona versión del runtime y configuración de Spark; no supongas workers fijos ni Photon.
 
   ```python
   print('spark_version=', spark.version)
@@ -57,7 +64,7 @@ Reutilizar el cómputo autorizado y crear objetos del experimento en un esquema 
   > **Salida esperada:** Se imprimen la versión de Spark y los dos parámetros reales.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 2 (Python):** establece parámetros constantes para todas las pruebas del notebook.
+- {% include step_label.html id="s003" %} **Celda 2 (Python):** establece parámetros constantes para todas las pruebas del notebook.
 
   ```python
   spark.conf.set('spark.sql.adaptive.enabled', 'true')
@@ -68,7 +75,7 @@ Reutilizar el cómputo autorizado y crear objetos del experimento en un esquema 
   > **Salida esperada:** `AQE=true` y `shuffle_partitions=200` para el experimento.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 3 (SQL):** cambia el selector de lenguaje a **SQL**, crea el esquema de laboratorio. Si el catálogo deniega `CREATE SCHEMA`, solicita al propietario que lo cree sin alterar `batch1`.
+- {% include step_label.html id="s004" %} **Celda 3 (SQL):** cambia el selector de lenguaje a **SQL**, crea el esquema de laboratorio. Si el catálogo deniega `CREATE SCHEMA`, solicita al propietario que lo cree sin alterar `batch1`.
 
   ```sql
   CREATE SCHEMA IF NOT EXISTS dbricks_de_int.p12_performance_lab;
@@ -77,7 +84,7 @@ Reutilizar el cómputo autorizado y crear objetos del experimento en un esquema 
   > **Salida esperada:** El esquema aislado aparece al repetir `SHOW SCHEMAS`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 4 (Python):** vuelve a Python y define los nombres que reutilizarán todos los pasos y la Práctica 13.
+- {% include step_label.html id="s005" %} **Celda 4 (Python):** vuelve a Python y define los nombres que reutilizarán todos los pasos y la Práctica 13.
 
   ```python
   BASE = 'dbricks_de_int.p12_performance_lab'
@@ -92,7 +99,7 @@ Reutilizar el cómputo autorizado y crear objetos del experimento en un esquema 
   > **Salida esperada:** Las cinco rutas se muestran dentro de `dbricks_de_int.p12_performance_lab`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 5 (SQL):** crea la tabla de 24 mediciones y la tabla de recomendaciones en una operación por sentencia.
+- {% include step_label.html id="s006" %} **Celda 5 (SQL):** crea la tabla de 24 mediciones y la tabla de recomendaciones en una operación por sentencia.
 
   ```sql
   CREATE TABLE IF NOT EXISTS dbricks_de_int.p12_performance_lab.benchmark_metrics (
@@ -121,7 +128,10 @@ Reutilizar el cómputo autorizado y crear objetos del experimento en un esquema 
 
 Comparar particionado por país y Liquid Clustering sobre 200,000 eventos idénticos.
 
-- {% include step_label.html %} **Celda 6 (SQL):** genera los 200,000 eventos sintéticos reproducibles en `events_source`; esta tabla es el origen común.
+
+{% assign tracking_task_id = "t002" %}
+
+- {% include step_label.html id="s007" %} **Celda 6 (SQL):** genera los 200,000 eventos sintéticos reproducibles en `events_source`; esta tabla es el origen común.
 
   ```sql
   CREATE OR REPLACE TABLE dbricks_de_int.p12_performance_lab.events_source
@@ -139,7 +149,7 @@ Comparar particionado por país y Liquid Clustering sobre 200,000 eventos idént
   > **Salida esperada:** Se materializan 200,000 filas y 6 columnas.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 7 (SQL):** comprueba filas, clientes, países, fechas y claves únicas del origen.
+- {% include step_label.html id="s008" %} **Celda 7 (SQL):** comprueba filas, clientes, países, fechas y claves únicas del origen.
 
   ```sql
   SELECT COUNT(*) filas, COUNT(DISTINCT event_id) ids_unicos,
@@ -151,7 +161,7 @@ Comparar particionado por país y Liquid Clustering sobre 200,000 eventos idént
   > **Salida esperada:** `filas=200000`, `clientes=1000`, `paises=5`, `fechas=90`, `ids_unicos=200000`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 8 (SQL):** crea el diseño estático por **country** (5 valores), no por 1,000 clientes; así evitas demasiados directorios pequeños.
+- {% include step_label.html id="s009" %} **Celda 8 (SQL):** crea el diseño estático por **country** (5 valores), no por 1,000 clientes; así evitas demasiados directorios pequeños.
 
   ```sql
   CREATE OR REPLACE TABLE dbricks_de_int.p12_performance_lab.events_partitioned_country
@@ -162,7 +172,7 @@ Comparar particionado por país y Liquid Clustering sobre 200,000 eventos idént
   > **Salida esperada:** `events_partitioned_country` queda particionada por `country`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 9 (SQL):** crea el diseño con **Liquid Clustering** en cliente y fecha usando exactamente el mismo origen.
+- {% include step_label.html id="s010" %} **Celda 9 (SQL):** crea el diseño con **Liquid Clustering** en cliente y fecha usando exactamente el mismo origen.
 
   ```sql
   CREATE OR REPLACE TABLE dbricks_de_int.p12_performance_lab.events_liquid
@@ -173,7 +183,7 @@ Comparar particionado por país y Liquid Clustering sobre 200,000 eventos idént
   > **Salida esperada:** `events_liquid` queda configurada con `CLUSTER BY (customer_id,event_date)`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 10 (SQL):** ejecuta `OPTIMIZE` solo sobre Liquid Clustering.
+- {% include step_label.html id="s011" %} **Celda 10 (SQL):** ejecuta `OPTIMIZE` solo sobre Liquid Clustering.
 
   ```sql
   OPTIMIZE dbricks_de_int.p12_performance_lab.events_liquid;
@@ -182,7 +192,7 @@ Comparar particionado por país y Liquid Clustering sobre 200,000 eventos idént
   > **Salida esperada:** Se obtiene el resultado real de la operación; puede indicar 0 archivos reescritos si no había trabajo pendiente.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 11 (SQL):** compara filas e importe; ambos diseños deben representar exactamente los mismos eventos.
+- {% include step_label.html id="s012" %} **Celda 11 (SQL):** compara filas e importe; ambos diseños deben representar exactamente los mismos eventos.
 
   ```sql
   SELECT 'static' diseno,COUNT(*) filas,SUM(amount) total_amount
@@ -195,7 +205,7 @@ Comparar particionado por país y Liquid Clustering sobre 200,000 eventos idént
   > **Salida esperada:** Dos filas con 200,000 eventos y el mismo `total_amount`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celdas 12 y 13 (SQL):** ejecuta **por separado** `DESCRIBE DETAIL` sobre cada diseño y registra `numFiles`, `sizeInBytes` y sus claves.
+- {% include step_label.html id="s013" %} **Celdas 12 y 13 (SQL):** ejecuta **por separado** `DESCRIBE DETAIL` sobre cada diseño y registra `numFiles`, `sizeInBytes` y sus claves.
 
   ```sql
   DESCRIBE DETAIL dbricks_de_int.p12_performance_lab.events_partitioned_country;
@@ -204,7 +214,7 @@ Comparar particionado por país y Liquid Clustering sobre 200,000 eventos idént
   > **Salida esperada:** La tabla estática presenta `partitionColumns=[country]`; Liquid contiene configuración de clustering sin particionado estático.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 13 (SQL):** ejecuta la inspección equivalente de Liquid.
+- {% include step_label.html id="s014" %} **Celda 13 (SQL):** ejecuta la inspección equivalente de Liquid.
 
   ```sql
   DESCRIBE DETAIL dbricks_de_int.p12_performance_lab.events_liquid;
@@ -223,7 +233,10 @@ Comparar particionado por país y Liquid Clustering sobre 200,000 eventos idént
 
 Las seis combinaciones se ejecutan cuatro veces; las primeras seis son calentamientos.
 
-- {% include step_label.html %} **Celda 14 (Python):** define tres consultas equivalentes que se ejecutarán sobre ambos diseños.
+
+{% assign tracking_task_id = "t003" %}
+
+- {% include step_label.html id="s015" %} **Celda 14 (Python):** define tres consultas equivalentes que se ejecutarán sobre ambos diseños.
 
   ```python
   QUERIES={
@@ -238,7 +251,7 @@ Las seis combinaciones se ejecutan cuatro veces; las primeras seis son calentami
   > **Salida esperada:** Quedan definidos 3 patrones (cliente/fecha, país/día y agregado total).
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 15 (Python):** ejecuta cada consulta en ambos diseños para comprobar que entrega **las mismas filas y valores** antes de medir.
+- {% include step_label.html id="s016" %} **Celda 15 (Python):** ejecuta cada consulta en ambos diseños para comprobar que entrega **las mismas filas y valores** antes de medir.
 
   ```python
   for q,template in QUERIES.items():
@@ -251,7 +264,7 @@ Las seis combinaciones se ejecutan cuatro veces; las primeras seis son calentami
   > **Salida esperada:** Se imprimen 3 comprobaciones iguales; cualquier diferencia detiene las mediciones.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 16 (Python):** ejecuta 1 calentamiento y 3 mediciones por combinación; el identificador permite filtrar las 24 filas. **No uses `spark.sparkContext`**, no disponible en algunos modos de acceso.
+- {% include step_label.html id="s017" %} **Celda 16 (Python):** ejecuta 1 calentamiento y 3 mediciones por combinación; el identificador permite filtrar las 24 filas. **No uses `spark.sparkContext`**, no disponible en algunos modos de acceso.
 
   ```python
   import time,uuid
@@ -285,7 +298,7 @@ Las seis combinaciones se ejecutan cuatro veces; las primeras seis son calentami
   > **Salida esperada:** Se imprimen 24 resultados con consulta, diseño, repetición, filas y duración; se guarda el `experiment_id`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 17 (Python):** verifica que son 24 ejecuciones, 6 calentamientos y 18 mediciones.
+- {% include step_label.html id="s018" %} **Celda 17 (Python):** verifica que son 24 ejecuciones, 6 calentamientos y 18 mediciones.
 
   ```python
   from pyspark.sql import functions as F
@@ -298,7 +311,7 @@ Las seis combinaciones se ejecutan cuatro veces; las primeras seis son calentami
   > **Salida esperada:** `total=24`, `warmup=6`, `medidas=18`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 18 (Python):** muestra las mediciones del experimento sin incluir las ejecuciones de otros participantes.
+- {% include step_label.html id="s019" %} **Celda 18 (Python):** muestra las mediciones del experimento sin incluir las ejecuciones de otros participantes.
 
   ```python
   display(r.filter(~F.col('is_warmup')).select('query_name','physical_design','execution_number','duration_seconds','run_id').orderBy('query_name','physical_design','execution_number'))
@@ -317,17 +330,20 @@ Las seis combinaciones se ejecutan cuatro veces; las primeras seis son calentami
 
 Spark UI aporta evidencia adicional si está accesible; los tiempos principales provienen del notebook.
 
-- {% include step_label.html %} **Interfaz → Compute → selecciona el clúster → Spark UI** (si tienes permiso). Busca las pestañas **SQL/DataFrame**, **Jobs** y **Stages** para una ejecución de cada consulta.
+
+{% assign tracking_task_id = "t004" %}
+
+- {% include step_label.html id="s020" %} **Interfaz → Compute → selecciona el clúster → Spark UI** (si tienes permiso). Busca las pestañas **SQL/DataFrame**, **Jobs** y **Stages** para una ejecución de cada consulta.
 
   > **Salida esperada:** Se identifican las ejecuciones observables; si el workspace limita Spark UI, deja constancia de la limitación.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **En Spark UI**, revisa `Input`, `Shuffle Read/Write`, duración de stages y `Spill` de las consultas que estén visibles. No traslades valores de otra ejecución.
+- {% include step_label.html id="s021" %} **En Spark UI**, revisa `Input`, `Shuffle Read/Write`, duración de stages y `Spill` de las consultas que estén visibles. No traslades valores de otra ejecución.
 
   > **Salida esperada:** Queda una evidencia por cada patrón; cero solo significa cero cuando la interfaz lo indique explícitamente.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 19 (SQL):** compara medianas y archivos físicos por consulta y diseño, filtrando por el ID actual. Sustituye el ID del experimento en el filtro.
+- {% include step_label.html id="s022" %} **Celda 19 (SQL):** compara medianas y archivos físicos por consulta y diseño, filtrando por el ID actual. Sustituye el ID del experimento en el filtro.
 
   > **Nota:** Sustituye el marcador por el `experiment_id` impreso en la celda 16; no ejecutes la consulta con el marcador literal.
   {: .lab-note .info .compact}
@@ -344,7 +360,7 @@ Spark UI aporta evidencia adicional si está accesible; los tiempos principales 
   > **Salida esperada:** Seis filas con tres mediciones por combinación; la mediana es calculada, no estimada.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 20 (Python):** consulta medianas filtradas sin sustituir marcadores manualmente.
+- {% include step_label.html id="s023" %} **Celda 20 (Python):** consulta medianas filtradas sin sustituir marcadores manualmente.
 
   ```python
   display(r.filter(~F.col('is_warmup')).groupBy('query_name','physical_design').agg(F.expr('percentile_approx(duration_seconds,0.5)').alias('mediana_s'),F.count('*').alias('runs')).orderBy('query_name','physical_design'))
@@ -363,7 +379,10 @@ Spark UI aporta evidencia adicional si está accesible; los tiempos principales 
 
 La recomendación distingue hallazgos observados de hipótesis sobre costo y escalabilidad.
 
-- {% include step_label.html %} **Celda 21 (Python):** calcula una tabla comparativa de medianas por consulta sin mezclar experimentos.
+
+{% assign tracking_task_id = "t005" %}
+
+- {% include step_label.html id="s024" %} **Celda 21 (Python):** calcula una tabla comparativa de medianas por consulta sin mezclar experimentos.
 
   ```python
   median=r.filter(~F.col('is_warmup')).groupBy('query_name','physical_design').agg(F.expr('percentile_approx(duration_seconds,0.5)').alias('seconds'))
@@ -376,7 +395,7 @@ La recomendación distingue hallazgos observados de hipótesis sobre costo y esc
   > **Salida esperada:** Tres comparaciones con `static_s`, `liquid_s` y porcentaje observado.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 22 (Python):** crea una recomendación **condicionada** por los tres resultados y los límites del experimento; no presupongas que Liquid gana.
+- {% include step_label.html id="s025" %} **Celda 22 (Python):** crea una recomendación **condicionada** por los tres resultados y los límites del experimento; no presupongas que Liquid gana.
 
   ```python
   results=comparisons.orderBy('query_name').collect()
@@ -392,7 +411,7 @@ La recomendación distingue hallazgos observados de hipótesis sobre costo y esc
   > **Salida esperada:** Se registra una fila ligada al `experiment_id` para usar en la Práctica 13.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Celda 23 (SQL):** comprueba que los objetos para la Práctica 13 siguen disponibles y **no los elimines**.
+- {% include step_label.html id="s026" %} **Celda 23 (SQL):** comprueba que los objetos para la Práctica 13 siguen disponibles y **no los elimines**.
 
   ```sql
   SHOW TABLES IN dbricks_de_int.p12_performance_lab;

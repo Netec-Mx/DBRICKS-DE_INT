@@ -1,4 +1,8 @@
 ---
+course_id: dbricksint
+lab_id: l006
+tracking: true
+position: 6
 layout: lab
 title: 'Práctica 6: Creación de workflow multi-tarea'
 permalink: /lab6/lab6/
@@ -52,12 +56,15 @@ Verificar **Unity Catalog** y crear los cuatro notebooks que ejecutará el Job. 
 
 Verificar cómputo y permisos de lectura sobre el catálogo antes de configurar las tareas.
 
-- {% include step_label.html %} En Databricks, abre **Workspace** y localiza tu carpeta personal de trabajo.
+
+{% assign tracking_task_id = "t001" %}
+
+- {% include step_label.html id="s001" %} En Databricks, abre **Workspace** y localiza tu carpeta personal de trabajo.
 
   > **Salida esperada:** Se muestra tu directorio bajo /**Workspace**/Users/ y puedes crear elementos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Abre** **Compute** y confirma que puedes utilizar **Job Compute** con acceso **Standard** y **Databricks Runtime 15.4 LTS**.
+- {% include step_label.html id="s002" %} **Abre** **Compute** y confirma que puedes utilizar **Job Compute** con acceso **Standard** y **Databricks Runtime 15.4 LTS**.
 
   > **Nota:** No crear un All-Purpose nuevo; el Job utilizará su propia configuración de cómputo.
   {: .lab-note .info .compact}
@@ -65,7 +72,7 @@ Verificar cómputo y permisos de lectura sobre el catálogo antes de configurar 
   > **Salida esperada:** Existe una política o configuración autorizada para ejecutar un Job con notebooks.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En un notebook Python temporal ejecuta esta consulta de permisos y contexto.
+- {% include step_label.html id="s003" %} En un notebook Python temporal ejecuta esta consulta de permisos y contexto.
 
   ```python
   CATALOG = 'dbricks_de_int'
@@ -88,27 +95,27 @@ Verificar cómputo y permisos de lectura sobre el catálogo antes de configurar 
 
 Organizar los notebooks en una carpeta específica y diferenciar sus responsabilidades.
 
-- {% include step_label.html %} En **Workspace** crea la carpeta **workflow_6** dentro de tu directorio personal.
+- {% include step_label.html id="s004" %} En **Workspace** crea la carpeta **workflow_6** dentro de tu directorio personal.
 
   > **Salida esperada:** La carpeta **workflow_6** aparece en el árbol de **Workspace**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Crea** el notebook Python **01_ingest_landing** dentro de **workflow_6**.
+- {% include step_label.html id="s005" %} **Crea** el notebook Python **01_ingest_landing** dentro de **workflow_6**.
 
   > **Salida esperada:** El notebook se muestra con el nombre exacto y lenguaje Python.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Crea** el notebook Python **02_transform_orders** dentro de **workflow_6**.
+- {% include step_label.html id="s006" %} **Crea** el notebook Python **02_transform_orders** dentro de **workflow_6**.
 
   > **Salida esperada:** El notebook se muestra con el nombre exacto y lenguaje Python.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Crea** el notebook Python **03_validate_orders** dentro de **workflow_6**.
+- {% include step_label.html id="s007" %} **Crea** el notebook Python **03_validate_orders** dentro de **workflow_6**.
 
   > **Salida esperada:** El notebook se muestra con el nombre exacto y lenguaje Python.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Crea** el notebook Python **04_publish_run_metrics** dentro de **workflow_6**.
+- {% include step_label.html id="s008" %} **Crea** el notebook Python **04_publish_run_metrics** dentro de **workflow_6**.
 
   > **Salida esperada:** El notebook se muestra con el nombre exacto y lenguaje Python.
   {: .lab-note .output .compact}
@@ -117,7 +124,7 @@ Organizar los notebooks en una carpeta específica y diferenciar sus responsabil
 
 Establecer el contrato que utilizarán las tareas de las Prácticas 6 y 7.
 
-- {% include step_label.html %} **Revisa** los cinco parámetros comunes que configuraremos a nivel de Job.
+- {% include step_label.html id="s009" %} **Revisa** los cinco parámetros comunes que configuraremos a nivel de Job.
 
   ```python
   # Parámetros para el Job (referencia; no es necesario ejecutarlos):
@@ -145,7 +152,10 @@ Construir los dos notebooks iniciales: crear un CSV controlado con escenarios re
 
 Crear ocho registros **baseline** y tres registros en cada escenario posterior mediante un parámetro.
 
-- {% include step_label.html %} **Abre** **01_ingest_landing** y pega el bloque completo de generación del archivo.
+
+{% assign tracking_task_id = "t002" %}
+
+- {% include step_label.html id="s010" %} **Abre** **01_ingest_landing** y pega el bloque completo de generación del archivo.
 
   > **Nota:** El nombre del archivo solo admite caracteres seguros y termina en .csv; el directorio landing debe existir.
   {: .lab-note .info .compact}
@@ -180,12 +190,12 @@ Crear ocho registros **baseline** y tres registros en cada escenario posterior m
   > **Salida esperada:** La celda queda preparada para los tres escenarios sin modificar el código entre ejecuciones.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Ejecuta** **01_ingest_landing** con los valores predeterminados del escenario **baseline**.
+- {% include step_label.html id="s011" %} **Ejecuta** **01_ingest_landing** con los valores predeterminados del escenario **baseline**.
 
   > **Salida esperada:** Se muestra Escenario=**baseline** y Filas=8.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Verifica** con Python que el CSV de **baseline** contiene exactamente ocho filas de datos.
+- {% include step_label.html id="s012" %} **Verifica** con Python que el CSV de **baseline** contiene exactamente ocho filas de datos.
 
   ```python
   file_path='/Volumes/dbricks_de_int/batch1/landing/wf_baseline_001.csv'
@@ -199,7 +209,7 @@ Crear ocho registros **baseline** y tres registros en cada escenario posterior m
   > **Salida esperada:** La aserción se completa y aparece CSV validado: 8 filas.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Identifica** en el CSV un identificador duplicado, un importe negativo, un importe vacío y un ID vacío.
+- {% include step_label.html id="s013" %} **Identifica** en el CSV un identificador duplicado, un importe negativo, un importe vacío y un ID vacío.
 
   ```python
   display(check.orderBy('order_id','amount'))
@@ -212,7 +222,7 @@ Crear ocho registros **baseline** y tres registros en cada escenario posterior m
 
 Evitar escrituras en bronze_orders o en las tablas de auditoría usadas por otras prácticas.
 
-- {% include step_label.html %} **Abre** **02_transform_orders** y agrega la definición de widgets y el lector CSV.
+- {% include step_label.html id="s014" %} **Abre** **02_transform_orders** y agrega la definición de widgets y el lector CSV.
 
   ```python
   from pyspark.sql import functions as F
@@ -234,7 +244,7 @@ Evitar escrituras en bronze_orders o en las tablas de auditoría usadas por otra
   > **Salida esperada:** Se leen los parámetros y se prepara el **DataFrame** de origen.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Ejecuta** el bloque para crear **p6_workflow_orders** con contrato **Delta** explícito.
+- {% include step_label.html id="s015" %} **Ejecuta** el bloque para crear **p6_workflow_orders** con contrato **Delta** explícito.
 
   ```python
   spark.sql('''CREATE TABLE IF NOT EXISTS dbricks_de_int.batch1.p6_workflow_orders (
@@ -249,7 +259,7 @@ Evitar escrituras en bronze_orders o en las tablas de auditoría usadas por otra
   > **Salida esperada:** La tabla existe y DESCRIBE DETAIL indica formato delta.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Transforma el **DataFrame** agregando lote, fecha de proceso, origen y marca temporal.
+- {% include step_label.html id="s016" %} Transforma el **DataFrame** agregando lote, fecha de proceso, origen y marca temporal.
 
   ```python
   orders=(raw.select(F.lit(batch_id).alias('batch_id'),F.to_date(F.lit(run_date)).alias('run_date'),
@@ -263,7 +273,7 @@ Evitar escrituras en bronze_orders o en las tablas de auditoría usadas por otra
   > **Salida esperada:** El esquema contiene los siete campos del contrato **Delta**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Escribe solo la partición lógica de **batch_id** mediante reemplazo selectivo.
+- {% include step_label.html id="s017" %} Escribe solo la partición lógica de **batch_id** mediante reemplazo selectivo.
 
   > **Nota:** replaceWhere evita duplicados al reejecutar el mismo lote; nunca se sobrescribe toda la tabla.
   {: .lab-note .info .compact}
@@ -281,7 +291,7 @@ Evitar escrituras en bronze_orders o en las tablas de auditoría usadas por otra
   > **Salida esperada:** La tabla contiene ocho registros **baseline**, sin duplicarse en una repetición.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Consulta** el lote **baseline** y verifica la presencia de los datos crudos.
+- {% include step_label.html id="s018" %} **Consulta** el lote **baseline** y verifica la presencia de los datos crudos.
 
   ```python
   display(spark.sql("SELECT order_id, customer_id, amount_raw FROM dbricks_de_int.batch1.p6_workflow_orders WHERE batch_id='wf_baseline_001' ORDER BY order_id"))
@@ -305,7 +315,10 @@ Evaluar calidad por fila, publicar métricas de tarea y persistir los resultados
 
 Tratar los duplicados, los importes incorrectos y los identificadores vacíos como rechazos observables.
 
-- {% include step_label.html %} **Abre** **03_validate_orders** y pega el lector de parámetros y los registros del lote.
+
+{% assign tracking_task_id = "t003" %}
+
+- {% include step_label.html id="s019" %} **Abre** **03_validate_orders** y pega el lector de parámetros y los registros del lote.
 
   ```python
   from pyspark.sql import functions as F
@@ -321,7 +334,7 @@ Tratar los duplicados, los importes incorrectos y los identificadores vacíos co
   > **Salida esperada:** La tarea encuentra los registros provenientes de **02_transform_orders**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Calcula importe decimal, duplicados y una causa de rechazo por registro.
+- {% include step_label.html id="s020" %} Calcula importe decimal, duplicados y una causa de rechazo por registro.
 
   ```python
   typed=(source.withColumn('amount',F.expr('try_cast(amount_raw AS DECIMAL(18,2))'))
@@ -343,7 +356,7 @@ Tratar los duplicados, los importes incorrectos y los identificadores vacíos co
   > **Salida esperada:** Se genera validation_reason en cada fila: vacío solo para registros aprobados.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Calcula total, válidos, rechazados y duplicados excedentes.
+- {% include step_label.html id="s021" %} Calcula total, válidos, rechazados y duplicados excedentes.
 
   ```python
   total_rows=validated.count()
@@ -359,7 +372,7 @@ Tratar los duplicados, los importes incorrectos y los identificadores vacíos co
   > **Salida esperada:** Baseline: total=8, valid=3, invalid=5 y **duplicate_excess**=1.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Guarda** el lote validado en p6_workflow_validated usando reemplazo por **batch_id**.
+- {% include step_label.html id="s022" %} **Guarda** el lote validado en p6_workflow_validated usando reemplazo por **batch_id**.
 
   ```python
   spark.sql('''CREATE TABLE IF NOT EXISTS dbricks_de_int.batch1.p6_workflow_validated (
@@ -378,7 +391,7 @@ Tratar los duplicados, los importes incorrectos y los identificadores vacíos co
   > **Salida esperada:** La tabla **Delta** conserva la razón de rechazo y permite repetir el lote.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Publica** métricas pequeñas mediante dbutils.jobs.taskValues.set.
+- {% include step_label.html id="s023" %} **Publica** métricas pequeñas mediante dbutils.jobs.taskValues.set.
 
   > **Nota:** Los **task values** se recuperan entre tareas dentro de una misma ejecución del Job.
   {: .lab-note .info .compact}
@@ -397,7 +410,7 @@ Tratar los duplicados, los importes incorrectos y los identificadores vacíos co
 
 Crear una tabla de eventos compatible también con las ramas condicionales de la Práctica 7.
 
-- {% include step_label.html %} **Abre** **04_publish_run_metrics** y agrega el lector de parámetros y **task values**.
+- {% include step_label.html id="s024" %} **Abre** **04_publish_run_metrics** y agrega el lector de parámetros y **task values**.
 
   ```python
   from pyspark.sql import functions as F
@@ -413,7 +426,7 @@ Crear una tabla de eventos compatible también con las ramas condicionales de la
   > **Salida esperada:** Los cinco valores proceden de la tarea **validate_orders** del mismo Run.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Crea** la tabla **p6_workflow_audit** antes de registrar el evento de ejecución.
+- {% include step_label.html id="s025" %} **Crea** la tabla **p6_workflow_audit** antes de registrar el evento de ejecución.
 
   ```python
   spark.sql('''CREATE TABLE IF NOT EXISTS dbricks_de_int.batch1.p6_workflow_audit (
@@ -429,7 +442,7 @@ Crear una tabla de eventos compatible también con las ramas condicionales de la
   > **Salida esperada:** La tabla tiene un contrato uniforme para las Prácticas 6 y 7.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Inserta un evento **QUALITY_CHECK** sustituyendo eventos previos del mismo lote y tipo.
+- {% include step_label.html id="s026" %} Inserta un evento **QUALITY_CHECK** sustituyendo eventos previos del mismo lote y tipo.
 
   ```python
   table='dbricks_de_int.batch1.p6_workflow_audit'
@@ -461,22 +474,25 @@ Configurar **Job Compute**, los cinco parámetros y las dependencias exactas de 
 
 Utilizar un **Job Compute** compartido por las cuatro tareas, sujeto a la política institucional.
 
-- {% include step_label.html %} En Databricks abre Workflows o **Jobs & Pipelines** y selecciona Create job.
+
+{% assign tracking_task_id = "t004" %}
+
+- {% include step_label.html id="s027" %} En Databricks abre Workflows o **Jobs & Pipelines** y selecciona Create job.
 
   > **Salida esperada:** Se abre el editor de un Job nuevo.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Asigna el nombre **job_orders_orchestration_b2** y guarda.
+- {% include step_label.html id="s028" %} Asigna el nombre **job_orders_orchestration_b2** y guarda.
 
   > **Salida esperada:** El nombre aparece en la cabecera del Job.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Crea** la primera Notebook task **ingest_landing** y selecciona **01_ingest_landing**.
+- {% include step_label.html id="s029" %} **Crea** la primera Notebook task **ingest_landing** y selecciona **01_ingest_landing**.
 
   > **Salida esperada:** La tarea muestra el notebook de ingesta en workflow_6.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Configura** **Job Compute** con Runtime 15.4 LTS, **Standard** y 1 worker si está permitido.
+- {% include step_label.html id="s030" %} **Configura** **Job Compute** con Runtime 15.4 LTS, **Standard** y 1 worker si está permitido.
 
   > **Nota:** Los nombres exactos de las propiedades pueden variar por cloud y política; reutiliza el mismo **Job Compute** en las tareas.
   {: .lab-note .info .compact}
@@ -488,27 +504,27 @@ Utilizar un **Job Compute** compartido por las cuatro tareas, sujeto a la polít
 
 Formar un **DAG** lineal sin tareas aisladas.
 
-- {% include step_label.html %} **Crea** **transform_orders** con el notebook **02_transform_orders** y dependencia **ingest_landing**.
+- {% include step_label.html id="s031" %} **Crea** **transform_orders** con el notebook **02_transform_orders** y dependencia **ingest_landing**.
 
   > **Salida esperada:** Se muestra una flecha desde **ingest_landing** hacia **transform_orders**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Crea** **validate_orders** con el notebook **03_validate_orders** y dependencia **transform_orders**.
+- {% include step_label.html id="s032" %} **Crea** **validate_orders** con el notebook **03_validate_orders** y dependencia **transform_orders**.
 
   > **Salida esperada:** El tercer nodo aparece conectado únicamente después de **transform_orders**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Crea** **publish_run_metrics** con **04_publish_run_metrics** y dependencia **validate_orders**.
+- {% include step_label.html id="s033" %} **Crea** **publish_run_metrics** con **04_publish_run_metrics** y dependencia **validate_orders**.
 
   > **Salida esperada:** La última tarea depende de **validate_orders** y podrá recuperar **task values**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Selecciona** el mismo **Job Compute** en las cuatro tareas.
+- {% include step_label.html id="s034" %} **Selecciona** el mismo **Job Compute** en las cuatro tareas.
 
   > **Salida esperada:** Las cuatro tareas utilizan la misma definición de cómputo.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Inspecciona** el grafo y verifica el orden completo de las dependencias.
+- {% include step_label.html id="s035" %} **Inspecciona** el grafo y verifica el orden completo de las dependencias.
 
   > **Salida esperada:** **DAG**: **ingest_landing** → **transform_orders** → **validate_orders** → **publish_run_metrics**.
   {: .lab-note .output .compact}
@@ -517,7 +533,7 @@ Formar un **DAG** lineal sin tareas aisladas.
 
 Restringir concurrencia y registrar avisos sin crear una programación recurrente.
 
-- {% include step_label.html %} En **Job parameters** crea los cinco parámetros con los valores **baseline** establecidos.
+- {% include step_label.html id="s036" %} En **Job parameters** crea los cinco parámetros con los valores **baseline** establecidos.
 
   ```python
   # Valores en la interfaz Job parameters:
@@ -531,12 +547,12 @@ Restringir concurrencia y registrar avisos sin crear una programación recurrent
   > **Salida esperada:** Aparecen **batch_id**, **run_date**, **source_file**, **quality_scenario** y **simulate_publish_failure**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Configura** Timeout = 20 minutos en cada tarea y Max concurrent runs = 1 en el Job.
+- {% include step_label.html id="s037" %} **Configura** Timeout = 20 minutos en cada tarea y Max concurrent runs = 1 en el Job.
 
   > **Salida esperada:** Los límites se muestran guardados en la configuración.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Configura** 1 reintento en **transform_orders** y 0 en las otras tareas; agrega notificación On failure.
+- {% include step_label.html id="s038" %} **Configura** 1 reintento en **transform_orders** y 0 en las otras tareas; agrega notificación On failure.
 
   > **Salida esperada:** La configuración permite observar fallos sin reintentar tareas distintas de **transform_orders**.
   {: .lab-note .output .compact}
@@ -556,12 +572,15 @@ Lanzar un Run manual y comprobar evidencias en el grafo, registros **Delta** y m
 
 Validar que la orquestación complete las cuatro tareas con el lote **baseline**.
 
-- {% include step_label.html %} **Selecciona** **Run now** en el Job con los cinco parámetros **baseline** y abre la ejecución.
+
+{% assign tracking_task_id = "t005" %}
+
+- {% include step_label.html id="s039" %} **Selecciona** **Run now** en el Job con los cinco parámetros **baseline** y abre la ejecución.
 
   > **Salida esperada:** Aparece un Run con cuatro tareas en orden; al completar debe indicar **Succeeded**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Inspecciona** las salidas de **validate_orders** y **publish_run_metrics**.
+- {% include step_label.html id="s040" %} **Inspecciona** las salidas de **validate_orders** y **publish_run_metrics**.
 
   > **Salida esperada:** El log de **validate_orders** muestra 8, 3, 5, 1 y **OBSERVED**; la última tarea publica auditoría.
   {: .lab-note .output .compact}
@@ -570,7 +589,7 @@ Validar que la orquestación complete las cuatro tareas con el lote **baseline**
 
 Verificar que los resultados persisten sin alterar tablas de los laboratorios anteriores.
 
-- {% include step_label.html %} En un notebook conectado comprueba las métricas del lote **baseline**.
+- {% include step_label.html id="s041" %} En un notebook conectado comprueba las métricas del lote **baseline**.
 
   ```python
   row=spark.sql("SELECT total_rows,valid_rows,invalid_rows,duplicate_excess,quality_status FROM dbricks_de_int.batch1.p6_workflow_audit WHERE batch_id='wf_baseline_001' AND event_type='QUALITY_CHECK' ORDER BY event_timestamp DESC LIMIT 1").first()
@@ -582,7 +601,7 @@ Verificar que los resultados persisten sin alterar tablas de los laboratorios an
   > **Salida esperada:** Se muestra exactamente 8/3/5/1 con estado **OBSERVED**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Conserva** los cuatro notebooks, el Job y las tablas p6_ para la Práctica 7.
+- {% include step_label.html id="s042" %} **Conserva** los cuatro notebooks, el Job y las tablas p6_ para la Práctica 7.
 
   > **Nota:** No ejecutes DROP TABLE ni borres el Job; la Práctica 7 lo extenderá.
   {: .lab-note .info .compact}

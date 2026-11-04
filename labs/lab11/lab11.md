@@ -1,4 +1,8 @@
 ---
+course_id: dbricksint
+lab_id: l011
+tracking: true
+position: 11
 layout: lab
 title: "Práctica 11: Migración y validación de accesos"
 permalink: /lab11/lab11/
@@ -58,7 +62,10 @@ Crear un origen reproducible completamente dentro de Unity Catalog, sin dependen
 
 ### Tarea 1.1. Confirmar recursos y preparar notebook
 
-- {% include step_label.html %} **Con la cuenta principal**, entra en **Workspace → Home → tu carpeta de trabajo → batch_1**. Crea el notebook SQL **`11_migracion_accesos`**, selecciona el cómputo autorizado y ejecuta la **celda SQL 1**.
+
+{% assign tracking_task_id = "t001" %}
+
+- {% include step_label.html id="s001" %} **Con la cuenta principal**, entra en **Workspace → Home → tu carpeta de trabajo → batch_1**. Crea el notebook SQL **`11_migracion_accesos`**, selecciona el cómputo autorizado y ejecuta la **celda SQL 1**.
 
   ```sql
   SELECT current_user() AS usuario,
@@ -69,7 +76,7 @@ Crear un origen reproducible completamente dentro de Unity Catalog, sin dependen
   > **Salida esperada:** Aparece el usuario principal real; conserva esta sesión para crear las tablas y conceder permisos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **`11_migracion_accesos`**, agrega la **celda SQL 2**; comprueba que el catálogo está disponible y que aún no tienes un esquema de P11 perteneciente a otro participante.
+- {% include step_label.html id="s002" %} En **`11_migracion_accesos`**, agrega la **celda SQL 2**; comprueba que el catálogo está disponible y que aún no tienes un esquema de P11 perteneciente a otro participante.
 
   ```sql
   SHOW SCHEMAS IN dbricks_de_int LIKE 'p11_migration_lab';
@@ -78,7 +85,7 @@ Crear un origen reproducible completamente dentro de Unity Catalog, sin dependen
   > **Salida esperada:** Si aparece una fila, verifica que el esquema sea tuyo antes de continuar; no elimines datos ajenos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 3**, revisa permisos sobre el catálogo para detectar privilegios amplios heredables. No ejecutes `REVOKE` institucional.
+- {% include step_label.html id="s003" %} En la **celda SQL 3**, revisa permisos sobre el catálogo para detectar privilegios amplios heredables. No ejecutes `REVOKE` institucional.
 
   ```sql
   SHOW GRANTS ON CATALOG dbricks_de_int;
@@ -89,7 +96,7 @@ Crear un origen reproducible completamente dentro de Unity Catalog, sin dependen
 
 ### Tarea 1.2. Crear tabla fuente sintética
 
-- {% include step_label.html %} En la **celda SQL 4**, crea el esquema **`p11_migration_lab`** con la cuenta principal. Necesitas `CREATE SCHEMA` sobre el catálogo.
+- {% include step_label.html id="s004" %} En la **celda SQL 4**, crea el esquema **`p11_migration_lab`** con la cuenta principal. Necesitas `CREATE SCHEMA` sobre el catálogo.
 
   ```sql
   CREATE SCHEMA IF NOT EXISTS dbricks_de_int.p11_migration_lab;
@@ -98,7 +105,7 @@ Crear un origen reproducible completamente dentro de Unity Catalog, sin dependen
   > **Salida esperada:** El esquema aparece en `dbricks_de_int`; `batch1` y `p10_security_lab` quedan intactos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 5**, crea la tabla administrada de origen **`p11_sales_source`** y carga 20 transacciones sintéticas; pega ambas sentencias en esa celda y ejecútalas en orden.
+- {% include step_label.html id="s005" %} En la **celda SQL 5**, crea la tabla administrada de origen **`p11_sales_source`** y carga 20 transacciones sintéticas; pega ambas sentencias en esa celda y ejecútalas en orden.
 
   ```sql
   CREATE TABLE IF NOT EXISTS dbricks_de_int.p11_migration_lab.p11_sales_source (
@@ -125,7 +132,7 @@ Crear un origen reproducible completamente dentro de Unity Catalog, sin dependen
   > **Salida esperada:** `p11_sales_source` contiene 20 transacciones `TX11-001` a `TX11-020`, con datos ficticios.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 6**, comprueba la línea base antes de clonar.
+- {% include step_label.html id="s006" %} En la **celda SQL 6**, comprueba la línea base antes de clonar.
 
   ```sql
   SELECT COUNT(*) AS filas,
@@ -152,7 +159,10 @@ Crear una copia física Delta administrada y verificar dónde quedaron los archi
 
 ### Tarea 2.1. Clonar una tabla de Unity Catalog
 
-- {% include step_label.html %} En **`11_migracion_accesos`**, crea la **celda SQL 7** y ejecuta **`DEEP CLONE`** desde `p11_sales_source` hacia `p11_sales_migrated`. No ejecutes `SYNC TABLE`.
+
+{% assign tracking_task_id = "t002" %}
+
+- {% include step_label.html id="s007" %} En **`11_migracion_accesos`**, crea la **celda SQL 7** y ejecuta **`DEEP CLONE`** desde `p11_sales_source` hacia `p11_sales_migrated`. No ejecutes `SYNC TABLE`.
 
   > **Nota:** Si ya existe `p11_sales_migrated`, `IF NOT EXISTS` no actualiza sus datos. Solo úsalo como primera ejecución; si pertenece a otro participante, no continúes.
   {: .lab-note .info .compact}
@@ -165,7 +175,7 @@ Crear una copia física Delta administrada y verificar dónde quedaron los archi
   > **Salida esperada:** La tabla destino se registra como Delta; el resultado de CLONE muestra métricas de la operación que pueden variar por ejecución.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 8**, muestra las dos tablas del esquema.
+- {% include step_label.html id="s008" %} En la **celda SQL 8**, muestra las dos tablas del esquema.
 
   ```sql
   SHOW TABLES IN dbricks_de_int.p11_migration_lab;
@@ -176,7 +186,7 @@ Crear una copia física Delta administrada y verificar dónde quedaron los archi
 
 ### Tarea 2.2. Confirmar Delta y ubicación distinta
 
-- {% include step_label.html %} En la **celda SQL 9**, inspecciona los metadatos del origen.
+- {% include step_label.html id="s009" %} En la **celda SQL 9**, inspecciona los metadatos del origen.
 
   ```sql
   DESCRIBE DETAIL dbricks_de_int.p11_migration_lab.p11_sales_source;
@@ -185,7 +195,7 @@ Crear una copia física Delta administrada y verificar dónde quedaron los archi
   > **Salida esperada:** `format=delta`; anota el valor exacto de `location` del origen.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 10**, inspecciona los metadatos del clon.
+- {% include step_label.html id="s010" %} En la **celda SQL 10**, inspecciona los metadatos del clon.
 
   ```sql
   DESCRIBE DETAIL dbricks_de_int.p11_migration_lab.p11_sales_migrated;
@@ -194,7 +204,7 @@ Crear una copia física Delta administrada y verificar dónde quedaron los archi
   > **Salida esperada:** `format=delta` y `location` **distinta** de la fuente, porque `DEEP CLONE` crea archivos independientes.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 11**, inspecciona las operaciones recientes del clon.
+- {% include step_label.html id="s011" %} En la **celda SQL 11**, inspecciona las operaciones recientes del clon.
 
   ```sql
   DESCRIBE HISTORY dbricks_de_int.p11_migration_lab.p11_sales_migrated LIMIT 5;
@@ -216,7 +226,10 @@ Comprobar igualdad de datos y esquema con consultas que muestren diferencias num
 
 ### Tarea 3.1. Verificar estructura y cantidades
 
-- {% include step_label.html %} En **`11_migracion_accesos`**, ejecuta la **celda SQL 12** para inspeccionar columnas y tipos del origen.
+
+{% assign tracking_task_id = "t003" %}
+
+- {% include step_label.html id="s012" %} En **`11_migracion_accesos`**, ejecuta la **celda SQL 12** para inspeccionar columnas y tipos del origen.
 
   ```sql
   DESCRIBE TABLE dbricks_de_int.p11_migration_lab.p11_sales_source;
@@ -225,7 +238,7 @@ Comprobar igualdad de datos y esquema con consultas que muestren diferencias num
   > **Salida esperada:** Se identifican siete columnas: `transaction_id`, `customer_id`, `email`, `phone`, `region`, `amount` y `status`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 13**, revisa las mismas columnas en el clon.
+- {% include step_label.html id="s013" %} En la **celda SQL 13**, revisa las mismas columnas en el clon.
 
   ```sql
   DESCRIBE TABLE dbricks_de_int.p11_migration_lab.p11_sales_migrated;
@@ -234,7 +247,7 @@ Comprobar igualdad de datos y esquema con consultas que muestren diferencias num
   > **Salida esperada:** Los nombres, tipos y orden de las siete columnas coinciden con la celda 12.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 14**, compara filas, claves e importe mediante una única consulta de diferencias.
+- {% include step_label.html id="s014" %} En la **celda SQL 14**, compara filas, claves e importe mediante una única consulta de diferencias.
 
   ```sql
   WITH origen AS (
@@ -260,7 +273,7 @@ Comprobar igualdad de datos y esquema con consultas que muestren diferencias num
 
 ### Tarea 3.2. Comparar filas, no solo agregados
 
-- {% include step_label.html %} En la **celda SQL 15**, compara todas las columnas del origen contra el clon con `EXCEPT`.
+- {% include step_label.html id="s015" %} En la **celda SQL 15**, compara todas las columnas del origen contra el clon con `EXCEPT`.
 
   ```sql
   SELECT * FROM dbricks_de_int.p11_migration_lab.p11_sales_source
@@ -271,7 +284,7 @@ Comprobar igualdad de datos y esquema con consultas que muestren diferencias num
   > **Salida esperada:** Cero filas: no hay valores de origen ausentes en el clon.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 16**, invierte la comparación.
+- {% include step_label.html id="s016" %} En la **celda SQL 16**, invierte la comparación.
 
   ```sql
   SELECT * FROM dbricks_de_int.p11_migration_lab.p11_sales_migrated
@@ -282,7 +295,7 @@ Comprobar igualdad de datos y esquema con consultas que muestren diferencias num
   > **Salida esperada:** Cero filas: el clon no contiene valores adicionales. Como cada `transaction_id` es único, la comparación cubre las 20 transacciones.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 17**, confirma el contrato de PII antes de crear la vista.
+- {% include step_label.html id="s017" %} En la **celda SQL 17**, confirma el contrato de PII antes de crear la vista.
 
   ```sql
   SELECT COUNT(*) AS filas,
@@ -307,7 +320,10 @@ Conceder lectura de la vista a los dos grupos, pero lectura directa del clon sol
 
 ### Tarea 4.1. Conceder uso y crear vista dinámica
 
-- {% include step_label.html %} Con la **cuenta principal**, en **`11_migracion_accesos`**, ejecuta la **celda SQL 18**. El propietario del catálogo o quien tenga `MANAGE` debe conceder `USE CATALOG` a ambos grupos **solo si faltaba**; si ya se hizo en P10, verifica sin repetir cambios.
+
+{% assign tracking_task_id = "t004" %}
+
+- {% include step_label.html id="s018" %} Con la **cuenta principal**, en **`11_migracion_accesos`**, ejecuta la **celda SQL 18**. El propietario del catálogo o quien tenga `MANAGE` debe conceder `USE CATALOG` a ambos grupos **solo si faltaba**; si ya se hizo en P10, verifica sin repetir cambios.
 
   ```sql
   SHOW GRANTS ON CATALOG dbricks_de_int;
@@ -316,7 +332,7 @@ Conceder lectura de la vista a los dos grupos, pero lectura directa del clon sol
   > **Salida esperada:** Aparecen `USE CATALOG` de `data_engineers_b2` y `data_analysts_b2` (concedidos en la Práctica 10). Si falta uno, solicita al propietario que lo configure antes de seguir.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 19**, concede `USE SCHEMA` únicamente en el nuevo esquema, sin permisos globales sobre otras tablas.
+- {% include step_label.html id="s019" %} En la **celda SQL 19**, concede `USE SCHEMA` únicamente en el nuevo esquema, sin permisos globales sobre otras tablas.
 
   ```sql
   GRANT USE SCHEMA ON SCHEMA dbricks_de_int.p11_migration_lab TO `data_engineers_b2`;
@@ -326,7 +342,7 @@ Conceder lectura de la vista a los dos grupos, pero lectura directa del clon sol
   > **Salida esperada:** Ambos grupos pueden resolver los objetos de `p11_migration_lab`; esto no da acceso directo a las tablas.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 20**, crea `p11_vw_sales_masked`. Su lógica muestra correo y teléfono completos únicamente al grupo Ingeniería.
+- {% include step_label.html id="s020" %} En la **celda SQL 20**, crea `p11_vw_sales_masked`. Su lógica muestra correo y teléfono completos únicamente al grupo Ingeniería.
 
   ```sql
   CREATE OR REPLACE VIEW dbricks_de_int.p11_migration_lab.p11_vw_sales_masked AS
@@ -341,7 +357,7 @@ Conceder lectura de la vista a los dos grupos, pero lectura directa del clon sol
   > **Salida esperada:** Se crea una vista de 20 filas con `email` y `phone` dinámicamente enmascarados según la identidad.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 21**, concede `SELECT` directo del clon **solo** a Ingeniería y `SELECT` de la vista **a ambos grupos**.
+- {% include step_label.html id="s021" %} En la **celda SQL 21**, concede `SELECT` directo del clon **solo** a Ingeniería y `SELECT` de la vista **a ambos grupos**.
 
   ```sql
   GRANT SELECT ON TABLE dbricks_de_int.p11_migration_lab.p11_sales_migrated TO `data_engineers_b2`;
@@ -354,7 +370,7 @@ Conceder lectura de la vista a los dos grupos, pero lectura directa del clon sol
 
 ### Tarea 4.2. Validación de permisos antes del cambio de sesión
 
-- {% include step_label.html %} En la **celda SQL 22**, ejecuta **solo** `SHOW GRANTS` de la tabla clonada y confirma el `SELECT` de Ingeniería.
+- {% include step_label.html id="s022" %} En la **celda SQL 22**, ejecuta **solo** `SHOW GRANTS` de la tabla clonada y confirma el `SELECT` de Ingeniería.
 
   ```sql
   SHOW GRANTS ON TABLE dbricks_de_int.p11_migration_lab.p11_sales_migrated;
@@ -363,7 +379,7 @@ Conceder lectura de la vista a los dos grupos, pero lectura directa del clon sol
   > **Salida esperada:** `data_engineers_b2` aparece con `SELECT`; `data_analysts_b2` **no** debe tener `SELECT` directo ni por herencia.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 23**, consulta únicamente los privilegios de la vista. No combines esta sentencia con el `SHOW GRANTS` anterior.
+- {% include step_label.html id="s023" %} En la **celda SQL 23**, consulta únicamente los privilegios de la vista. No combines esta sentencia con el `SHOW GRANTS` anterior.
 
   ```sql
   SHOW GRANTS ON VIEW dbricks_de_int.p11_migration_lab.p11_vw_sales_masked;
@@ -372,7 +388,7 @@ Conceder lectura de la vista a los dos grupos, pero lectura directa del clon sol
   > **Salida esperada:** Aparecen **dos filas `SELECT`**, una para `data_engineers_b2` y otra para `data_analysts_b2`. Si falta alguna, vuelve a la celda 21 y concede exclusivamente el `SELECT` faltante.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 24**, verifica que ambos grupos tengan `USE SCHEMA` y que no haya concesiones amplias inesperadas.
+- {% include step_label.html id="s024" %} En la **celda SQL 24**, verifica que ambos grupos tengan `USE SCHEMA` y que no haya concesiones amplias inesperadas.
 
   ```sql
   SHOW GRANTS ON SCHEMA dbricks_de_int.p11_migration_lab;
@@ -394,7 +410,10 @@ Inicia sesiones independientes para comprobar los permisos y el enmascaramiento,
 
 ### Tarea 5.1. Probar Ingeniería y Analítica en SQL Editor
 
-- {% include step_label.html %} **Cierra la sesión principal** o usa una sesión privada. Inicia Databricks con la **cuenta de Ingeniería** de la Práctica 10. Abre **SQL Editor → New query**, selecciona el SQL Warehouse autorizado y ejecuta **consulta 1**.
+
+{% assign tracking_task_id = "t005" %}
+
+- {% include step_label.html id="s025" %} **Cierra la sesión principal** o usa una sesión privada. Inicia Databricks con la **cuenta de Ingeniería** de la Práctica 10. Abre **SQL Editor → New query**, selecciona el SQL Warehouse autorizado y ejecuta **consulta 1**.
 
   ```sql
   SELECT current_user() AS usuario,
@@ -405,7 +424,7 @@ Inicia sesiones independientes para comprobar los permisos y el enmascaramiento,
   > **Salida esperada:** `ingenieria=true` y `analitica=false`. Si aparece `false` inesperadamente aun estando el usuario en Groups → Members, cierra sesión, vuelve a entrar y repite la consulta antes de cambiar permisos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **misma sesión de Ingeniería**, ejecuta la **consulta 2** sobre la vista para demostrar que no hay máscaras.
+- {% include step_label.html id="s026" %} En la **misma sesión de Ingeniería**, ejecuta la **consulta 2** sobre la vista para demostrar que no hay máscaras.
 
   ```sql
   SELECT transaction_id, email, phone
@@ -416,7 +435,7 @@ Inicia sesiones independientes para comprobar los permisos y el enmascaramiento,
   > **Salida esperada:** `TX11-001` y `TX11-002` muestran correos `cliente01@ejemplo.test`, `cliente02@ejemplo.test` y teléfonos de prueba completos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Cierra Ingeniería e inicia con el **usuario de Analítica** existente. En **SQL Editor → New query**, ejecuta **consulta 3** y comprueba su membresía.
+- {% include step_label.html id="s027" %} Cierra Ingeniería e inicia con el **usuario de Analítica** existente. En **SQL Editor → New query**, ejecuta **consulta 3** y comprueba su membresía.
 
   ```sql
   SELECT current_user() AS usuario,
@@ -427,7 +446,7 @@ Inicia sesiones independientes para comprobar los permisos y el enmascaramiento,
   > **Salida esperada:** `ingenieria=false` y `analitica=true`. Si la membresía acaba de asignarse y no aparece, inicia sesión nuevamente.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Con Analítica, ejecuta **consulta 4** sobre la vista enmascarada y registra el resultado permitido.
+- {% include step_label.html id="s028" %} Con Analítica, ejecuta **consulta 4** sobre la vista enmascarada y registra el resultado permitido.
 
   ```sql
   SELECT transaction_id, email, phone
@@ -438,7 +457,7 @@ Inicia sesiones independientes para comprobar los permisos y el enmascaramiento,
   > **Salida esperada:** `TX11-001` y `TX11-002` devuelven `***MASKED_EMAIL***` y `***MASKED_PHONE***` sin exponer PII.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **otra consulta separada**, todavía con Analítica, ejecuta la **prueba negativa** sobre el clon. No realices `UPDATE` ni cambios a datos.
+- {% include step_label.html id="s029" %} En **otra consulta separada**, todavía con Analítica, ejecuta la **prueba negativa** sobre el clon. No realices `UPDATE` ni cambios a datos.
 
   ```sql
   SELECT email FROM dbricks_de_int.p11_migration_lab.p11_sales_migrated LIMIT 1;
@@ -449,7 +468,7 @@ Inicia sesiones independientes para comprobar los permisos y el enmascaramiento,
 
 ### Tarea 5.2. Comprobación final con la cuenta principal
 
-- {% include step_label.html %} Regresa a la **cuenta principal** y al notebook **`11_migracion_accesos`**. Ejecuta la **celda SQL 25** y conserva los totales finales del clon y la vista.
+- {% include step_label.html id="s030" %} Regresa a la **cuenta principal** y al notebook **`11_migracion_accesos`**. Ejecuta la **celda SQL 25** y conserva los totales finales del clon y la vista.
 
   ```sql
   SELECT 'clon' AS objeto, COUNT(*) AS filas,

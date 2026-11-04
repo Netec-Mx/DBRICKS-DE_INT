@@ -1,4 +1,8 @@
 ---
+course_id: dbricksint
+lab_id: l005
+tracking: true
+position: 5
 layout: lab
 title: 'Práctica 5: Auditoría con Time Travel y restauración de versión'
 permalink: /lab5/lab5/
@@ -51,12 +55,15 @@ Comprobar el resultado incremental de Silver y crear una copia Delta de recupera
 
 Identificar la tabla fuente y confirmar las seis claves disponibles después del MERGE.
 
-- {% include step_label.html %} En **Workspace > Home > batch_1**, selecciona **Create > Notebook**; nómbralo `05_time_travel_restore` y elige **Python**.
+
+{% assign tracking_task_id = "t001" %}
+
+- {% include step_label.html id="s001" %} En **Workspace > Home > batch_1**, selecciona **Create > Notebook**; nómbralo `05_time_travel_restore` y elige **Python**.
 
   > **Salida esperada:** Se crea el notebook.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Conecta el mismo cluster de las prácticas anteriores; configura el catálogo, la sesión UTC y un identificador único.
+- {% include step_label.html id="s002" %} Conecta el mismo cluster de las prácticas anteriores; configura el catálogo, la sesión UTC y un identificador único.
 
   ```python
   from pyspark.sql import functions as F
@@ -72,7 +79,7 @@ Identificar la tabla fuente y confirmar las seis claves disponibles después del
   > **Salida esperada:** Aparecen dbricks_de_int.batch1.p3_silver_orders, la copia p5_ y un ID único.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que la tabla Silver fuente contiene seis pedidos únicos.
+- {% include step_label.html id="s003" %} Comprueba que la tabla Silver fuente contiene seis pedidos únicos.
 
   ```python
   assert spark.catalog.tableExists(ORIGINAL), 'Falta Silver: completa la Práctica 3 y 4'
@@ -92,7 +99,7 @@ Identificar la tabla fuente y confirmar las seis claves disponibles después del
 
 Crear una copia de los datos actuales en otra tabla Delta para ejecutar UPDATE y RESTORE sin riesgos externos.
 
-- {% include step_label.html %} En una celda Python nueva, crea únicamente la tabla de ensayo p5_ a partir de Silver; ejecuta con **Shift+Enter**.
+- {% include step_label.html id="s004" %} En una celda Python nueva, crea únicamente la tabla de ensayo p5_ a partir de Silver; ejecuta con **Shift+Enter**.
 
   > **Importante:** CREATE OR REPLACE se utiliza solo con la copia p5_, nunca con la fuente p3_.
   {: .lab-note .important .compact}
@@ -108,7 +115,7 @@ Crear una copia de los datos actuales en otra tabla Delta para ejecutar UPDATE y
   > **Salida esperada:** La tabla p5_silver_restore_lab contiene seis filas. Se muestra `VALIDACIÓN EXITOSA: Copia Delta aislada: 6 registros; fuente original protegida`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Crea la tabla Delta de auditoría de recuperación si aún no existe.
+- {% include step_label.html id="s005" %} Crea la tabla Delta de auditoría de recuperación si aún no existe.
 
   ```python
   spark.sql(f'''CREATE TABLE IF NOT EXISTS {AUD} (
@@ -119,7 +126,7 @@ Crear una copia de los datos actuales en otra tabla Delta para ejecutar UPDATE y
   > **Salida esperada:** Se crea p5_delta_recovery_audit.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta el historial de la copia Delta y comprueba que tiene al menos una versión.
+- {% include step_label.html id="s006" %} Consulta el historial de la copia Delta y comprueba que tiene al menos una versión.
 
   ```python
   display(spark.sql(f'DESCRIBE HISTORY {R} LIMIT 5'))
@@ -145,7 +152,10 @@ Guardar una línea base histórica con número de versión real, contrastar VERS
 
 Registrar las métricas de la versión más reciente existente antes del incidente.
 
-- {% include step_label.html %} Captura automáticamente la versión segura y sus métricas desde DESCRIBE HISTORY.
+
+{% assign tracking_task_id = "t002" %}
+
+- {% include step_label.html id="s007" %} Captura automáticamente la versión segura y sus métricas desde DESCRIBE HISTORY.
 
   ```python
   history=spark.sql(f'DESCRIBE HISTORY {R}')
@@ -157,7 +167,7 @@ Registrar las métricas de la versión más reciente existente antes del inciden
   > **Salida esperada:** safe_version y las métricas se almacenan en variables.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Verifica que la consulta VERSION AS OF devuelve las seis filas originales.
+- {% include step_label.html id="s008" %} Verifica que la consulta VERSION AS OF devuelve las seis filas originales.
 
   ```python
   assert base['n']==6
@@ -168,7 +178,7 @@ Registrar las métricas de la versión más reciente existente antes del inciden
   > **Salida esperada:** Se muestran seis pedidos históricos. Se muestra `VALIDACIÓN EXITOSA: Time Travel VERSION AS OF: 6 pedidos recuperados`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Define la función de auditoría y guarda el evento BASELINE_CAPTURED.
+- {% include step_label.html id="s009" %} Define la función de auditoría y guarda el evento BASELINE_CAPTURED.
 
   ```python
   from pyspark.sql.types import StructType,StructField,StringType,TimestampType,LongType,DecimalType
@@ -192,7 +202,7 @@ Registrar las métricas de la versión más reciente existente antes del inciden
 
 Verificar que la marca temporal de una versión disponible permite consultar su contenido histórico.
 
-- {% include step_label.html %} Obtén la marca temporal del historial correspondiente a safe_version.
+- {% include step_label.html id="s010" %} Obtén la marca temporal del historial correspondiente a safe_version.
 
   ```python
   hist=spark.sql(f'DESCRIBE HISTORY {R}')
@@ -206,7 +216,7 @@ Verificar que la marca temporal de una versión disponible permite consultar su 
   > **Salida esperada:** Se muestra la marca temporal de la versión segura. Se muestra `VALIDACIÓN EXITOSA: Condiciones comprobadas sin errores`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta la copia histórica utilizando TIMESTAMP AS OF con el instante registrado.
+- {% include step_label.html id="s011" %} Consulta la copia histórica utilizando TIMESTAMP AS OF con el instante registrado.
 
   > **Importante:** No redondees el instante al segundo: hacerlo puede seleccionar una versión anterior.
   {: .lab-note .important .compact}
@@ -218,7 +228,7 @@ Verificar que la marca temporal de una versión disponible permite consultar su 
   > **Salida esperada:** Se muestran los mismos pedidos de la versión segura.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que los conteos históricos por versión y por timestamp son iguales.
+- {% include step_label.html id="s012" %} Comprueba que los conteos históricos por versión y por timestamp son iguales.
 
   ```python
   via_ts=spark.sql(f"SELECT COUNT(*) AS n FROM {R} TIMESTAMP AS OF '{safe_ts_sql}'").first()['n']
@@ -246,7 +256,10 @@ Modificar deliberadamente un único pedido en la tabla aislada, medir una difere
 
 Producir un incidente controlado sobre una clave única sin afectar el origen del curso.
 
-- {% include step_label.html %} Selecciona un pedido único, registra su importe y realiza el UPDATE de simulación.
+
+{% assign tracking_task_id = "t003" %}
+
+- {% include step_label.html id="s013" %} Selecciona un pedido único, registra su importe y realiza el UPDATE de simulación.
 
   > **Advertencia:** Nunca ejecutes UPDATE en la tabla p3_silver_orders de las prácticas anteriores.
   {: .lab-note .warning .compact}
@@ -264,7 +277,7 @@ Producir un incidente controlado sobre una clave única sin afectar el origen de
   > **Salida esperada:** Se cambia el importe de un único pedido en la copia p5_. Se muestra `VALIDACIÓN EXITOSA: Incidente controlado: pedido único seleccionado; UPDATE ejecutado en la copia`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta la fila modificada y comprueba que el cambio quedó persistido.
+- {% include step_label.html id="s014" %} Consulta la fila modificada y comprueba que el cambio quedó persistido.
 
   ```python
   display(spark.table(R).filter(F.col('order_id')==incident_id).select('order_id','amount'))
@@ -273,7 +286,7 @@ Producir un incidente controlado sobre una clave única sin afectar el origen de
   > **Salida esperada:** El importe aumentó en 9999.99.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que el historial generó una operación UPDATE.
+- {% include step_label.html id="s015" %} Comprueba que el historial generó una operación UPDATE.
 
   ```python
   assert 'UPDATE' in [r['operation'] for r in spark.sql(f'DESCRIBE HISTORY {R}').collect()]
@@ -287,7 +300,7 @@ Producir un incidente controlado sobre una clave única sin afectar el origen de
 
 Comparar las métricas actuales con las históricas antes de ejecutar RESTORE.
 
-- {% include step_label.html %} Calcula las diferencias de conteo e importe contra la versión segura.
+- {% include step_label.html id="s016" %} Calcula las diferencias de conteo e importe contra la versión segura.
 
   ```python
   old=spark.sql(f'SELECT COUNT(*) AS n, CAST(SUM(amount) AS DECIMAL(20,2)) AS total FROM {R} VERSION AS OF {safe_version}').first()
@@ -298,7 +311,7 @@ Comparar las métricas actuales con las históricas antes de ejecutar RESTORE.
   > **Salida esperada:** La diferencia de filas es 0 y la diferencia de importes es 9999.99.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Verifica automáticamente que un solo registro fue modificado.
+- {% include step_label.html id="s017" %} Verifica automáticamente que un solo registro fue modificado.
 
   ```python
   from decimal import Decimal
@@ -310,7 +323,7 @@ Comparar las métricas actuales con las históricas antes de ejecutar RESTORE.
   > **Salida esperada:** Se validan diferencia 0 filas y 9999.99 de importe. Se muestra `VALIDACIÓN EXITOSA: Incidente: 0 filas de diferencia; importe alterado en 9999.99`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Registra la evidencia INCIDENT_DETECTED antes de restaurar.
+- {% include step_label.html id="s018" %} Registra la evidencia INCIDENT_DETECTED antes de restaurar.
 
   ```python
   log_event('INCIDENT_DETECTED','Importe alterado en copia aislada')
@@ -323,7 +336,7 @@ Comparar las métricas actuales con las históricas antes de ejecutar RESTORE.
 
 Restaurar usando una versión verificada y comprobar el historial que queda después del RESTORE.
 
-- {% include step_label.html %} Ejecuta RESTORE TABLE sobre la copia p5_ a la versión segura.
+- {% include step_label.html id="s019" %} Ejecuta RESTORE TABLE sobre la copia p5_ a la versión segura.
 
   ```python
   spark.sql(f'RESTORE TABLE {R} TO VERSION AS OF {safe_version}').show(truncate=False)
@@ -332,7 +345,7 @@ Restaurar usando una versión verificada y comprobar el historial que queda desp
   > **Salida esperada:** La operación RESTORE finaliza sin errores.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que el importe del pedido afectado volvió a su valor original.
+- {% include step_label.html id="s020" %} Comprueba que el importe del pedido afectado volvió a su valor original.
 
   ```python
   assert spark.table(R).filter(F.col('order_id')==incident_id).first()['amount']==original_amount
@@ -342,7 +355,7 @@ Restaurar usando una versión verificada y comprobar el historial que queda desp
   > **Salida esperada:** El pedido recupera su importe anterior. Se muestra `VALIDACIÓN EXITOSA: RESTORE: el importe original del pedido fue recuperado`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que el historial contiene RESTORE posterior a UPDATE.
+- {% include step_label.html id="s021" %} Comprueba que el historial contiene RESTORE posterior a UPDATE.
 
   ```python
   ops=[r['operation'] for r in spark.sql(f'DESCRIBE HISTORY {R}').orderBy(F.col('version').desc()).collect()]
@@ -368,7 +381,10 @@ Reconciliar la copia restaurada contra la versión segura, registrar el evento R
 
 Comprobar que los importes y conteos son idénticos antes del incidente y después de RESTORE.
 
-- {% include step_label.html %} Compara el estado restaurado con el estado histórico original.
+
+{% assign tracking_task_id = "t004" %}
+
+- {% include step_label.html id="s022" %} Compara el estado restaurado con el estado histórico original.
 
   ```python
   old=spark.sql(f'SELECT COUNT(*) AS n, CAST(SUM(amount) AS DECIMAL(20,2)) AS total FROM {R} VERSION AS OF {safe_version}').first()
@@ -379,7 +395,7 @@ Comprobar que los importes y conteos son idénticos antes del incidente y despu�
   > **Salida esperada:** Las diferencias de filas e importe son 0 y 0.00.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba automáticamente que las métricas históricas coinciden.
+- {% include step_label.html id="s023" %} Comprueba automáticamente que las métricas históricas coinciden.
 
   ```python
   assert now['n']==old['n'] and now['total']==old['total']
@@ -389,7 +405,7 @@ Comprobar que los importes y conteos son idénticos antes del incidente y despu�
   > **Salida esperada:** La tabla restaurada coincide con la línea base. Se muestra `VALIDACIÓN EXITOSA: Recuperación: 0 filas de diferencia; 0.00 de diferencia en importe`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Verifica que la tabla fuente original conserva sus seis registros.
+- {% include step_label.html id="s024" %} Verifica que la tabla fuente original conserva sus seis registros.
 
   ```python
   assert spark.table(ORIGINAL).count()==6
@@ -405,7 +421,7 @@ Comprobar que los importes y conteos son idénticos antes del incidente y despu�
 
 Guardar evidencia temporal y validar la secuencia de auditoría de la práctica.
 
-- {% include step_label.html %} Registra el evento RESTORE_COMPLETED en la auditoría Delta.
+- {% include step_label.html id="s025" %} Registra el evento RESTORE_COMPLETED en la auditoría Delta.
 
   ```python
   log_event('RESTORE_COMPLETED','Recuperación verificada con métricas históricas')
@@ -414,7 +430,7 @@ Guardar evidencia temporal y validar la secuencia de auditoría de la práctica.
   > **Salida esperada:** Se escribe RESTORE_COMPLETED.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta cronológicamente los tres eventos de auditoría.
+- {% include step_label.html id="s026" %} Consulta cronológicamente los tres eventos de auditoría.
 
   ```python
   display(spark.table(AUD).filter(F.col('recovery_id')==RECOVERY_ID).orderBy('occurred_at'))
@@ -423,7 +439,7 @@ Guardar evidencia temporal y validar la secuencia de auditoría de la práctica.
   > **Salida esperada:** Aparecen BASELINE_CAPTURED, INCIDENT_DETECTED y RESTORE_COMPLETED.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que existe exactamente un evento BASELINE_CAPTURED y uno RESTORE_COMPLETED.
+- {% include step_label.html id="s027" %} Comprueba que existe exactamente un evento BASELINE_CAPTURED y uno RESTORE_COMPLETED.
 
   ```python
   events=[r['event_type'] for r in spark.table(AUD).filter(F.col('recovery_id')==RECOVERY_ID).collect()]
@@ -451,7 +467,10 @@ Demostrar el manejo de versiones inexistentes y dejar intactas tanto la fuente d
 
 Confirmar que una consulta histórica inválida devuelve error sin provocar modificaciones.
 
-- {% include step_label.html %} Consulta intencionalmente una versión futura inexistente y captura el error.
+
+{% assign tracking_task_id = "t005" %}
+
+- {% include step_label.html id="s028" %} Consulta intencionalmente una versión futura inexistente y captura el error.
 
   ```python
   future=int(spark.sql(f'DESCRIBE HISTORY {R} LIMIT 1').first()['version'])+100000
@@ -467,7 +486,7 @@ Confirmar que una consulta histórica inválida devuelve error sin provocar modi
   > **Salida esperada:** Se captura un error por versión inexistente; no se modifica la tabla. Se muestra `VALIDACIÓN EXITOSA: Versión inexistente: error esperado capturado sin cambios`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Confirma que los importes siguen coincidiendo después de la prueba de error.
+- {% include step_label.html id="s029" %} Confirma que los importes siguen coincidiendo después de la prueba de error.
 
   ```python
   current=spark.sql(f'SELECT COUNT(*) AS n, CAST(SUM(amount) AS DECIMAL(20,2)) AS total FROM {R}').first()
@@ -485,7 +504,7 @@ Confirmar que una consulta histórica inválida devuelve error sin provocar modi
 
 Conservar historial, auditoría y copia restaurada sin ejecutar operaciones destructivas.
 
-- {% include step_label.html %} Guarda la evidencia del historial con UPDATE y RESTORE en el notebook.
+- {% include step_label.html id="s030" %} Guarda la evidencia del historial con UPDATE y RESTORE en el notebook.
 
   ```python
   display(spark.sql(f'DESCRIBE HISTORY {R} LIMIT 6').select('version','timestamp','operation'))
@@ -494,7 +513,7 @@ Conservar historial, auditoría y copia restaurada sin ejecutar operaciones dest
   > **Salida esperada:** El historial muestra UPDATE y RESTORE.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Guarda el notebook y conserva la copia, el historial y la tabla de auditoría.
+- {% include step_label.html id="s031" %} Guarda el notebook y conserva la copia, el historial y la tabla de auditoría.
 
   > **Importante:** No ejecutes VACUUM ni DROP sobre la copia o sobre la fuente; se necesita el historial.
   {: .lab-note .important .compact}

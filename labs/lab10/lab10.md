@@ -1,4 +1,8 @@
 ---
+course_id: dbricksint
+lab_id: l010
+tracking: true
+position: 10
 layout: lab
 title: "Práctica 10: Configuración completa de permisos en Unity Catalog"
 permalink: /lab10/lab10/
@@ -65,17 +69,20 @@ next: /lab11/lab11/
 
 ### Tarea 1.1. Confirmar las identidades existentes
 
-- {% include step_label.html %} **Con la cuenta principal**, abre el menú de usuario de Databricks y entra en **Settings → Identity and access**. En **Management and permissions > Groups**, pulsa **Manage**. Busca `data_engineers_b2` y `data_analysts_b2`; abre cada grupo para comprobar su lista **Members**.
+
+{% assign tracking_task_id = "t001" %}
+
+- {% include step_label.html id="s001" %} **Con la cuenta principal**, abre el menú de usuario de Databricks y entra en **Settings → Identity and access**. En **Management and permissions > Groups**, pulsa **Manage**. Busca `data_engineers_b2` y `data_analysts_b2`; abre cada grupo para comprobar su lista **Members**.
 
   > **Salida esperada:** Se muestran ambos grupos existentes. El usuario de ingeniería pertenece a `data_engineers_b2` y el de analítica a `data_analysts_b2`. Si no aparecen, solicita al administrador que los prepare: **no los crees en esta práctica**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Sin salir de **Settings → Identity and access**, en **Users** pulsa **Manage**. Busca los **dos correos reales** facilitados por el administrador y revisa que estén activos, tengan acceso al workspace y no sean administradores.
+- {% include step_label.html id="s002" %} Sin salir de **Settings → Identity and access**, en **Users** pulsa **Manage**. Busca los **dos correos reales** facilitados por el administrador y revisa que estén activos, tengan acceso al workspace y no sean administradores.
 
   > **Salida esperada:** Existen dos usuarios distintos y utilizables. Ninguno es Workspace Admin, Account Admin ni propietario de los recursos del laboratorio. Si la pantalla no permite consultar membresías o roles, solicita confirmación al administrador.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **Workspace → Home**, abre tu carpeta de trabajo (por ejemplo `batch_1`). Crea el notebook **`10_unity_catalog`**, con lenguaje **SQL**, conecta el cómputo autorizado y ejecuta su **celda SQL 1**.
+- {% include step_label.html id="s003" %} En **Workspace → Home**, abre tu carpeta de trabajo (por ejemplo `batch_1`). Crea el notebook **`10_unity_catalog`**, con lenguaje **SQL**, conecta el cómputo autorizado y ejecuta su **celda SQL 1**.
 
   ```sql
   SELECT current_user() AS usuario_principal,
@@ -88,7 +95,7 @@ next: /lab11/lab11/
 
 ### Tarea 1.2. Identificar concesiones heredadas antes de operar
 
-- {% include step_label.html %} En `10_unity_catalog`, agrega la **celda SQL 2** debajo de la anterior. Inspecciona el catálogo compartido antes de crear el esquema.
+- {% include step_label.html id="s004" %} En `10_unity_catalog`, agrega la **celda SQL 2** debajo de la anterior. Inspecciona el catálogo compartido antes de crear el esquema.
 
   ```sql
   SHOW GRANTS ON CATALOG dbricks_de_int;
@@ -97,7 +104,7 @@ next: /lab11/lab11/
   > **Salida esperada:** Puedes identificar concesiones existentes. Revisa si `account users`, grupos amplios o alguno de los dos usuarios de prueba recibe privilegios heredables como `ALL PRIVILEGES`, `SELECT` o `MODIFY`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 3**, verifica que puedes usar el catálogo y que el nombre del esquema exclusivo no corresponde a un esquema institucional.
+- {% include step_label.html id="s005" %} En la **celda SQL 3**, verifica que puedes usar el catálogo y que el nombre del esquema exclusivo no corresponde a un esquema institucional.
 
   ```sql
   SHOW SCHEMAS IN dbricks_de_int LIKE 'p10_security_lab';
@@ -116,7 +123,10 @@ next: /lab11/lab11/
 
 ### Tarea 2.1. Crear esquema y tabla de pedidos
 
-- {% include step_label.html %} **Con la cuenta principal**, en `10_unity_catalog` ejecuta la **celda SQL 4** para crear el esquema exclusivo. Requiere `USE CATALOG` y `CREATE SCHEMA`.
+
+{% assign tracking_task_id = "t002" %}
+
+- {% include step_label.html id="s006" %} **Con la cuenta principal**, en `10_unity_catalog` ejecuta la **celda SQL 4** para crear el esquema exclusivo. Requiere `USE CATALOG` y `CREATE SCHEMA`.
 
   ```sql
   CREATE SCHEMA IF NOT EXISTS dbricks_de_int.p10_security_lab;
@@ -125,7 +135,7 @@ next: /lab11/lab11/
   > **Salida esperada:** Existe `dbricks_de_int.p10_security_lab`, separado de `batch1`. Si obtienes `PERMISSION_DENIED`, detente y solicita los privilegios indicados en los requisitos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 5**, revisa las concesiones del esquema recién creado, incluyendo las que Databricks muestre como heredadas.
+- {% include step_label.html id="s007" %} En la **celda SQL 5**, revisa las concesiones del esquema recién creado, incluyendo las que Databricks muestre como heredadas.
 
   ```sql
   SHOW GRANTS ON SCHEMA dbricks_de_int.p10_security_lab;
@@ -134,7 +144,7 @@ next: /lab11/lab11/
   > **Salida esperada:** El ejecutor puede administrar el esquema. Si alguno de los usuarios de prueba ya tiene `SELECT` o `MODIFY` efectivos por herencia, suspende las pruebas negativas y solicita un catálogo aislado; no ejecutes `REVOKE` sobre el catálogo compartido.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 6**, crea `p10_orders_sensitive` y carga **únicamente datos sintéticos**. Ejecuta ambas sentencias en orden; requieren creación de tablas y capacidad de insertar datos.
+- {% include step_label.html id="s008" %} En la **celda SQL 6**, crea `p10_orders_sensitive` y carga **únicamente datos sintéticos**. Ejecuta ambas sentencias en orden; requieren creación de tablas y capacidad de insertar datos.
 
   ```sql
   CREATE TABLE IF NOT EXISTS dbricks_de_int.p10_security_lab.p10_orders_sensitive (
@@ -155,7 +165,7 @@ next: /lab11/lab11/
   > **Salida esperada:** La tabla contiene `P10-001` a `P10-012`, todos con correos ficticios `@ejemplo.test`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 7**, comprueba los datos generados antes de conceder permisos a los grupos.
+- {% include step_label.html id="s009" %} En la **celda SQL 7**, comprueba los datos generados antes de conceder permisos a los grupos.
 
   ```sql
   SELECT COUNT(*) AS pedidos,
@@ -169,7 +179,7 @@ next: /lab11/lab11/
 
 ### Tarea 2.2. Crear auditoría y volumen propios
 
-- {% include step_label.html %} En la **celda SQL 8**, crea la tabla de auditoría y registra su único evento inicial.
+- {% include step_label.html id="s010" %} En la **celda SQL 8**, crea la tabla de auditoría y registra su único evento inicial.
 
   ```sql
   CREATE TABLE IF NOT EXISTS dbricks_de_int.p10_security_lab.p10_access_audit (
@@ -185,7 +195,7 @@ next: /lab11/lab11/
   > **Salida esperada:** La tabla contiene el evento `EVT-001` de tipo `BASELINE`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 9**, crea un **Managed Volume** del laboratorio, sin tocar `dbricks_de_int.batch1.landing`.
+- {% include step_label.html id="s011" %} En la **celda SQL 9**, crea un **Managed Volume** del laboratorio, sin tocar `dbricks_de_int.batch1.landing`.
 
   ```sql
   CREATE VOLUME IF NOT EXISTS dbricks_de_int.p10_security_lab.p10_files;
@@ -205,7 +215,10 @@ next: /lab11/lab11/
 
 ### Tarea 3.1. Conceder acceso mínimo por grupo
 
-- {% include step_label.html %} **Con la cuenta principal**, en `10_unity_catalog` ejecuta la **celda SQL 10**. El propietario del catálogo, o quien tenga `MANAGE`, debe conceder `USE CATALOG` a ambos grupos; si no eres ese principal, solicita que ejecute únicamente estas dos sentencias.
+
+{% assign tracking_task_id = "t003" %}
+
+- {% include step_label.html id="s012" %} **Con la cuenta principal**, en `10_unity_catalog` ejecuta la **celda SQL 10**. El propietario del catálogo, o quien tenga `MANAGE`, debe conceder `USE CATALOG` a ambos grupos; si no eres ese principal, solicita que ejecute únicamente estas dos sentencias.
 
   ```sql
   GRANT USE CATALOG ON CATALOG dbricks_de_int TO `data_engineers_b2`;
@@ -215,7 +228,7 @@ next: /lab11/lab11/
   > **Salida esperada:** Ambos grupos tienen `USE CATALOG`. No se concede `SELECT` ni `ALL PRIVILEGES` en todo `dbricks_de_int`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 11**, como propietario del esquema, concede `USE SCHEMA` a ambos grupos sin otorgar acceso a todas las tablas.
+- {% include step_label.html id="s013" %} En la **celda SQL 11**, como propietario del esquema, concede `USE SCHEMA` a ambos grupos sin otorgar acceso a todas las tablas.
 
   ```sql
   GRANT USE SCHEMA ON SCHEMA dbricks_de_int.p10_security_lab TO `data_engineers_b2`;
@@ -225,7 +238,7 @@ next: /lab11/lab11/
   > **Salida esperada:** Los grupos pueden resolver los nombres del esquema, pero `USE SCHEMA` por sí solo no les concede `SELECT` sobre pedidos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 12**, otorga a Ingeniería `SELECT` y `MODIFY` sobre pedidos, lectura de auditoría y permisos de lectura/escritura **solo** sobre `p10_files`.
+- {% include step_label.html id="s014" %} En la **celda SQL 12**, otorga a Ingeniería `SELECT` y `MODIFY` sobre pedidos, lectura de auditoría y permisos de lectura/escritura **solo** sobre `p10_files`.
 
   ```sql
   GRANT SELECT, MODIFY ON TABLE dbricks_de_int.p10_security_lab.p10_orders_sensitive TO `data_engineers_b2`;
@@ -238,7 +251,7 @@ next: /lab11/lab11/
 
 ### Tarea 3.2. Crear la vista y validar los permisos antes de las pruebas
 
-- {% include step_label.html %} En la **celda SQL 13**, crea la vista dinámica. La condición evalúa **la identidad del usuario que consulta**, no la del propietario que crea la vista.
+- {% include step_label.html id="s015" %} En la **celda SQL 13**, crea la vista dinámica. La condición evalúa **la identidad del usuario que consulta**, no la del propietario que crea la vista.
 
   ```sql
   CREATE OR REPLACE VIEW dbricks_de_int.p10_security_lab.p10_vw_orders_analytics AS
@@ -253,7 +266,7 @@ next: /lab11/lab11/
   > **Salida esperada:** La vista preserva los 12 pedidos y muestra correo completo a Ingeniería, pero `c***@ejemplo.test` a Analítica.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 14**, concede `SELECT` sobre la vista a ambos grupos. Analítica **no** debe recibir `SELECT` sobre la tabla sensible.
+- {% include step_label.html id="s016" %} En la **celda SQL 14**, concede `SELECT` sobre la vista a ambos grupos. Analítica **no** debe recibir `SELECT` sobre la tabla sensible.
 
   ```sql
   GRANT SELECT ON VIEW dbricks_de_int.p10_security_lab.p10_vw_orders_analytics TO `data_engineers_b2`;
@@ -263,7 +276,7 @@ next: /lab11/lab11/
   > **Salida esperada:** Los dos grupos tienen `SELECT` sobre la vista; solamente Ingeniería tiene `SELECT` directo sobre `p10_orders_sensitive`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Con la cuenta principal**, en `10_unity_catalog`, crea la **celda SQL 15** para revisar exclusivamente los permisos de la **tabla sensible**. Ejecuta esta consulta por separado.
+- {% include step_label.html id="s017" %} **Con la cuenta principal**, en `10_unity_catalog`, crea la **celda SQL 15** para revisar exclusivamente los permisos de la **tabla sensible**. Ejecuta esta consulta por separado.
 
   ```sql
   SHOW GRANTS ON TABLE dbricks_de_int.p10_security_lab.p10_orders_sensitive;
@@ -272,7 +285,7 @@ next: /lab11/lab11/
   > **Salida esperada:** `data_engineers_b2` tiene `SELECT` y `MODIFY`. No debe aparecer una concesión directa de `SELECT` para `data_analysts_b2`. Revisa también los privilegios heredados antes de realizar pruebas negativas.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 16**, revisa **solo los permisos de la vista dinámica**. Este es un control **obligatorio** antes de comenzar la Tarea 4.
+- {% include step_label.html id="s018" %} En la **celda SQL 16**, revisa **solo los permisos de la vista dinámica**. Este es un control **obligatorio** antes de comenzar la Tarea 4.
 
   ```sql
   SHOW GRANTS ON VIEW dbricks_de_int.p10_security_lab.p10_vw_orders_analytics;
@@ -281,7 +294,7 @@ next: /lab11/lab11/
   > **Salida esperada:** Deben aparecer **dos filas `SELECT`**, una con `Principal=data_engineers_b2` y otra con `Principal=data_analysts_b2`. Si solo aparece Ingeniería, **no cambies de usuario todavía**: aplica la corrección del siguiente paso.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Solo si falta `SELECT` para Analítica** en la celda 16, ejecuta la **celda SQL 17** con la cuenta propietaria; después **vuelve a ejecutar la celda 16** para verificar que el permiso quedó registrado. Si ya existe, omite el `GRANT`.
+- {% include step_label.html id="s019" %} **Solo si falta `SELECT` para Analítica** en la celda 16, ejecuta la **celda SQL 17** con la cuenta propietaria; después **vuelve a ejecutar la celda 16** para verificar que el permiso quedó registrado. Si ya existe, omite el `GRANT`.
 
   ```sql
   GRANT SELECT ON VIEW dbricks_de_int.p10_security_lab.p10_vw_orders_analytics
@@ -291,7 +304,7 @@ next: /lab11/lab11/
   > **Salida esperada:** La siguiente ejecución de `SHOW GRANTS ON VIEW` muestra `SELECT` tanto para Ingeniería como para Analítica. **No concedas `SELECT` sobre `p10_orders_sensitive` a Analítica.**
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 18**, comprueba por separado los privilegios de **auditoría**; no combines varios `SHOW GRANTS` en una sola celda, porque podrías ver únicamente la última salida.
+- {% include step_label.html id="s020" %} En la **celda SQL 18**, comprueba por separado los privilegios de **auditoría**; no combines varios `SHOW GRANTS` en una sola celda, porque podrías ver únicamente la última salida.
 
   ```sql
   SHOW GRANTS ON TABLE dbricks_de_int.p10_security_lab.p10_access_audit;
@@ -300,7 +313,7 @@ next: /lab11/lab11/
   > **Salida esperada:** Ingeniería tiene `SELECT` sobre `p10_access_audit`; Analítica no recibe un `SELECT` directo en esta tabla.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 19**, comprueba los privilegios del **Volume exclusivo**.
+- {% include step_label.html id="s021" %} En la **celda SQL 19**, comprueba los privilegios del **Volume exclusivo**.
 
   ```sql
   SHOW GRANTS ON VOLUME dbricks_de_int.p10_security_lab.p10_files;
@@ -309,7 +322,7 @@ next: /lab11/lab11/
   > **Salida esperada:** `data_engineers_b2` muestra `READ VOLUME` y `WRITE VOLUME`. Que aparezcan solo dos filas aquí es normal: esta consulta verifica únicamente el Volume.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **Antes de pasar a la Tarea 4**, confirma en las **celdas 15 y 16** que Ingeniería tiene `SELECT` en tabla y vista, y Analítica **solo en la vista**. Confirma también las concesiones `USE CATALOG` y `USE SCHEMA` para ambos grupos; si faltan, solicita a la cuenta propietaria que las conceda. Si existen permisos amplios heredados, detén las pruebas de denegación.
+- {% include step_label.html id="s022" %} **Antes de pasar a la Tarea 4**, confirma en las **celdas 15 y 16** que Ingeniería tiene `SELECT` en tabla y vista, y Analítica **solo en la vista**. Confirma también las concesiones `USE CATALOG` y `USE SCHEMA` para ambos grupos; si faltan, solicita a la cuenta propietaria que las conceda. Si existen permisos amplios heredados, detén las pruebas de denegación.
 
   > **Salida esperada:** Ambos grupos pueden resolver `dbricks_de_int.p10_security_lab`; solo Ingeniería tiene lectura directa de los pedidos; **ambos** tienen `SELECT` en `p10_vw_orders_analytics`. No inicies la prueba de Analítica sin cumplir estas condiciones.
   {: .lab-note .output .compact}
@@ -324,7 +337,10 @@ next: /lab11/lab11/
 
 ### Tarea 4.1. Sesión exclusiva de Ingeniería
 
-- {% include step_label.html %} **Cierra sesión de la cuenta principal** o abre una sesión privada y entra en Databricks con el **usuario de Ingeniería** proporcionado previamente. Abre **SQL Editor → New query** y selecciona el SQL Warehouse autorizado. Ejecuta la **consulta 1**.
+
+{% assign tracking_task_id = "t004" %}
+
+- {% include step_label.html id="s023" %} **Cierra sesión de la cuenta principal** o abre una sesión privada y entra en Databricks con el **usuario de Ingeniería** proporcionado previamente. Abre **SQL Editor → New query** y selecciona el SQL Warehouse autorizado. Ejecuta la **consulta 1**.
 
   ```sql
   SELECT current_user() AS usuario,
@@ -335,7 +351,7 @@ next: /lab11/lab11/
   > **Salida esperada:** `es_ingeniero=true` y `es_analista=false`. Si `false` aparece aunque el usuario ya figura en **Settings → Identity and access → Groups → Members**, **cierra por completo la sesión de prueba y vuelve a iniciar sesión**; repite la consulta. Puede existir un retraso de propagación o contexto de sesión anterior. Si persiste, solicita al administrador que valide el grupo y no continúes.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **En la misma sesión de Ingeniería**, agrega la **consulta 2** en SQL Editor; primero consulta la tabla original y después la vista (ejecuciones separadas).
+- {% include step_label.html id="s024" %} **En la misma sesión de Ingeniería**, agrega la **consulta 2** en SQL Editor; primero consulta la tabla original y después la vista (ejecuciones separadas).
 
   ```sql
   SELECT order_id, customer_email
@@ -354,7 +370,7 @@ next: /lab11/lab11/
 
 ### Tarea 4.2. Sesión exclusiva de Analítica
 
-- {% include step_label.html %} Cierra la sesión de Ingeniería e inicia otra con el **usuario de Analítica**. En **SQL Editor → New query**, selecciona el SQL Warehouse y ejecuta la **consulta 3**.
+- {% include step_label.html id="s025" %} Cierra la sesión de Ingeniería e inicia otra con el **usuario de Analítica**. En **SQL Editor → New query**, selecciona el SQL Warehouse y ejecuta la **consulta 3**.
 
   ```sql
   SELECT current_user() AS usuario,
@@ -365,7 +381,7 @@ next: /lab11/lab11/
   > **Salida esperada:** `es_ingeniero=false` y `es_analista=true` con el correo real del usuario analítico. Si `es_analista=false` pese a aparecer en **Groups → Members**, cierra sesión, vuelve a ingresar y repite la consulta antes de avanzar.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} **En la misma sesión de Analítica**, ejecuta la **consulta 4** sobre la vista dinámica; no cambies de identidad durante su ejecución.
+- {% include step_label.html id="s026" %} **En la misma sesión de Analítica**, ejecuta la **consulta 4** sobre la vista dinámica; no cambies de identidad durante su ejecución.
 
   ```sql
   SELECT order_id, customer_email
@@ -376,7 +392,7 @@ next: /lab11/lab11/
   > **Salida esperada:** Aparecen `P10-001 | c***@ejemplo.test` y `P10-002 | c***@ejemplo.test`. Si aparece `INSUFFICIENT_PERMISSIONS` para **la vista**, regresa a la cuenta principal y verifica `SHOW GRANTS ON VIEW` (Tarea 3, celda 16): deben figurar ambos grupos con `SELECT`. Concede el permiso faltante solo sobre la vista, confirma la concesión y vuelve a iniciar sesión con Analítica antes de repetir esta consulta.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En otra consulta de **SQL Editor**, todavía como Analítica, intenta leer **directamente** la tabla sensible. Esta es una prueba negativa deliberada: no requiere modificar datos.
+- {% include step_label.html id="s027" %} En otra consulta de **SQL Editor**, todavía como Analítica, intenta leer **directamente** la tabla sensible. Esta es una prueba negativa deliberada: no requiere modificar datos.
 
   ```sql
   SELECT customer_email
@@ -397,7 +413,10 @@ next: /lab11/lab11/
 
 ### Tarea 5.1. Comprobar resultados con la cuenta principal
 
-- {% include step_label.html %} **Cierra la sesión de Analítica** y vuelve a iniciar con la **cuenta principal**. Abre `Workspace → batch_1 → 10_unity_catalog`, conecta el cómputo y ejecuta la **celda SQL 20** para revisar el total de pedidos tras las pruebas.
+
+{% assign tracking_task_id = "t005" %}
+
+- {% include step_label.html id="s028" %} **Cierra la sesión de Analítica** y vuelve a iniciar con la **cuenta principal**. Abre `Workspace → batch_1 → 10_unity_catalog`, conecta el cómputo y ejecuta la **celda SQL 20** para revisar el total de pedidos tras las pruebas.
 
   ```sql
   SELECT COUNT(*) AS pedidos,
@@ -408,7 +427,7 @@ next: /lab11/lab11/
   > **Salida esperada:** `pedidos=12`, `importe_total=1365.00`. Las pruebas de acceso no modifican pedidos.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En la **celda SQL 21**, confirma que la tabla de auditoría conserva su registro inicial.
+- {% include step_label.html id="s029" %} En la **celda SQL 21**, confirma que la tabla de auditoría conserva su registro inicial.
 
   ```sql
   SELECT event_id, event_type
@@ -418,7 +437,7 @@ next: /lab11/lab11/
   > **Salida esperada:** Una fila `EVT-001 | BASELINE`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Registra una matriz de permisos en tus notas, con las **dos cuentas reales** y los resultados observados. No intentes provocar denegaciones ejecutando `UPDATE` ni modifiques concesiones institucionales.
+- {% include step_label.html id="s030" %} Registra una matriz de permisos en tus notas, con las **dos cuentas reales** y los resultados observados. No intentes provocar denegaciones ejecutando `UPDATE` ni modifiques concesiones institucionales.
 
   | Cuenta de prueba | Tabla sensible | Vista dinámica | Auditoría | Volumen propio |
   |---|---|---|---|---|
@@ -428,7 +447,7 @@ next: /lab11/lab11/
   > **Salida esperada:** Se documentan dos usuarios reales, resultados positivos y negativos, 12 pedidos, 1365.00 y los recursos exclusivos del Schema `p10_security_lab`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Conserva el notebook `10_unity_catalog`, la vista `p10_vw_orders_analytics`, ambas tablas y el Volume `p10_files`. No elimines los grupos ni cambies permisos de `batch1`.
+- {% include step_label.html id="s031" %} Conserva el notebook `10_unity_catalog`, la vista `p10_vw_orders_analytics`, ambas tablas y el Volume `p10_files`. No elimines los grupos ni cambies permisos de `batch1`.
 
   > **Salida esperada:** Los recursos de la Práctica 10 permanecen en `dbricks_de_int.p10_security_lab` para revisión posterior.
   {: .lab-note .output .compact}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "code": "DBRICKS_DE_INT",
+  "trackingId": "dbricksint",
+  "name": "Ingeniería de datos con Databricks",
+  "description": "Curso de ingeniería de datos con Databricks, PySpark, Delta Lake, Unity Catalog y Lakeflow."
+}

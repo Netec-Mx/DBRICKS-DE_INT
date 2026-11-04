@@ -1,4 +1,8 @@
 ---
+course_id: dbricksint
+lab_id: l001
+tracking: true
+position: 1
 layout: lab
 title: "Práctica 1: Configuración de cluster y ejecución de notebook ETL"
 permalink: /lab1/lab1/
@@ -48,19 +52,22 @@ Configurarás un cluster **Single node** para esta práctica de cinco pedidos, s
 
 ### Tarea 1.1. Abrir el formulario de creación
 
-- {% include step_label.html %} Inicia sesión en el workspace de **Azure Databricks** con las credenciales del curso.
 
-- {% include step_label.html %} En el menú izquierdo, selecciona **Compute** para abrir tus recursos de cómputo.
+{% assign tracking_task_id = "t001" %}
+
+- {% include step_label.html id="s001" %} Inicia sesión en el workspace de **Azure Databricks** con las credenciales del curso.
+
+- {% include step_label.html id="s002" %} En el menú izquierdo, selecciona **Compute** para abrir tus recursos de cómputo.
 
   > **Salida esperada:** Se muestra la lista de recursos que puedes utilizar o administrar.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Si ya tienes un cluster autorizado y compatible, selecciónalo; de lo contrario, pulsa **Create compute**.
+- {% include step_label.html id="s003" %} Si ya tienes un cluster autorizado y compatible, selecciónalo; de lo contrario, pulsa **Create compute**.
 
   > **Importante:** No crees recursos duplicados si el instructor ya proporcionó un cluster funcional.
   {: .lab-note .important .compact}
 
-- {% include step_label.html %} En **Create new compute**, confirma que el encabezado indique **Simple form: ON**.
+- {% include step_label.html id="s004" %} En **Create new compute**, confirma que el encabezado indique **Simple form: ON**.
 
   > **Salida esperada:** El formulario muestra las secciones **General**, **Performance**, **Tags** y **Advanced**.
   {: .lab-note .output .compact}
@@ -82,54 +89,54 @@ Configura las propiedades **en este orden**, igual que aparecen en tu interfaz.
 | 9 | **Tags** | Dejar vacíos salvo que la institución los exija |
 | 10 | **Advanced > Access mode** | `Manual` → `Standard (formerly: Shared)` |
 
-- {% include step_label.html %} En **General > Compute name**, escribe `lab1-etl-<usuario>`; sustituye `<usuario>` por tu identificador.
+- {% include step_label.html id="s005" %} En **General > Compute name**, escribe `lab1-etl-<usuario>`; sustituye `<usuario>` por tu identificador.
 
   > **Salida esperada:** El nombre identifica exclusivamente tu cluster del laboratorio.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **Policy**, deja **Unrestricted** únicamente si tienes autorización; en otro caso, selecciona la política del curso.
+- {% include step_label.html id="s006" %} En **Policy**, deja **Unrestricted** únicamente si tienes autorización; en otro caso, selecciona la política del curso.
 
   > **Nota:** Una política institucional puede bloquear algunas propiedades; conserva los valores obligatorios.
   {: .lab-note .info .compact}
 
-- {% include step_label.html %} En **Performance**, deja **Machine learning** desmarcado y selecciona **Databricks runtime: 15.4 LTS**.
+- {% include step_label.html id="s007" %} En **Performance**, deja **Machine learning** desmarcado y selecciona **Databricks runtime: 15.4 LTS**.
 
   > **Salida esperada:** El selector muestra `15.4 LTS`, con Spark 3.5.0.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Deja desmarcada la casilla **Photon acceleration**; no es necesaria para este ejemplo pequeño.
+- {% include step_label.html id="s008" %} Deja desmarcada la casilla **Photon acceleration**; no es necesaria para este ejemplo pequeño.
 
-- {% include step_label.html %} En **Preferred node type**, selecciona el nodo autorizado más pequeño con cuota suficiente **Standard_D8s_v5 (8 vCPU) o Standard_D4s_v5 (4 vCPU) o Standard_D4ds_v4**.
+- {% include step_label.html id="s009" %} En **Preferred node type**, selecciona el nodo autorizado más pequeño con cuota suficiente **Standard_D8s_v5 (8 vCPU) o Standard_D4s_v5 (4 vCPU) o Standard_D4ds_v4**.
 
-- {% include step_label.html %} Mantén marcada la casilla **Single node** para ejecutar driver y procesamiento en un solo nodo.
+- {% include step_label.html id="s010" %} Mantén marcada la casilla **Single node** para ejecutar driver y procesamiento en un solo nodo.
 
   > **Importante:** No configures 2 workers. **Single node** es suficiente para los cinco registros de este laboratorio y reduce el uso de recursos frente a un cluster multinodo equivalente.
   {: .lab-note .important .compact}
 
-- {% include step_label.html %} Marca **Terminate after** e introduce `20` en el campo de minutos de inactividad.
+- {% include step_label.html id="s011" %} Marca **Terminate after** e introduce `20` en el campo de minutos de inactividad.
 
   > **Salida esperada:** Se muestra **Terminate after 20 minutes of inactivity**.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} En **Tags**, deja **Key** y **Value** vacíos si el curso no exige etiquetas personalizadas.
+- {% include step_label.html id="s012" %} En **Tags**, deja **Key** y **Value** vacíos si el curso no exige etiquetas personalizadas.
 
 ### Tarea 1.3. Configurar Advanced, crear y verificar
 
-- {% include step_label.html %} Despliega **Advanced** y entra en **Access mode**, como se muestra al final del formulario.
+- {% include step_label.html id="s013" %} Despliega **Advanced** y entra en **Access mode**, como se muestra al final del formulario.
 
-- {% include step_label.html %} Selecciona **Auto** y, en el desplegable contiguo, **Standard (formerly: Shared)**.
+- {% include step_label.html id="s014" %} Selecciona **Auto** y, en el desplegable contiguo, **Standard (formerly: Shared)**.
 
   > **Salida esperada:** El formulario muestra `Auto` y `Standard (formerly: Shared)`.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba nombre, Runtime 15.4 LTS, Single node, terminación 20 minutos y Access mode Standard.
+- {% include step_label.html id="s015" %} Comprueba nombre, Runtime 15.4 LTS, Single node, terminación 20 minutos y Access mode Standard.
 
-- {% include step_label.html %} Solo si **no aparece una advertencia de cuota o bloqueo**, pulsa **Create** en la parte inferior del formulario.
+- {% include step_label.html id="s016" %} Solo si **no aparece una advertencia de cuota o bloqueo**, pulsa **Create** en la parte inferior del formulario.
 
   > **Advertencia:** Si la cuota sigue en `0`, no podrás garantizar el aprovisionamiento. Solicita un cluster del curso ya iniciado o la corrección de cuota antes de continuar con la Tarea 2.
   {: .lab-note .warning .compact}
 
-- {% include step_label.html %} En la ficha del cluster, espera el estado **Running**; si aparece **Terminated**, pulsa **Start**.
+- {% include step_label.html id="s017" %} En la ficha del cluster, espera el estado **Running**; si aparece **Terminated**, pulsa **Start**.
 
   > **Salida esperada:** El cluster está **Running** y disponible para conectarlo a un notebook.
   {: .lab-note .output .compact}
@@ -157,13 +164,16 @@ Crearás un notebook de Python dentro de tu espacio personal, lo asociarás al c
 Prepara el documento ejecutable donde se desarrollarán y validarán las transformaciones.
 
 
-- {% include step_label.html %} En la barra lateral, abre **Workspace > Home** y localiza tu carpeta de usuario en **Users**.
+
+{% assign tracking_task_id = "t002" %}
+
+- {% include step_label.html id="s018" %} En la barra lateral, abre **Workspace > Home** y localiza tu carpeta de usuario en **Users**.
 
   > **Salida esperada:** Se muestra tu directorio de trabajo con permiso para crear archivos.
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En tu carpeta personal, pulsa **Create > Folder**, escribe `batch_1` y entra a la carpeta.
+- {% include step_label.html id="s019" %} En tu carpeta personal, pulsa **Create > Folder**, escribe `batch_1` y entra a la carpeta.
 
   > **Nota:** La ruta definitiva será `/Workspace/Users/<usuario>/batch_1/`.
   {: .lab-note .info .compact}
@@ -172,13 +182,13 @@ Prepara el documento ejecutable donde se desarrollarán y validarán las transfo
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Dentro de `batch_1`, pulsa **Create > Notebook**, escribe `01_etl_basico` y confirma **Create**.
+- {% include step_label.html id="s020" %} Dentro de `batch_1`, pulsa **Create > Notebook**, escribe `01_etl_basico` y confirma **Create**.
 
   > **Salida esperada:** Se abre un notebook vacío con el nombre indicado.
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Elige **Python** como lenguaje; arriba a la derecha, pulsa el **boton verde ó Connect** y selecciona el cluster Running recien creado.
+- {% include step_label.html id="s021" %} Elige **Python** como lenguaje; arriba a la derecha, pulsa el **boton verde ó Connect** y selecciona el cluster Running recien creado.
 
   > **Salida esperada:** El notebook está conectado a un cluster Running y listo para ejecutar celdas.
   {: .lab-note .output .compact}
@@ -189,7 +199,7 @@ Prepara el documento ejecutable donde se desarrollarán y validarán las transfo
 Confirma la sesión de Spark y agrega una introducción breve al propósito del notebook.
 
 
-- {% include step_label.html %} En la primera celda **Python**, pega el código de versiones y pulsa **Shift+Enter** para ejecutarlo.
+- {% include step_label.html id="s022" %} En la primera celda **Python**, pega el código de versiones y pulsa **Shift+Enter** para ejecutarlo.
 
   ```python
   import sys
@@ -201,7 +211,7 @@ Confirma la sesión de Spark y agrega una introducción breve al propósito del 
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Debajo de la primera celda, agrega otra, cambia su tipo a **Markdown** y pega el texto indicado.
+- {% include step_label.html id="s023" %} Debajo de la primera celda, agrega otra, cambia su tipo a **Markdown** y pega el texto indicado.
 
   ```markdown
   **Objetivo:** procesar cinco pedidos controlados sin archivos externos.
@@ -212,7 +222,7 @@ Confirma la sesión de Spark y agrega una introducción breve al propósito del 
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Debajo del Markdown, agrega una celda **Python**, pega las importaciones y ejecútala con **Shift+Enter**.
+- {% include step_label.html id="s024" %} Debajo del Markdown, agrega una celda **Python**, pega las importaciones y ejecútala con **Shift+Enter**.
 
   ```python
   from pyspark.sql import functions as F
@@ -242,7 +252,10 @@ Construirás un DataFrame con cinco pedidos de ejemplo, aplicarás conversiones 
 Extrae cinco registros definidos en el notebook para mantener independencia frente a archivos o permisos de almacenamiento.
 
 
-- {% include step_label.html %} Debajo de las importaciones, crea una celda **Python**, pega la lista `pedidos` y ejecútala.
+
+{% assign tracking_task_id = "t003" %}
+
+- {% include step_label.html id="s025" %} Debajo de las importaciones, crea una celda **Python**, pega la lista `pedidos` y ejecútala.
 
   ```python
   pedidos = [
@@ -258,7 +271,7 @@ Extrae cinco registros definidos en el notebook para mantener independencia fren
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Agrega una celda **Python** debajo de `pedidos`, pega `spark.createDataFrame(...)` y ejecútala.
+- {% include step_label.html id="s026" %} Agrega una celda **Python** debajo de `pedidos`, pega `spark.createDataFrame(...)` y ejecútala.
 
   ```python
   raw_df = spark.createDataFrame(
@@ -270,7 +283,7 @@ Extrae cinco registros definidos en el notebook para mantener independencia fren
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En una celda **Python** nueva, ejecuta `raw_df.printSchema()` y revisa los cuatro tipos.
+- {% include step_label.html id="s027" %} En una celda **Python** nueva, ejecuta `raw_df.printSchema()` y revisa los cuatro tipos.
 
   ```python
   raw_df.printSchema()
@@ -280,7 +293,7 @@ Extrae cinco registros definidos en el notebook para mantener independencia fren
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En la siguiente celda **Python**, ejecuta `display(raw_df.orderBy("order_id"))` y cuenta las filas.
+- {% include step_label.html id="s028" %} En la siguiente celda **Python**, ejecuta `display(raw_df.orderBy("order_id"))` y cuenta las filas.
 
   ```python
   display(raw_df.orderBy("order_id"))
@@ -295,7 +308,7 @@ Extrae cinco registros definidos en el notebook para mantener independencia fren
 Convierte fechas e importes y prepara datos tipados para producir un resumen diario confiable.
 
 
-- {% include step_label.html %} Debajo de la carga, crea una celda **Python**, pega la transformación `typed_df` y ejecútala.
+- {% include step_label.html id="s029" %} Debajo de la carga, crea una celda **Python**, pega la transformación `typed_df` y ejecútala.
 
   ```python
   typed_df = (
@@ -309,7 +322,7 @@ Convierte fechas e importes y prepara datos tipados para producir un resumen dia
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En una celda **Python** nueva, ejecuta `typed_df.printSchema()` y revisa fecha e importe.
+- {% include step_label.html id="s030" %} En una celda **Python** nueva, ejecuta `typed_df.printSchema()` y revisa fecha e importe.
 
   ```python
   typed_df.printSchema()
@@ -319,7 +332,7 @@ Convierte fechas e importes y prepara datos tipados para producir un resumen dia
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En la siguiente celda **Python**, pega el filtro que define `valid_df` y ejecútalo.
+- {% include step_label.html id="s031" %} En la siguiente celda **Python**, pega el filtro que define `valid_df` y ejecútalo.
 
   ```python
   valid_df = typed_df.filter(
@@ -334,7 +347,7 @@ Convierte fechas e importes y prepara datos tipados para producir un resumen dia
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Agrega una celda **Python** con `valid_df.count()` y ejecútala para comprobar los cinco pedidos.
+- {% include step_label.html id="s032" %} Agrega una celda **Python** con `valid_df.count()` y ejecútala para comprobar los cinco pedidos.
 
   ```python
   total_validos = valid_df.count()
@@ -345,7 +358,7 @@ Convierte fechas e importes y prepara datos tipados para producir un resumen dia
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Debajo del filtro, agrega una celda **Python**, pega el agregado `daily_df` y ejecútalo.
+- {% include step_label.html id="s033" %} Debajo del filtro, agrega una celda **Python**, pega el agregado `daily_df` y ejecútalo.
 
   ```python
   daily_df = (
@@ -367,7 +380,7 @@ Convierte fechas e importes y prepara datos tipados para producir un resumen dia
 Publica el resultado como vista temporal de sesión y consúltalo desde SQL para completar la etapa Load.
 
 
-- {% include step_label.html %} En una celda **Python** nueva, ejecuta `display(daily_df)` y verifica las dos fechas.
+- {% include step_label.html id="s034" %} En una celda **Python** nueva, ejecuta `display(daily_df)` y verifica las dos fechas.
 
   ```python
   display(daily_df)
@@ -377,7 +390,7 @@ Publica el resultado como vista temporal de sesión y consúltalo desde SQL para
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En la siguiente celda **Python**, ejecuta `daily_df.createOrReplaceTempView("etl_ventas_diarias")`.
+- {% include step_label.html id="s035" %} En la siguiente celda **Python**, ejecuta `daily_df.createOrReplaceTempView("etl_ventas_diarias")`.
 
   > **Importante:** La vista no es una tabla Delta: solo existe mientras esté activa la misma SparkSession.
   {: .lab-note .important .compact}
@@ -390,7 +403,7 @@ Publica el resultado como vista temporal de sesión y consúltalo desde SQL para
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Agrega una celda nueva, cambia su lenguaje a **SQL** o usa `%sql`, y ejecuta la consulta.
+- {% include step_label.html id="s036" %} Agrega una celda nueva, cambia su lenguaje a **SQL** o usa `%sql`, y ejecuta la consulta.
 
   ```sql
   SELECT order_date, order_count, total_sales
@@ -405,7 +418,7 @@ Publica el resultado como vista temporal de sesión y consúltalo desde SQL para
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} En otra celda **SQL** del mismo notebook y cluster, pega la consulta de totales y ejecútala.
+- {% include step_label.html id="s037" %} En otra celda **SQL** del mismo notebook y cluster, pega la consulta de totales y ejecútala.
 
   ```sql
   SELECT SUM(order_count) AS pedidos, SUM(total_sales) AS ventas
@@ -435,7 +448,10 @@ Verificarás con aserciones que el ETL produce los registros y totales previstos
 Confirma la consistencia del procesamiento con controles automáticos y una segunda ejecución funcional.
 
 
-- {% include step_label.html %} Agrega una celda **Python** debajo de las consultas SQL, pega las aserciones y ejecútalas.
+
+{% assign tracking_task_id = "t004" %}
+
+- {% include step_label.html id="s038" %} Agrega una celda **Python** debajo de las consultas SQL, pega las aserciones y ejecútalas.
 
   ```python
   from decimal import Decimal
@@ -454,7 +470,7 @@ Confirma la consistencia del procesamiento con controles automáticos y una segu
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Vuelve a la celda `daily_df`, ejecútala y después reejecuta la celda `createOrReplaceTempView`.
+- {% include step_label.html id="s039" %} Vuelve a la celda `daily_df`, ejecútala y después reejecuta la celda `createOrReplaceTempView`.
 
   > **Nota:** No es necesario volver a iniciar el cluster ni volver a crear el notebook.
   {: .lab-note .info .compact}
@@ -463,7 +479,7 @@ Confirma la consistencia del procesamiento con controles automáticos y una segu
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Regresa a la última consulta **SQL**, ejecútala nuevamente y compara pedidos y ventas.
+- {% include step_label.html id="s040" %} Regresa a la última consulta **SQL**, ejecútala nuevamente y compara pedidos y ventas.
 
   ```sql
   SELECT SUM(order_count) AS pedidos, SUM(total_sales) AS ventas
@@ -479,7 +495,7 @@ Confirma la consistencia del procesamiento con controles automáticos y una segu
 Conserva la implementación y confirma el estado del recurso para que pueda utilizarse en otra sesión.
 
 
-- {% include step_label.html %} En **Workspace > Home > batch_1**, comprueba que existe `01_etl_basico` y vuelve a abrirlo.
+- {% include step_label.html id="s041" %} En **Workspace > Home > batch_1**, comprueba que existe `01_etl_basico` y vuelve a abrirlo.
 
   > **Nota:** Databricks guarda automáticamente los cambios del notebook; verifica que el nombre y la ubicación sean correctos.
   {: .lab-note .info .compact}
@@ -488,7 +504,7 @@ Conserva la implementación y confirma el estado del recurso para que pueda util
   {: .lab-note .output .compact}
 
 
-- {% include step_label.html %} Abre **Compute** y revisa el estado; pulsa **Terminate** solo si el instructor autoriza detenerlo.
+- {% include step_label.html id="s042" %} Abre **Compute** y revisa el estado; pulsa **Terminate** solo si el instructor autoriza detenerlo.
 
   > **Advertencia:** No detengas un cluster compartido mientras otros participantes lo estén utilizando.
   {: .lab-note .warning .compact}

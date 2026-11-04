@@ -1,4 +1,8 @@
 ---
+course_id: dbricksint
+lab_id: l003
+tracking: true
+position: 3
 layout: lab
 title: 'Práctica 3: Ingesta batch completa con validaciones'
 permalink: /lab3/lab3/
@@ -52,17 +56,20 @@ Configurar un laboratorio aislado en el esquema autorizado, comprobar los permis
 
 Ubicar el notebook y verificar que hay un clúster compatible con Unity Catalog.
 
-- {% include step_label.html %} En Workspace, crea el notebook Python **03_ingesta_batch_validaciones** dentro de **batch_1**.
+
+{% assign tracking_task_id = "t001" %}
+
+- {% include step_label.html id="s001" %} En Workspace, crea el notebook Python **03_ingesta_batch_validaciones** dentro de **batch_1**.
 
   > **Salida esperada:** Notebook creado con lenguaje Python.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Asocia el notebook al mismo clúster de Databricks disponible para las prácticas.
+- {% include step_label.html id="s002" %} Asocia el notebook al mismo clúster de Databricks disponible para las prácticas.
 
   > **Salida esperada:** El selector de cómputo indica Connected o Running.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Ejecuta la celda de constantes para definir las cinco tablas p3_ y el archivo del lote.
+- {% include step_label.html id="s003" %} Ejecuta la celda de constantes para definir las cinco tablas p3_ y el archivo del lote.
 
   ```python
   from pyspark.sql import functions as F
@@ -84,7 +91,7 @@ Ubicar el notebook y verificar que hay un clúster compatible con Unity Catalog.
   > **Salida esperada:** Se imprime dbricks_de_int.batch1.p3_ como prefijo; se conserva el clúster existente.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que el esquema y el volumen de aterrizaje son accesibles.
+- {% include step_label.html id="s004" %} Comprueba que el esquema y el volumen de aterrizaje son accesibles.
 
   ```python
   spark.sql(f'USE CATALOG `{C}`')
@@ -101,7 +108,7 @@ Ubicar el notebook y verificar que hay un clúster compatible con Unity Catalog.
 
 Preparar el almacenamiento Delta necesario para controlar rechazos y métricas de cada lote.
 
-- {% include step_label.html %} Confirma que trabajarás con tablas p3_ y no con las tablas creadas por la Práctica 2.
+- {% include step_label.html id="s005" %} Confirma que trabajarás con tablas p3_ y no con las tablas creadas por la Práctica 2.
 
   > **Nota:** Así se evita sobrescribir accidentalmente el laboratorio anterior.
   {: .lab-note .info .compact}
@@ -117,7 +124,7 @@ Preparar el almacenamiento Delta necesario para controlar rechazos y métricas d
   > **Salida esperada:** La celda confirma explícitamente que las cinco tablas usan el prefijo p3_.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Crea las tablas Delta para cuarentena y auditoría utilizando los esquemas definidos.
+- {% include step_label.html id="s006" %} Crea las tablas Delta para cuarentena y auditoría utilizando los esquemas definidos.
 
   ```python
   spark.sql(f'''CREATE TABLE IF NOT EXISTS {Q} (
@@ -133,7 +140,7 @@ Preparar el almacenamiento Delta necesario para controlar rechazos y métricas d
   > **Salida esperada:** Se crean las tablas p3_quarantine_orders y p3_batch_ingestion_audit.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Verifica las columnas y tipos de ambas tablas auxiliares.
+- {% include step_label.html id="s007" %} Verifica las columnas y tipos de ambas tablas auxiliares.
 
   ```python
   display(spark.sql(f'DESCRIBE {Q}')); display(spark.sql(f'DESCRIBE {A}'))
@@ -142,7 +149,7 @@ Preparar el almacenamiento Delta necesario para controlar rechazos y métricas d
   > **Salida esperada:** La auditoría usa conteos BIGINT y marca temporal TIMESTAMP.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que las dos tablas auxiliares utilizan el formato Delta.
+- {% include step_label.html id="s008" %} Comprueba que las dos tablas auxiliares utilizan el formato Delta.
 
   ```python
   assert all(spark.sql(f'DESCRIBE DETAIL {t}').first()['format']=='delta' for t in [Q,A])
@@ -156,7 +163,7 @@ Preparar el almacenamiento Delta necesario para controlar rechazos y métricas d
 
 Determinar el estado inicial y evitar residuos de una repetición anterior.
 
-- {% include step_label.html %} Registra el instante de inicio en una variable Python para usarlo en la auditoría.
+- {% include step_label.html id="s009" %} Registra el instante de inicio en una variable Python para usarlo en la auditoría.
 
   ```python
   started=datetime.now(timezone.utc).replace(tzinfo=None)
@@ -165,7 +172,7 @@ Determinar el estado inicial y evitar residuos de una repetición anterior.
   > **Salida esperada:** La variable started contiene un datetime.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta los objetos p3_ existentes antes de crear el lote de pruebas.
+- {% include step_label.html id="s010" %} Consulta los objetos p3_ existentes antes de crear el lote de pruebas.
 
   ```python
   display(spark.sql(f'SHOW TABLES IN `{C}`.`{S}`').filter(F.col('tableName').startswith('p3_')))
@@ -174,7 +181,7 @@ Determinar el estado inicial y evitar residuos de una repetición anterior.
   > **Salida esperada:** Se muestran los nombres p3_ existentes.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Revisa el comportamiento de una repetición: las escrituras reemplazan las tablas de datos p3_; la auditoría también se reemplazará para evitar filas duplicadas.
+- {% include step_label.html id="s011" %} Revisa el comportamiento de una repetición: las escrituras reemplazan las tablas de datos p3_; la auditoría también se reemplazará para evitar filas duplicadas.
 
   > **Advertencia:** No borres tablas de la Práctica 2 ni ejecutes DROP: las tablas p3_ se actualizarán de forma controlada.
   {: .lab-note .warning .compact}
@@ -205,7 +212,10 @@ Crear un archivo de diez pedidos que ejercite todas las reglas de calidad y carg
 
 Proporcionar dos pedidos válidos y ocho filas rechazables, con duplicados y conversiones incorrectas.
 
-- {% include step_label.html %} Ejecuta la celda que construye las diez filas del CSV controlado para batch_002.
+
+{% assign tracking_task_id = "t002" %}
+
+- {% include step_label.html id="s012" %} Ejecuta la celda que construye las diez filas del CSV controlado para batch_002.
 
   ```python
   csv='''order_id,customer_id,order_date,quantity,unit_price,status
@@ -228,7 +238,7 @@ Proporcionar dos pedidos válidos y ocho filas rechazables, con duplicados y con
   > **Salida esperada:** Aparece VALIDACIÓN EXITOSA: archivo CSV del laboratorio 3 disponible en el Volume.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Confirma que el archivo puede abrirse desde el volumen administrado.
+- {% include step_label.html id="s013" %} Confirma que el archivo puede abrirse desde el volumen administrado.
 
   ```python
   print(dbutils.fs.head(P,3000))
@@ -237,7 +247,7 @@ Proporcionar dos pedidos válidos y ocho filas rechazables, con duplicados y con
   > **Salida esperada:** Se observan 10 registros de datos y una cabecera.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Lee el CSV sin inferencia de tipos y comprueba que conserva los datos inválidos como texto.
+- {% include step_label.html id="s014" %} Lee el CSV sin inferencia de tipos y comprueba que conserva los datos inválidos como texto.
 
   ```python
   preview=spark.read.option('header',True).option('inferSchema',False).csv(P)
@@ -247,7 +257,7 @@ Proporcionar dos pedidos válidos y ocho filas rechazables, con duplicados y con
   > **Salida esperada:** El DataFrame tiene diez filas; aparecen abc y fecha_invalida.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba los nombres de las columnas y el número exacto de filas de origen.
+- {% include step_label.html id="s015" %} Comprueba los nombres de las columnas y el número exacto de filas de origen.
 
   ```python
   assert preview.count()==10
@@ -262,7 +272,7 @@ Proporcionar dos pedidos válidos y ocho filas rechazables, con duplicados y con
 
 Conservar todos los registros en una tabla Delta sin filtrar los datos de mala calidad.
 
-- {% include step_label.html %} Prepara las columnas Bronze sin conversiones de tipos de negocio.
+- {% include step_label.html id="s016" %} Prepara las columnas Bronze sin conversiones de tipos de negocio.
 
   ```python
   raw=spark.read.option('header',True).option('inferSchema',False).csv(P)
@@ -276,7 +286,7 @@ Conservar todos los registros en una tabla Delta sin filtrar los datos de mala c
   > **Salida esperada:** bronze conserva el contenido del CSV como texto.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Escribe los datos originales en una tabla Delta p3_bronze_orders aislada.
+- {% include step_label.html id="s017" %} Escribe los datos originales en una tabla Delta p3_bronze_orders aislada.
 
   ```python
   bronze.write.format('delta').mode('overwrite').option('overwriteSchema','true').saveAsTable(B)
@@ -285,7 +295,7 @@ Conservar todos los registros en una tabla Delta sin filtrar los datos de mala c
   > **Salida esperada:** Bronze almacena diez filas de batch_002.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba el conteo y el identificador de lote en Bronze.
+- {% include step_label.html id="s018" %} Comprueba el conteo y el identificador de lote en Bronze.
 
   ```python
   assert spark.table(B).count()==10
@@ -296,7 +306,7 @@ Conservar todos los registros en una tabla Delta sin filtrar los datos de mala c
   > **Salida esperada:** Aparece VALIDACIÓN EXITOSA: Bronze contiene 10 filas exclusivamente del lote batch_002.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Visualiza los metadatos y los dos registros repetidos con order_id 1001.
+- {% include step_label.html id="s019" %} Visualiza los metadatos y los dos registros repetidos con order_id 1001.
 
   ```python
   display(spark.table(B).filter(F.col('order_id')=='1001'))
@@ -320,7 +330,10 @@ Tipar los registros, validar ocho condiciones, conservar motivos de rechazo y pe
 
 Aplicar try_cast para que las conversiones fallidas no detengan el proceso de carga.
 
-- {% include step_label.html %} Lee solo el lote actual desde Bronze y realiza conversiones tolerantes con try_cast.
+
+{% assign tracking_task_id = "t003" %}
+
+- {% include step_label.html id="s020" %} Lee solo el lote actual desde Bronze y realiza conversiones tolerantes con try_cast.
 
   ```python
   x=(spark.table(B).filter(F.col('batch_id')==BATCH)
@@ -333,7 +346,7 @@ Aplicar try_cast para que las conversiones fallidas no detengan el proceso de ca
   > **Salida esperada:** Se crea x con columnas order_date, quantity, unit_price y occurrences.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Muestra las conversiones inválidas para identificar las filas que requieren cuarentena.
+- {% include step_label.html id="s021" %} Muestra las conversiones inválidas para identificar las filas que requieren cuarentena.
 
   ```python
   display(x.filter(F.col('quantity').isNull() | F.col('order_date').isNull()))
@@ -342,7 +355,7 @@ Aplicar try_cast para que las conversiones fallidas no detengan el proceso de ca
   > **Salida esperada:** Aparecen la cantidad abc y la fecha fecha_invalida.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que order_id 1001 tiene dos ocurrencias en el lote.
+- {% include step_label.html id="s022" %} Comprueba que order_id 1001 tiene dos ocurrencias en el lote.
 
   ```python
   display(x.filter(F.col('order_id')=='1001').select('order_id','occurrences'))
@@ -351,7 +364,7 @@ Aplicar try_cast para que las conversiones fallidas no detengan el proceso de ca
   > **Salida esperada:** Las dos filas muestran occurrences = 2.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Construye la columna rejection_reason con ocho condiciones de calidad (identificador, cliente, fecha, cantidad, precio y duplicados).
+- {% include step_label.html id="s023" %} Construye la columna rejection_reason con ocho condiciones de calidad (identificador, cliente, fecha, cantidad, precio y duplicados).
 
   ```python
   x=x.withColumn('rejection_reason',F.concat_ws('; ',
@@ -370,7 +383,7 @@ Aplicar try_cast para que las conversiones fallidas no detengan el proceso de ca
   > **Salida esperada:** Aparece VALIDACIÓN EXITOSA: se detectaron exactamente 2 filas válidas.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Muestra las causas de rechazo antes de guardar los datos.
+- {% include step_label.html id="s024" %} Muestra las causas de rechazo antes de guardar los datos.
 
   ```python
   display(x.select('order_id','rejection_reason'))
@@ -379,7 +392,7 @@ Aplicar try_cast para que las conversiones fallidas no detengan el proceso de ca
   > **Salida esperada:** Se observan 8 filas con algún motivo y 2 sin rechazo.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que se identificaron dos registros válidos y ocho rechazados.
+- {% include step_label.html id="s025" %} Comprueba que se identificaron dos registros válidos y ocho rechazados.
 
   ```python
   assert x.filter(F.col('rejection_reason')=='').count()==2
@@ -394,7 +407,7 @@ Aplicar try_cast para que las conversiones fallidas no detengan el proceso de ca
 
 Preparar tablas Silver y cuarentena con el contrato que se reutilizará para MERGE y Time Travel.
 
-- {% include step_label.html %} Construye valid y rejected; calcula amount y conserva metadatos.
+- {% include step_label.html id="s026" %} Construye valid y rejected; calcula amount y conserva metadatos.
 
   ```python
   valid=(x.filter(F.col('rejection_reason')=='').select(
@@ -410,7 +423,7 @@ Preparar tablas Silver y cuarentena con el contrato que se reutilizará para MER
   > **Salida esperada:** valid contiene amount DECIMAL y rejected conserva rejection_reason.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Persiste los ocho registros rechazados en la tabla de cuarentena.
+- {% include step_label.html id="s027" %} Persiste los ocho registros rechazados en la tabla de cuarentena.
 
   ```python
   rejected.write.format('delta').mode('overwrite').option('overwriteSchema','true').saveAsTable(Q)
@@ -419,7 +432,7 @@ Preparar tablas Silver y cuarentena con el contrato que se reutilizará para MER
   > **Salida esperada:** Cuarentena contiene 8 registros.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Escribe los dos pedidos correctos en la tabla Delta Silver p3_silver_orders.
+- {% include step_label.html id="s028" %} Escribe los dos pedidos correctos en la tabla Delta Silver p3_silver_orders.
 
   ```python
   valid.write.format('delta').mode('overwrite').option('overwriteSchema','true').saveAsTable(V)
@@ -430,7 +443,7 @@ Preparar tablas Silver y cuarentena con el contrato que se reutilizará para MER
   > **Salida esperada:** Aparece VALIDACIÓN EXITOSA: Silver contiene los pedidos 1002 y 1009.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que los pedidos válidos no están repetidos.
+- {% include step_label.html id="s029" %} Comprueba que los pedidos válidos no están repetidos.
 
   ```python
   assert spark.table(V).count()==spark.table(V).select('order_id').distinct().count()
@@ -440,7 +453,7 @@ Preparar tablas Silver y cuarentena con el contrato que se reutilizará para MER
   > **Salida esperada:** Aparece VALIDACIÓN EXITOSA: no hay identificadores duplicados en Silver.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Muestra las filas rechazadas y sus causas desde la tabla Delta.
+- {% include step_label.html id="s030" %} Muestra las filas rechazadas y sus causas desde la tabla Delta.
 
   ```python
   display(spark.table(Q).select('order_id','rejection_reason'))
@@ -453,7 +466,7 @@ Preparar tablas Silver y cuarentena con el contrato que se reutilizará para MER
 
 Sembrar dos claves reales que permitirán demostrar actualizaciones y nuevas inserciones en la Práctica 4.
 
-- {% include step_label.html %} Crea dos pedidos iniciales O1001 y O1002 con el esquema de Silver.
+- {% include step_label.html id="s031" %} Crea dos pedidos iniciales O1001 y O1002 con el esquema de Silver.
 
   ```python
   seed=spark.createDataFrame([
@@ -478,7 +491,7 @@ Sembrar dos claves reales que permitirán demostrar actualizaciones y nuevas ins
   > **Salida esperada:** Silver conserva también O1001 y O1002 como datos base.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Valida las cuatro claves de negocio que permanecen disponibles en Silver.
+- {% include step_label.html id="s032" %} Valida las cuatro claves de negocio que permanecen disponibles en Silver.
 
   ```python
   assert set(r[0] for r in spark.table(V).select('order_id').collect())=={'1002','1009','O1001','O1002'}
@@ -488,7 +501,7 @@ Sembrar dos claves reales que permitirán demostrar actualizaciones y nuevas ins
   > **Salida esperada:** Aparece VALIDACIÓN EXITOSA: Silver contiene 1002, 1009, O1001 y O1002.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta los importes iniciales de los pedidos que actualizará el MERGE.
+- {% include step_label.html id="s033" %} Consulta los importes iniciales de los pedidos que actualizará el MERGE.
 
   ```python
   display(spark.table(V).filter(F.col('order_id').isin('O1001','O1002')).select('order_id','amount','status'))
@@ -497,7 +510,7 @@ Sembrar dos claves reales que permitirán demostrar actualizaciones y nuevas ins
   > **Salida esperada:** O1001=100.00 y O1002=70.00; ambos con status NEW.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Confirma que source_updated_at y created_at existen y tienen tipo timestamp.
+- {% include step_label.html id="s034" %} Confirma que source_updated_at y created_at existen y tienen tipo timestamp.
 
   ```python
   display(spark.sql(f'DESCRIBE {V}'))
@@ -506,7 +519,7 @@ Sembrar dos claves reales que permitirán demostrar actualizaciones y nuevas ins
   > **Salida esperada:** Aparecen source_updated_at, created_at y updated_at como timestamp.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Guarda una consulta de control con el total Silver antes de la carga incremental.
+- {% include step_label.html id="s035" %} Guarda una consulta de control con el total Silver antes de la carga incremental.
 
   ```python
   display(spark.table(V).groupBy('batch_id').agg(F.count('*').alias('rows'),F.sum('amount').alias('sales')))
@@ -530,7 +543,10 @@ Reconstruir ventas por fecha y canal, comprobar schema enforcement sin alterar S
 
 Materializar el agregado diario sin mezclarlo con objetos Gold de otros laboratorios.
 
-- {% include step_label.html %} Reconstruye Gold desde Silver con una fila por día y canal.
+
+{% assign tracking_task_id = "t004" %}
+
+- {% include step_label.html id="s036" %} Reconstruye Gold desde Silver con una fila por día y canal.
 
   ```python
   spark.sql(f'''CREATE OR REPLACE TABLE {G} USING DELTA AS
@@ -542,7 +558,7 @@ Materializar el agregado diario sin mezclarlo con objetos Gold de otros laborato
   > **Salida esperada:** Se crea p3_gold_daily_sales con columnas order_date, channel y total_sales.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta los importes Gold de las fechas 10 y 14 de febrero.
+- {% include step_label.html id="s037" %} Consulta los importes Gold de las fechas 10 y 14 de febrero.
 
   ```python
   display(spark.table(G).filter(F.col('order_date').isin('2025-02-10','2025-02-14')).orderBy('order_date'))
@@ -551,7 +567,7 @@ Materializar el agregado diario sin mezclarlo con objetos Gold de otros laborato
   > **Salida esperada:** Las ventas del lote batch_002 son 30.00 y 45.00.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que la suma de Gold coincide con la suma completa de Silver.
+- {% include step_label.html id="s038" %} Comprueba que la suma de Gold coincide con la suma completa de Silver.
 
   ```python
   gold_total = spark.table(G).agg(F.sum('total_sales')).first()[0]
@@ -563,7 +579,7 @@ Materializar el agregado diario sin mezclarlo con objetos Gold de otros laborato
   > **Salida esperada:** Aparece VALIDACIÓN EXITOSA y las ventas conciliadas en Silver y Gold = 245.00.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que la tabla Gold está persistida como Delta.
+- {% include step_label.html id="s039" %} Comprueba que la tabla Gold está persistida como Delta.
 
   ```python
   assert spark.sql(f'DESCRIBE DETAIL {G}').first()['format']=='delta'
@@ -573,7 +589,7 @@ Materializar el agregado diario sin mezclarlo con objetos Gold de otros laborato
   > **Salida esperada:** Aparece VALIDACIÓN EXITOSA: Gold está almacenada en formato Delta.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Verifica que la tabla Gold conserva los pedidos base para el siguiente laboratorio.
+- {% include step_label.html id="s040" %} Verifica que la tabla Gold conserva los pedidos base para el siguiente laboratorio.
 
   ```python
   display(spark.table(G).orderBy('order_date'))
@@ -586,7 +602,7 @@ Materializar el agregado diario sin mezclarlo con objetos Gold de otros laborato
 
 Comprobar que Delta rechaza un DataFrame incompatible y registrar el resultado sin modificar las filas Silver.
 
-- {% include step_label.html %} Guarda el conteo Silver anterior a la prueba de incompatibilidad.
+- {% include step_label.html id="s041" %} Guarda el conteo Silver anterior a la prueba de incompatibilidad.
 
   ```python
   before=spark.table(V).count()
@@ -596,7 +612,7 @@ Comprobar que Delta rechaza un DataFrame incompatible y registrar el resultado s
   > **Salida esperada:** Se registra before = 4.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Intenta añadir una columna inesperada a Silver y captura el error.
+- {% include step_label.html id="s042" %} Intenta añadir una columna inesperada a Silver y captura el error.
 
   > **Advertencia:** No habilites mergeSchema: una inserción exitosa indicaría que la prueba no cumplió su propósito.
   {: .lab-note .warning .compact}
@@ -617,7 +633,7 @@ Comprobar que Delta rechaza un DataFrame incompatible y registrar el resultado s
   > **Salida esperada:** La operación debe devolver EXPECTED_ERROR.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba que Silver no recibió la fila de prueba.
+- {% include step_label.html id="s043" %} Comprueba que Silver no recibió la fila de prueba.
 
   ```python
   assert status=='EXPECTED_ERROR'
@@ -631,7 +647,7 @@ Comprobar que Delta rechaza un DataFrame incompatible y registrar el resultado s
   > **Salida esperada:** Aparecen tres confirmaciones: Delta rechazó el esquema, Silver conserva 4 registros y no existe el pedido fake.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Registra los conteos calculados y el control de schema enforcement; reemplaza el único evento del lote en reejecuciones.
+- {% include step_label.html id="s044" %} Registra los conteos calculados y el control de schema enforcement; reemplaza el único evento del lote en reejecuciones.
 
   ```python
   completed = datetime.now(timezone.utc).replace(tzinfo=None)
@@ -658,7 +674,7 @@ Comprobar que Delta rechaza un DataFrame incompatible y registrar el resultado s
   > **Salida esperada:** La auditoría registra 10 Bronze, 2 válidos, 8 rechazados y EXPECTED_ERROR.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Consulta los valores que se almacenaron en la tabla de auditoría.
+- {% include step_label.html id="s045" %} Consulta los valores que se almacenaron en la tabla de auditoría.
 
   ```python
   display(spark.table(A).filter(F.col('batch_id')==BATCH))
@@ -682,7 +698,10 @@ Ejecutar controles globales sobre las capas y preservar el historial técnico, d
 
 Confirmar los conteos del lote y la preparación de los registros de ejemplo de la siguiente práctica.
 
-- {% include step_label.html %} Ejecuta las aserciones finales de conteos y motivos de rechazo.
+
+{% assign tracking_task_id = "t005" %}
+
+- {% include step_label.html id="s046" %} Ejecuta las aserciones finales de conteos y motivos de rechazo.
 
   ```python
   assert spark.table(B).count()==10
@@ -695,7 +714,7 @@ Confirmar los conteos del lote y la preparación de los registros de ejemplo de 
   > **Salida esperada:** Aparece VALIDACIÓN EXITOSA: Bronze=10, cuarentena=8, Silver batch_002=2 y semillas=2.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Comprueba los importes de los dos pedidos válidos del lote batch_002.
+- {% include step_label.html id="s047" %} Comprueba los importes de los dos pedidos válidos del lote batch_002.
 
   ```python
   display(spark.table(V).filter(F.col('batch_id')==BATCH).select('order_id','amount'))
@@ -704,7 +723,7 @@ Confirmar los conteos del lote y la preparación de los registros de ejemplo de 
   > **Salida esperada:** 1002=30.00 y 1009=45.00.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Confirma que se registró exactamente un evento de auditoría para batch_002.
+- {% include step_label.html id="s048" %} Confirma que se registró exactamente un evento de auditoría para batch_002.
 
   ```python
   assert spark.table(A).filter(F.col('batch_id')==BATCH).count()==1
@@ -714,7 +733,7 @@ Confirmar los conteos del lote y la preparación de los registros de ejemplo de 
   > **Salida esperada:** Aparece VALIDACIÓN EXITOSA: existe exactamente un registro de auditoría para batch_002.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Verifica que el archivo de entrada continúa disponible para su trazabilidad.
+- {% include step_label.html id="s049" %} Verifica que el archivo de entrada continúa disponible para su trazabilidad.
 
   ```python
   assert any(item.name == 'orders_batch_002_p3.csv' for item in dbutils.fs.ls(LAB_DIR))
@@ -728,7 +747,7 @@ Confirmar los conteos del lote y la preparación de los registros de ejemplo de 
 
 Preservar las transacciones Delta y el estado que utilizará el ejercicio incremental siguiente.
 
-- {% include step_label.html %} Muestra las últimas operaciones Delta de Bronze, Silver y cuarentena.
+- {% include step_label.html id="s050" %} Muestra las últimas operaciones Delta de Bronze, Silver y cuarentena.
 
   ```python
   for name in [B,V,Q]:
@@ -738,7 +757,7 @@ Preservar las transacciones Delta y el estado que utilizará el ejercicio increm
   > **Salida esperada:** Se observan operaciones WRITE de las tablas.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Verifica que el cómputo y las tablas p3_ continúan accesibles.
+- {% include step_label.html id="s051" %} Verifica que el cómputo y las tablas p3_ continúan accesibles.
 
   ```python
   for name in [B,V,G,Q,A]:
@@ -750,7 +769,7 @@ Preservar las transacciones Delta y el estado que utilizará el ejercicio increm
   > **Salida esperada:** Aparece VALIDACIÓN EXITOSA: las cinco tablas p3_ siguen disponibles para la Práctica 4.
   {: .lab-note .output .compact}
 
-- {% include step_label.html %} Guarda el notebook y evita ejecutar limpieza sobre las tablas p3_.
+- {% include step_label.html id="s052" %} Guarda el notebook y evita ejecutar limpieza sobre las tablas p3_.
 
   > **Importante:** No ejecutes VACUUM ni DROP: conserva la evidencia Delta y las dos semillas O1001/O1002 para la Práctica 4.
   {: .lab-note .important .compact}
